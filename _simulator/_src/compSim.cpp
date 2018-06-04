@@ -9,9 +9,9 @@
 #include <time.h>
 using namespace std;
 
-ComputerSimulation::ComputerSimulation(string n) : name(n), 
+ComputerSimulation::ComputerSimulation(string n) : name(n),
 	IM("Instruction Memory", INSTR ), DM("Data Memory", DATA) {
-	logg.open("SimCompLog.txt"); 
+	logg.open("SimCompLog.txt");
 	short i = 0; // set up instruction statics table
 	for (auto it = cpu.isaMap.begin(); it != cpu.isaMap.end(); it++)
 		instStatsTable[it->second] = i++;
@@ -28,7 +28,7 @@ void ComputerSimulation::reset() {
 	instructionsSimulated = 0;
 	singleStepMode = false;
 	dumpMode = false;
-    running = true; 
+    running = true;
 }
 
 void ComputerSimulation::resetStatistics(const Isa& isa ) {
@@ -63,7 +63,7 @@ void ComputerSimulation::singleStep(short opCode, word instr) {
 
 		char nextAction;
 		nextAction = selectSingleStepAction();
-		switch (nextAction) { 
+		switch (nextAction) {
 		case 'r': singleStepMode = false;
 			break;
 		case 's': ; // just continue
@@ -75,18 +75,18 @@ void ComputerSimulation::singleStep(short opCode, word instr) {
 	}
 }
 
-void ComputerSimulation::runProgram() { 
+void ComputerSimulation::runProgram() {
 	cpu.PC = 0;
 	do {
 		word instr = IM.read(cpu.PC);
 		short opCode = cpu.getOpCode(instr);
 		if (dumpMode) instStats[instStatsTable[opCode]]++;
 		instructionsSimulated++;
-		
+
 		if (opCode == HLT) {
 			setRunning(false);
 		}
-		else singleStep(opCode, instr); 
+		else singleStep(opCode, instr);
 	} while (isRunning());
 }
 

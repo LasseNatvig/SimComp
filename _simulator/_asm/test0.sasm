@@ -1,0 +1,7 @@
+; test0.sasm
+
+        LDI  R1 0      ; Set R1 to 0
+        ADI  R1 R1 1   ; increment R1
+        LDI  R2 5      ; Set R2 to 5
+        ADD  R3 R2 R1  ; R3 = R1 + R2
+        HLT 	 

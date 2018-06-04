@@ -1,5 +1,5 @@
 
-# Simulating Computers - IDI
+# Simulating Computers
 
 
 One Paragraph of project description goes here

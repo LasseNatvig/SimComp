@@ -1,0 +1,21 @@
+innerL  const int 1000	; 65536  ; max 16 bit integer value    
+outerL  const int 10000	; 61036  
+
+        LDI   R5 0       ; R5 is counter outer
+        SET   R6 #outerL
+_outer	SET   R2 #innerL ; R2 set
+        LDI   R1 0       ; R1 is counter inner 
+_inner	ADI   R1 R1 1    ; increment R1 
+        SUB   R3 R2 R1   ; R3 = R2 - R1, zero when all iterations in
+                         ; inner loop are done
+        BRZ   R3 4       ; address offset is 4 since SET takes 2 words
+        SET   R4 _inner	 ; new iteration in inner loop
+        JMP   R4
+;       ------ finished inner loop  
+        ADI   R5 R5 1
+        SUB   R3 R6 R5 ; as above, but tests for outer loop
+        BRZ   R3 4
+        SET   R4 _outer
+        JMP   R4	
+        HLT 	 
+		
