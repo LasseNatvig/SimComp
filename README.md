@@ -13,7 +13,7 @@ $ clang++ -std=c++11 -o SimComp clang++ -std=c++11 main.cpp compSim.cpp config.c
 Running this command will compile all the necessary source files to a executable named "SimComp".
 The generated binary will load all "\*.sasm" file from a directory which must be passed as an argument on execution.
 
-[comment]: <> (These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.)
+<!--These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. -->
 
 ### Prerequisites
 
@@ -23,7 +23,7 @@ Nothing this far. QT soon.
 Give examples
 ```
 
-[comment]: <> (
+<!--
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running
@@ -79,12 +79,13 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
-)
+-->
+
 ## Authors
 
 * **Lasse Natvig** - *Initial work* - [NTNU](https://innsida.ntnu.no/person/lasse)
 * **Ole Bjørn Eithun Pedersen** - *GUI and general development* - [LinkedIn](http://linkedin.com/in/eithunpedersen/)
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/LasseNatvig/SimComp/contributors) who participated in this project.
 
 
 ## Acknowledgments
