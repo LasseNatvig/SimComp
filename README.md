@@ -15,6 +15,13 @@ The generated binary will load all "\*.sasm" file from a directory which must be
 
 <!--These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. -->
 
+## Structure
+
+- `_Root/`
+  - `_Simulator/` Everything related to the core simulator.
+    - `_asm/` Example assembler programs.
+    - `_src/` C++ source code for simulator.
+
 ### Prerequisites
 
 Nothing this far. QT soon.
