@@ -36,7 +36,7 @@ vector<string> getSASMfiles(string folder) {
 vector<string> getSASMfiles(string folder) {
 	vector<string> names;
 	string search_path = folder + "/";
-	string filetype = ".sasm"; // Can be changed to accommodate
+	string filetype = ".sasm"; // Can be changed to accommodate diffrent filetypes
 
 	DIR *dp;
   struct dirent *dirp;

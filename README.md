@@ -1,21 +1,29 @@
 
 # Simulating Computers
 
-
-One Paragraph of project description goes here
+Simulating Computers (SimComp) is a project created as an introduction to the fundamental concepts in the areas of computer architecture and organization, instruction sets, assembler programming,
+run time systems and simulation. This repository is intended to accommodate the learning material found [here](#). Most of the documentation is found in the learning material, although following the "Getting Started" underneath should get the simulator running.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+First, you should start off by cloning this repository, or at least the \_simulator part. Then you´ll need to compile the code. Example using clang-900.0.39.2:
+```
+$ clang++ -std=c++11 -o SimComp clang++ -std=c++11 main.cpp compSim.cpp config.cpp isa.cpp loader.cpp logger.cpp memory.cpp Program.cpp utils.cpp
+```   
+Running this command will compile all the necessary source files to a executable named "SimComp".
+The generated binary will load all "\*.sasm" file from a directory which must be passed as an argument on execution.
+
+[comment]: <> (These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.)
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Nothing this far. QT soon.
 
 ```
 Give examples
 ```
 
+[comment]: <> (
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running
@@ -71,19 +79,14 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
-
+)
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
+* **Lasse Natvig** - *Initial work* - [NTNU](https://innsida.ntnu.no/person/lasse)
+* **Ole Bjørn Eithun Pedersen** - *GUI and general development* - [LinkedIn](http://linkedin.com/in/eithunpedersen/)
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
 
 * Hat tip to anyone whose code was used
-* Inspiration
-* etc

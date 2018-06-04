@@ -1,5 +1,5 @@
 #include <iomanip>
-#include<string>
+#include <string>
 #include "compSim.h"
 #include "memory.h"
 #include "logger.h"
@@ -28,7 +28,7 @@ void ComputerSimulation::reset() {
 	instructionsSimulated = 0;
 	singleStepMode = false;
 	dumpMode = false;
-    running = true;
+  running = true;
 }
 
 void ComputerSimulation::resetStatistics(const Isa& isa ) {
@@ -68,7 +68,8 @@ void ComputerSimulation::singleStep(short opCode, word instr) {
 			break;
 		case 's': ; // just continue
 			break;
-		case 't': setRunning(false);
+		case 't':
+			setRunning(false);
 			singleStepMode = false;
 			break;
 		}
