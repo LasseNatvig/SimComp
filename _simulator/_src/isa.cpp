@@ -17,7 +17,7 @@ Isa::Isa() {
 		{ "LDI", LDI },
 		{ "SET", SET },
 		{ "SHL", SHL },
-		{ "ST",   ST },
+		{ "ST",  ST },
 		{ "SUB", SUB }
 	};
 }
@@ -30,11 +30,13 @@ string Isa::disAssembly(word instr) {
 			found = it->first;
 	return found;
 }
+
 void Isa::printRegisterFile() {
 	for (int i = 0; i < noOfRegisters; i++)
 		cout << setw(4) << hex << R[i] << " ";
 	cout << dec;
 }
+
 bool Isa::printInstr(word machineInstr) {
 		word opCode = machineInstr & 0b1111111000000000;
 		word theRest = machineInstr & 0b0000000111111111;
@@ -46,27 +48,27 @@ bool Isa::printInstr(word machineInstr) {
 			if (it->second == (opCode >> 9))
 				mnemonic = it->first;
 		cout << mnemonic << " " << bits;
-		return (mnemonic == "SET"); 
+		return (mnemonic == "SET");
 }
 short Isa::getOpCode(const word& w) {
 	return ((w & 0b1111111000000000) >> 9);
 }
-word Isa::getRegNo1(const word& instr) { 
+word Isa::getRegNo1(const word& instr) {
 	return((0b0000000111000000 & instr) >> 6);
 }
-word Isa::getRegNo2(const word& instr) { 
+word Isa::getRegNo2(const word& instr) {
 	return((0b0000000000111000 & instr) >> 3);
 }
-word Isa::getRegNo3(const word& instr) { 
+word Isa::getRegNo3(const word& instr) {
 	return(0b0000000000000111 & instr);
 }
 word Isa::getImmediate(const word& instr) {
 	return (0b0000000000000111 & instr);
 }
-word Isa::getAdressOffset(const word& instr) { 
+word Isa::getAdressOffset(const word& instr) {
 	word AL = 0b0000000111000000 & instr;
 	word AR = 0b0000000000000111 & instr;
-	return ((AL >> 3) | AR); 
+	return ((AL >> 3) | AR);
 }
 
 void Isa::doInstruction(const short& opCode, const word& instr, Memory& DM, Memory& IM) {
@@ -104,7 +106,7 @@ void Isa::doInstruction(const short& opCode, const word& instr, Memory& DM, Memo
 		R[getRegNo1(instr)] = DM.read(R[getRegNo2(instr)]);
 		PC++;
 		break;
-	case SET: 
+	case SET:
 		PC++;
 		R[getRegNo1(instr)] = IM.read(PC);
 		PC++;

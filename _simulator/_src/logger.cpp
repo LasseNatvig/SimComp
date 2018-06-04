@@ -4,8 +4,8 @@
 
 using namespace std;
 
-LogFile::LogFile() { 
-	linesWritten = 0; 
+LogFile::LogFile() {
+	linesWritten = 0;
 }
 
 LogFile::~LogFile() {
@@ -31,11 +31,13 @@ void LogFile::write(string s) {
 
 void LogFile::timeStamp() {
 	time_t result = time(NULL);
-	char str[26];
-	ctime_s(str, sizeof str, &result);
-	ofs << str; 
+	//char str[26];
+	char* str;
+//	ctime_s(str, sizeof str, &result); Does not work with c++, only c11?
+	str = ctime(&result);
+	ofs << str;
 }
 
 // TODO AD LINUX-code, flytt til config ?
-// AD: Måtte endre til ctime_r for å få det til å kjøre i linux
+// AD: Mï¿½tte endre til ctime_r for ï¿½ fï¿½ det til ï¿½ kjï¿½re i linux
 // ctime_r(&result, str);
