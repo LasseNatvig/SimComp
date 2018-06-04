@@ -85,6 +85,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 * **Lasse Natvig** - *Initial work* - [NTNU](https://innsida.ntnu.no/person/lasse)
 * **Ole Bjørn Eithun Pedersen** - *GUI and general development* - [LinkedIn](http://linkedin.com/in/eithunpedersen/)
+
 See also the list of [contributors](https://github.com/LasseNatvig/SimComp/contributors) who participated in this project.
 
 
