@@ -1,13 +1,13 @@
 #pragma once
-#include<iostream>
-#include<vector>
-#include<string>
+#include <iostream>
+#include <vector>
+#include <string>
 #include "isa.h"
 
 enum memType { DATA, INSTR };
 typedef uint16_t word;
 
-class Isa;  // forward declaration
+class Isa;  // Forward declaration
 
 class Memory {
 private:
@@ -19,11 +19,17 @@ private:
 public:
 	std::string name; // Avoid using using namespace in .h files
 	memType type;
+
+	/* Constructor(s) */
 	Memory(std::string name, memType type);
-	void dumpStats(Isa& cpu) const; 
-	void resetStats();
+
+	/* Core functionality */
+	void dumpStats(Isa& cpu) const; // Dump memory statistics
+	void resetStats(); // Reset statistics (Sets varibles to default values)
+	void write(word addr, word w); // Write to memory
+	word read(const word& addr); // Read momory at adress "addr"
+
+	/* Get funcitons */
 	std::string getName();
 	word getNextFreeLocation();
-	void write(word addr, word w);
-	word read(const word& addr);
 };

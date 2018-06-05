@@ -13,14 +13,14 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	string sasmPath; // path to catalog for sasm files
+	string sasmPath; // Path to catalog for sasm files
 	if (argc >= 2) // argv[0] is program name
 		sasmPath = argv[1];
 	else
 		sasmPath = "./"; // Read from current directory
 	ComputerSimulation sim("AdHoc16_V03");
-	sim.load(selectProgram(sasmPath)); 
-	char simMode = ' '; // space is no mode 
+	sim.load(selectProgram(sasmPath));
+	char simMode = ' '; // Space is no mode
 
 	clock_t t;
 	while (simMode != 'q') {
@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
 
 				t = readTime() - start;
 				cout << "*** Simulation ended" << endl;
-				if (!sim.singleStep())  // time and MIPS rate does not make sense in singe step mode
+				if (!sim.singleStep())  // Time and MIPS rate does not make sense in singe step mode
 					reportMIPS(t, sim.instructionsSimulated);
 				if (sim.dump()) sim.dumpStats();
 		}
-	}  
+	}
 }

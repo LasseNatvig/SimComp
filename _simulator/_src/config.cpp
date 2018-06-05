@@ -10,9 +10,11 @@
 	#include <dirent.h>
 #endif
 
+
 using namespace std;
 
-#ifdef _WIN64
+
+#ifdef _WIN64 // If Windows OS (Uses Windows.h)
 vector<string> getSASMfiles(string folder) {
 	// code found here:
 	// https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c?rq=1
@@ -31,8 +33,7 @@ vector<string> getSASMfiles(string folder) {
 	return names;
 }
 
-
-#else
+#else // Assumes UNIX-like OS otherwise (Uses dirent.h)
 vector<string> getSASMfiles(string folder) {
 	vector<string> names;
 	string search_path = folder + "/";

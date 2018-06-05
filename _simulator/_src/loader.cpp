@@ -16,11 +16,12 @@
 using namespace std;
 
 void Loader::errorLoad(string msg) {
-	cerr << "Loader error " + msg + " will stop" << endl;
+	cerr << "Loader error " + msg + " will stop" << endl; // Why write to cerr and not log?
 	exit(-1);
 }
 
 word Loader::getOperand(string opStr) {
+	/* Returns operand word */
 	if (opStr[0] == 'R') {
 		word op = stoi(opStr.substr(1, opStr.size() - 1));
 		assert((op >= 0) && (op < 8));
@@ -28,29 +29,32 @@ word Loader::getOperand(string opStr) {
 	}
 	else {
 		errorLoad("Illegal Register-operand: " + opStr + " at line " + to_string(lines));
-		system("Pause"); // debug
+		system("Pause"); // debug (WINDOWS SPECIFIC CODE?)
 		return (0x00); // to avoid warning
 	}
 }
 
 word Loader::getAddress(string opStr) {
+	/* Return adress as word */
 	word addr = stoi(opStr);
 	assert((addr >= 0) && (addr < 64));
 	return addr;
 }
 
 word Loader::get3bitsConstant(string opStr) {
+	/*  */
 	word op = stoi(opStr);
 	assert((op >= 0) && (op < 8));
 	return op;
 }
 
 void Loader::parseAlloc(Program& prog, string& name, string& type, string& size, Memory& DM) {
+	/*  */
 	word sizeValue;
-	// check if size is given as an already defined constant
+	// Check if size is given as an already defined constant
 	if (prog.intConstants.find(size) != prog.intConstants.end())
 		sizeValue = prog.intConstants[size]; // size found as a constant
-	else { 	// size should be integer
+	else { 	// Size should be integer
 		try {
 			sizeValue = stoi(size); // stoi throws an exception invalid_argument if conversion cannot be done
 		}
@@ -70,7 +74,7 @@ void Loader::parseAlloc(Program& prog, string& name, string& type, string& size,
 	else {
 		cout << "Assembler error at line " << lines
 			<< ": alloc with type <" + type + "> not implemented. Skipped!" << endl;
-	}  // end of alloc
+	}  // End of alloc
 }
 
 void Loader::parseConst(Program& prog, string& name, string& type, string& value, Memory& DM, LogFile& logg) {
@@ -78,8 +82,8 @@ void Loader::parseConst(Program& prog, string& name, string& type, string& value
 		prog.intConstants[name] = stoi(value); // Constants are "compile-time" (i.e. handled by the kloader), but not stored in memory
 		logg.write("Constant named " + name + " given as " + to_string(stoi(value)) + "\n");
 	}
-	else if (type == "str") { // constant string must be stored in memory
-		// will read and store the string in a "compile-time" table, and place string in allocated memory
+	else if (type == "str") { // Constant string must be stored in memory
+		// Will read and store the string in a "compile-time" table, and place string in allocated memory
 		cout << "**** const string under implementation \n";
 		prog.strConstants[name] = value;
 		// Alloc as many bytes as the length of the string + 1 for \0 termination
@@ -204,7 +208,7 @@ void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& 
 		vector<string> asm_line;
 		string s;
 		bool comment = false;
-		while ((ss >> s) && (!comment)) { //parsing one line of text
+		while ((ss >> s) && (!comment)) { // Parsing one line of text
 			if (s == ";") comment = true; // the rest of the line is a comment, just skip it
 			else {
 				// logg.write(s + " ");  // TODO prints every assemble-line, assign this to a DEBUG_level

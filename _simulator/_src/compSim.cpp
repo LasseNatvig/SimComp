@@ -1,18 +1,24 @@
 #include <iomanip>
 #include <string>
+#include <time.h>
 #include "compSim.h"
 #include "memory.h"
 #include "logger.h"
 #include "config.h"
 #include "utils.h"
 #include "isa.h"
-#include <time.h>
+
+
 using namespace std;
 
+
 ComputerSimulation::ComputerSimulation(string n) : name(n),
-	IM("Instruction Memory", INSTR ), DM("Data Memory", DATA) {
-	logg.open("SimCompLog.txt");
-	short i = 0; // set up instruction statics table
+	IM("Instruction Memory", INSTR ), DM("Data Memory", DATA) // Initialize IM and DM
+	{
+	logg.open("SimCompLog.txt"); // Start logging to file "SimCompLog.txt"
+
+	/* Set up instruction statics table */
+	short i = 0;
 	for (auto it = cpu.isaMap.begin(); it != cpu.isaMap.end(); it++)
 		instStatsTable[it->second] = i++;
 	reset();
@@ -20,27 +26,8 @@ ComputerSimulation::ComputerSimulation(string n) : name(n),
 	logg.timeStamp();
 }
 
-void ComputerSimulation::load(string name) {
-	sasmLoader.load(name, sasmProg, cpu, DM, IM, logg);
-}
-
-void ComputerSimulation::reset() {
-	instructionsSimulated = 0;
-	singleStepMode = false;
-	dumpMode = false;
-  running = true;
-}
-
-void ComputerSimulation::resetStatistics(const Isa& isa ) {
-	IM.resetStats();
-	DM.resetStats();
-	if (instStats != nullptr)
-		delete[] instStats;
-	instStats = new long long[isa.maxNoInstructions];
-	for (short i = 0; i < isa.maxNoInstructions; i++) instStats[i] = 0;
-}
-
 ComputerSimulation::~ComputerSimulation() {
+	/* Dump statistics and delete statistics table */
 	if (dumpMode) {
 		IM.dumpStats(cpu);
 		DM.dumpStats(cpu);
@@ -49,7 +36,31 @@ ComputerSimulation::~ComputerSimulation() {
 		delete[] instStats;
 }
 
+void ComputerSimulation::load(string name) {
+	sasmLoader.load(name, sasmProg, cpu, DM, IM, logg);
+}
+
+void ComputerSimulation::reset() {
+	/* Reset variables to default */
+	instructionsSimulated = 0;
+	singleStepMode = false;
+	dumpMode = false;
+  running = true;
+}
+
+void ComputerSimulation::resetStatistics(const Isa& isa ) {
+	/* Reset and cleanup of statistics */
+	IM.resetStats();
+	DM.resetStats();
+	if (instStats != nullptr)
+		delete[] instStats;
+	instStats = new long long[isa.maxNoInstructions];
+	for (short i = 0; i < isa.maxNoInstructions; i++) instStats[i] = 0;
+}
+
 void ComputerSimulation::singleStep(short opCode, word instr) {
+	/* Executes a single step (equal to executing one instruction) */
+
 	// Uses call-by-value to show that opCode and instr cannot be changed
 	word thisPC = cpu.PC;
 
@@ -66,7 +77,7 @@ void ComputerSimulation::singleStep(short opCode, word instr) {
 		switch (nextAction) {
 		case 'r': singleStepMode = false;
 			break;
-		case 's': ; // just continue
+		case 's': ; // Just continue
 			break;
 		case 't':
 			setRunning(false);
@@ -77,6 +88,7 @@ void ComputerSimulation::singleStep(short opCode, word instr) {
 }
 
 void ComputerSimulation::runProgram() {
+	/* Normal execution of program */
 	cpu.PC = 0;
 	do {
 		word instr = IM.read(cpu.PC);
@@ -92,6 +104,7 @@ void ComputerSimulation::runProgram() {
 }
 
 void ComputerSimulation::dumpStats() {
+	/* Dump current statistics */
 	IM.dumpStats(cpu);
 	DM.dumpStats(cpu);
 	cout << "Instruction statistics:" << endl;

@@ -31,10 +31,14 @@ void LogFile::write(string s) {
 
 void LogFile::timeStamp() {
 	time_t result = time(NULL);
-	//char str[26];
+
+	#ifdef _WIN64
+	char str[26];
+	ctime_s(str, sizeof str, &result);
+	#else
 	char* str;
-//	ctime_s(str, sizeof str, &result); Does not work with c++, only c11?
 	str = ctime(&result);
+	#endif
 	ofs << str;
 }
 

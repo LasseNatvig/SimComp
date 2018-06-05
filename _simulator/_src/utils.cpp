@@ -1,10 +1,10 @@
-// utils.cpp
 #include<iostream>
 #include<string>
 #include <vector>
 #include "time.h"
 #include "compSim.h"
 #include "config.h"
+
 using namespace std;
 
 vector<string> menuSim{
@@ -17,7 +17,7 @@ vector<string> menuSim{
 vector<string> menuStep{ "s - step, ", "r - run, ", "t - terminate execution:"};
 
 string textMenuS(string question, const vector<string>& menu) {
-	// variant of textMenu that returns the selected string
+	/* Variant of textMenu that returns the selected string */
 	cout << endl << question << endl;
 	for (unsigned int i = 0; i < menu.size(); i++) {
 		cout << i << ": " << menu[i] << endl;
@@ -34,7 +34,7 @@ string textMenuS(string question, const vector<string>& menu) {
 }
 
 char textMenuC(string question, vector<string>& menu, bool compact) {
-	// variant of textMenu that returns the first character in the string
+	/* Variant of textMenu that returns the first character in the string */
 	cout << question;
 	if (compact) cout << " "; else cout << endl;
 	for (unsigned int i = 0; i < menu.size(); i++) {
@@ -54,9 +54,9 @@ char textMenuC(string question, vector<string>& menu, bool compact) {
 
 char selectSimulationMode(ComputerSimulation& sim) {
 	char mode = ' ';
-	sim.reset(); 
+	sim.reset();
 	mode = textMenuC("\nSelect simulation mode by typing a single letter:", menuSim, false);
-	switch (mode) { 
+	switch (mode) {
 	case 'r': sim.setRunning(true);
 		break;
 	case 's': sim.setSingleStepMode(true);
@@ -85,7 +85,7 @@ clock_t readTime() { return clock(); }
 
 void reportMIPS(clock_t ticks, long long instructions) {
 	float seconds = ((float) ticks) / CLOCKS_PER_SEC;
-	cout.setf(ios::fixed); cout.setf(ios::showpoint); cout.precision(2); 
+	cout.setf(ios::fixed); cout.setf(ios::showpoint); cout.precision(2);
 	if (seconds > 0.0) {
 		cout << "Total of " << instructions
 			<< " instructions\n@ " << seconds << " seconds" << endl;
