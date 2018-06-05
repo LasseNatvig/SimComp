@@ -1,5 +1,4 @@
 #pragma once
-// utils.h
 #include <string>
 #include "compSim.h"
 
