@@ -1,3 +1,4 @@
+#include <sstream>
 #include <iostream>
 #include <string>
 #include <bitset>
@@ -34,25 +35,43 @@ string Isa::disAssembly(word instr) {
 }
 
 void Isa::printRegisterFile() {
-	/* Prints content of all registers */
-	for (int i = 0; i < noOfRegisters; i++)
-		cout << setw(4) << hex << R[i] << " ";
-	cout << dec;
+        cout << getRegisterFile();
+}
+
+string Isa::getRegisterFile() {
+    /* Returns register file as std::string */
+    stringstream stream;
+    for (int i = 0; i < noOfRegisters; i++)
+        stream <<  setw(4) <<  hex << R[i] << " ";
+    stream << dec;
+    return stream.str();
 }
 
 bool Isa::printInstr(word machineInstr) {
-		/* Prints mnemonic for instrucion */ // TODO Make use of the disAssembly function?
-		word opCode = machineInstr & 0b1111111000000000;
-		word theRest = machineInstr & 0b0000000111111111;
-		bitset<9> bits;
-		bits = theRest;
-		string mnemonic;
-		// TODO can be made faster by using a reverse map, but performance is not of interest here
-		for (auto it = isaMap.begin(); it != isaMap.end(); it++)
-			if (it->second == (opCode >> 9))
-				mnemonic = it->first;
-		cout << mnemonic << " " << bits;
+        /* Prints mnemonic for instrucion */
+        string mnemonic = getInstr(machineInstr);
+        cout << mnemonic;
 		return (mnemonic == "SET");
+}
+
+string Isa::getInstr(word machineInstr) {
+    /* Returns instruction mnemonic as std::string */// TODO Make use of the disAssembly function?
+    word opCode = machineInstr & 0b1111111000000000;
+    word theRest = machineInstr & 0b0000000111111111;
+    bitset<9> bits;
+    bits = theRest;
+    string mnemonic;
+    // TODO can be made faster by using a reverse map, but performance is not of interest here
+    for (auto it = isaMap.begin(); it != isaMap.end(); it++) {
+        if (it->second == (opCode >> 9)) {
+            mnemonic = it->first;
+            break;
+         }
+    }
+    stringstream ret;
+    ret << mnemonic << " " << bits;
+    return ret.str();
+
 }
 
 short Isa::getOpCode(const word& w) {
@@ -131,7 +150,7 @@ void Isa::doInstruction(const short& opCode, const word& instr, Memory& DM, Memo
 		printInstr(instr);
 		cout << "Error: unimplemented instruction found at PC: " << PC
 			<< " instr: " << hex << instr << "-- will exit";
-		system("Pause");
+	//	system("Pause");
 		exit(-1);
 	}
 }

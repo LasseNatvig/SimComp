@@ -43,7 +43,8 @@ void ComputerSimulation::load(string name) {
 void ComputerSimulation::reset() {
 	/* Reset variables to default */
 	instructionsSimulated = 0;
-	singleStepMode = false;
+    singleStepMode_console = false;
+    singleStepMode_gui = false;
 	dumpMode = false;
   running = true;
 }
@@ -60,12 +61,11 @@ void ComputerSimulation::resetStatistics(const Isa& isa ) {
 
 void ComputerSimulation::singleStep(short opCode, word instr) {
 	/* Executes a single step (equal to executing one instruction) */
-
 	// Uses call-by-value to show that opCode and instr cannot be changed
-	word thisPC = cpu.PC;
 
-	cpu.doInstruction(opCode, instr, DM, IM);
-	if (singleStepMode) {
+    word thisPC = cpu.PC;
+		cpu.doInstruction(opCode, instr, DM, IM);
+    if (singleStepMode_console) {
 		cout << "(" << instructionsSimulated << ") after ";
 		cpu.printInstr(instr);
 		cout << " @" << thisPC << ":";
@@ -75,15 +75,15 @@ void ComputerSimulation::singleStep(short opCode, word instr) {
 		char nextAction;
 		nextAction = selectSingleStepAction();
 		switch (nextAction) {
-		case 'r': singleStepMode = false;
+        case 'r': singleStepMode_console = false;
 			break;
 		case 's': ; // Just continue
 			break;
 		case 't':
 			setRunning(false);
-			singleStepMode = false;
+            singleStepMode_console = false;
 			break;
-		}
+        }
 	}
 }
 

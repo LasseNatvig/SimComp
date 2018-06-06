@@ -59,7 +59,7 @@ char selectSimulationMode(ComputerSimulation& sim) {
 	switch (mode) {
 	case 'r': sim.setRunning(true);
 		break;
-	case 's': sim.setSingleStepMode(true);
+    case 's': sim.setSingleStepModeConsole(true);
 		sim.setRunning(true);
 		break;
 	case 'd': sim.setDumpMode(true);

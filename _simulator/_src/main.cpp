@@ -32,8 +32,8 @@ int main(int argc, char *argv[]) {
 
 				t = readTime() - start;
 				cout << "*** Simulation ended" << endl;
-				if (!sim.singleStep())  // Time and MIPS rate does not make sense in singe step mode
-					reportMIPS(t, sim.instructionsSimulated);
+				if (!sim.singleStepConsole())  // Time and MIPS rate does not make sense in singe step mode
+						reportMIPS(t, sim.instructionsSimulated);
 				if (sim.dump()) sim.dumpStats();
 		}
 	}
