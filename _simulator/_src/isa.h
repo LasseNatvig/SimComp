@@ -39,6 +39,7 @@ public:
 	
 	/* Get functions */
     std::string getRegisterFile();
+    std::string getRegisterNo(int registerNum);
     std::string getInstr(word machineInstr);
 	short getOpCode(const word& w);
 	word getRegNo1(const word& instr);

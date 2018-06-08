@@ -1,2 +1,2 @@
 Logfile SimCompLog.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Wed Jun  6 13:56:38 2018
+ComputerSimulation AdHoc16_V03 started at time Fri Jun  8 14:41:12 2018

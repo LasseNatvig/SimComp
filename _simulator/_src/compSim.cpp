@@ -43,8 +43,8 @@ void ComputerSimulation::load(string name) {
 void ComputerSimulation::reset() {
 	/* Reset variables to default */
 	instructionsSimulated = 0;
-    singleStepMode_console = false;
-    singleStepMode_gui = false;
+  singleStepMode_console = false;
+  singleStepMode_gui = false;
 	dumpMode = false;
   running = true;
 }
@@ -64,7 +64,7 @@ void ComputerSimulation::singleStep(short opCode, word instr) {
 	// Uses call-by-value to show that opCode and instr cannot be changed
 
     word thisPC = cpu.PC;
-		cpu.doInstruction(opCode, instr, DM, IM);
+    cpu.doInstruction(opCode, instr, DM, IM);
     if (singleStepMode_console) {
 		cout << "(" << instructionsSimulated << ") after ";
 		cpu.printInstr(instr);

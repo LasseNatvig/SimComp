@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "welcomewidget.h"
 #include "runwidget.h"
 #include "globals.h"
 #include <QMainWindow>
@@ -23,7 +22,6 @@ private:
     QIcon* appIcon;
 
     // Child widgets
-    welcomeWidget* welcomeW;
     runWidget* runW;
 
     // State variables

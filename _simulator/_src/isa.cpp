@@ -40,9 +40,15 @@ void Isa::printRegisterFile() {
 
 string Isa::getRegisterFile() {
     /* Returns register file as std::string */
-    stringstream stream;
+    string regFile = "";
     for (int i = 0; i < noOfRegisters; i++)
-        stream <<  setw(4) <<  hex << R[i] << " ";
+        regFile += getRegisterNo(i) + " ";
+    return regFile;
+}
+
+string Isa::getRegisterNo(int registerNum) {
+    stringstream stream;
+    stream <<  setw(4) <<  hex << R[registerNum] << " ";
     stream << dec;
     return stream.str();
 }
@@ -150,7 +156,7 @@ void Isa::doInstruction(const short& opCode, const word& instr, Memory& DM, Memo
 		printInstr(instr);
 		cout << "Error: unimplemented instruction found at PC: " << PC
 			<< " instr: " << hex << instr << "-- will exit";
-	//	system("Pause");
+        system("Pause");
 		exit(-1);
 	}
 }

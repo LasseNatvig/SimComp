@@ -27,12 +27,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        welcomewidget.cpp \
         runwidget.cpp
 
 HEADERS += \
         mainwindow.h \
-        welcomewidget.h \
         globals.h \
         runwidget.h
 
