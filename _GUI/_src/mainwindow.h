@@ -6,8 +6,6 @@
 #include <QMainWindow>
 #include <QIcon>
 
-#define STYLESHEET  0
-
 
 class MainWindow : public QMainWindow
 {
@@ -24,16 +22,7 @@ private:
     // Child widgets
     runWidget* runW;
 
-    // State variables
-    globals::windowState currentState;
-    globals::windowState lastState;
-
-    // State functions
-    void exitState();
-
 public slots:
-    void changeState(globals::windowState nextState);
-    void toRunState(QString filename);
 };
 
 #endif // MAINWINDOW_H

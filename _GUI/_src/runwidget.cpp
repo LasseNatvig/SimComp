@@ -1,14 +1,13 @@
 #include "runwidget.h"
 
-#include <ctime>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QHeaderView>
-#include <QGroupBox>
 #include <QPixmap>
 #include <QFileDialog>
 
@@ -36,7 +35,6 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     QVBoxLayout* dropdownMenuLayout = new QVBoxLayout;
     dropdownMenu->addItem("Run");
     dropdownMenu->addItem("Singel step");
-    dropdownMenu->addItem("Run and dump");
     dropdownMenuLayout->addWidget(select_mode_lbl, 0, Qt::AlignCenter);
     dropdownMenuLayout->addWidget(dropdownMenu);
     dropdownMenuBox->setLayout(dropdownMenuLayout);
@@ -47,6 +45,9 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     description_txt.append("(Pressing \"End\" will stop the simulation and reset PC)");
     description_lbl->setText(description_txt);
     description_lbl->setStyleSheet("font-weight: bold;");
+
+    // Create list with statistics
+    stats_lst = new QListWidget;
 
     // Create icon as QPixmap in a QLabel
     icon_img = new QLabel;
@@ -60,6 +61,7 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
         tableHeader << QString("R") + QString::number(i);
     tableHeader << "next PC";
     table->setColumnCount(12);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
     table->setHorizontalHeaderLabels(tableHeader);
     table->verticalHeader()->setVisible(false);
 
@@ -75,8 +77,8 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
 
     // Create sidepanel
     QVBoxLayout* sidePanelLayout = new QVBoxLayout;
-  //  sidePanelLayout->addWidget(dropdownMenuBox, 0, Qt::AlignTop); // TOP
-    sidePanelLayout->addWidget(icon_img, 0, Qt::AlignCenter); // MIDDLE
+    sidePanelLayout->addWidget(icon_img, 0, Qt::AlignCenter); // TOP
+    sidePanelLayout->addWidget(stats_lst, 0, Qt::AlignCenter); // MIDDLE
     sidePanelLayout->addWidget(description_lbl, 0, Qt::AlignCenter); // MIDDLE
     sidePanelLayout->addWidget(buttonBox, 0, Qt::AlignBottom); // BOTTOM
 
@@ -87,18 +89,18 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(table, 2, 1);
     mainLayout->addLayout(sidePanelLayout, 2, 2);
 
+    // Set main layout of runWidget
     setLayout(mainLayout);
 
     // Make connections
+    connect(start_btn, SIGNAL(clicked()), this, SLOT(startSim())); // start_btn -> startSim()
+    connect(end_btn, SIGNAL(clicked()), this, SLOT(endSim())); // end_btn -> endSim()
+    connect(dropdownMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(setButtonText(int))); // Change in dropdown menu -> change start_btm
+    connect(open_btn, SIGNAL(clicked()), this, SLOT(openFile())); // open_btn -> openFile()
 
-    connect(start_btn, SIGNAL(clicked()), this, SLOT(startSim)); // start_btn -> startSim()
-    connect(end_btn, SIGNAL(clicked()), this, SLOT(endSim())); // quit_btn -> quitSim()
-    connect(dropdownMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(setButtonText(int)));
-    connect(open_btn, SIGNAL(clicked()), this, SLOT(openFile()));
-    // Set min size of this window
-    this->setMinimumSize(QSize(800,400));
+    // Set minimum size of this window
+    this->setMinimumSize(QSize(MIN_WIDTH, MIN_HEIGHT));
 }
-
 
 void runWidget::startSim() {
     /* startSim() starts the simulation with the selected mode from the dropdown menu */
@@ -111,33 +113,19 @@ void runWidget::startSim() {
     // Decide which mode to start simulator in
     switch (dropdownMenu->currentIndex()) {
     case 0: // Run program
-        start_btn->setText("Start");
         start = readTime();
         simulator->setRunning(true);
         simulator->runProgram(); // Run program
+        appendStats(start); // Append stats
         break;
     case 1: // Singel step program
-        start_btn->setText("Step");
+        stats_lst->clear();
         start = readTime();
         simulator->setSingleStepModeGUI(true);
         simulator->setRunning(true);
         nextStep();
         break;
-    case 2: // Run and dump statistics
-        start_btn->setText("Start");
-        start = readTime();
-        simulator->setDumpMode(true);
-        simulator->setRunning(true);
-        simulator->runProgram(); // Run program
-        break;
     }
-
-    double mips = this->getMIPS(readTime()-start);
-    if (simulator->dump()) simulator->resetStatistics(simulator->cpu); // From core code (Not sure why this is done here)
-
-
-    if (!simulator->singleStepGUI()) std::cout << mips; // Present MIPS nicely
-    if (simulator->dump()) std::cout <<"Stats"; // Show statictics in a nice way
 }
 
 double runWidget::getMIPS(clock_t ticks) {
@@ -152,9 +140,6 @@ void runWidget::setButtonText(int currentIndex) {
         break;
     case 1:
         start_btn->setText("Step");
-        break;
-    case 2:
-        start_btn->setText("Run");
         break;
     }
 }
@@ -204,6 +189,7 @@ void runWidget::nextStep() {
 
 void runWidget::endSim() {
     simulator->setRunning(false);
+    simulator->resetStatistics(simulator->cpu);
     simulator->cpu.PC = 0;
 }
 
@@ -211,6 +197,27 @@ void runWidget::openFile() {
     // Starts a file dialog which lets the user choose a assembler program to run
     filename = QFileDialog::getOpenFileName(this, tr("Open file"), "/",tr("Assembler program (*.sasm)"));
     program_lbl->setText("Program: " + filename);
+}
+
+void runWidget::appendStats(clock_t start) {
+    /* Appends statistics from current simulation */
+
+    stats_lst->clear(); // Clear all current stats
+
+    // Create vector with stats
+    std::vector<std::string> stats_vec;
+    std::stringstream  ss;
+    ss << getMIPS(readTime()-start);
+    stats_vec.push_back("MIPS: " + ss.str());
+    ss.str(std::string());
+    simulator->IM.getStats(simulator->cpu, stats_vec);
+    simulator->DM.getStats(simulator->cpu, stats_vec);
+    simulator->resetStatistics(simulator->cpu);
+
+    // Add stats to stats_lst
+    for (auto &item : stats_vec) {
+        stats_lst->addItem(QString::fromStdString(item));
+    }
 }
 
 void showChange(QTableWidget* table, int rowIndex, int from, int to) {

@@ -4,6 +4,7 @@
 #include "../../_Simulator/_src/logger.h"
 #include "../../_Simulator/_src/utils.h"
 #include "../../_Simulator/_src/compSim.h"
+#include "globals.h"
 #include <string>
 #include <QWidget>
 #include <QString>
@@ -12,6 +13,7 @@
 #include <QPushButton>
 #include <QTableWidget>
 #include <QGroupBox>
+#include <QListWidget>
 
 void showChange(QTableWidget* table, int rowIndex, int from, int to);
 
@@ -29,7 +31,7 @@ private:
     std::string simName = "AdHoc16_V03";
     double getMIPS(clock_t ticks);
 
-    QLabel* filename_lbl;
+
     /* CHOOSE PROGRAM */
     QGroupBox* programBox;
     QLabel* program_lbl;
@@ -43,6 +45,8 @@ private:
     // - MIDDLE
     QLabel* description_lbl;
     QLabel* icon_img;
+    QListWidget* stats_lst;
+    void appendStats(clock_t ticks); // For appending statistics to stats_lst
     // - BOTTOM
     QGroupBox* buttonBox;
     QPushButton* start_btn;

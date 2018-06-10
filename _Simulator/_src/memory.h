@@ -26,6 +26,7 @@ public:
 	/* Core functionality */
 	void dumpStats(Isa& cpu) const; // Dump memory statistics
 	void resetStats(); // Reset statistics (Sets varibles to default values)
+    void getStats(Isa& cpu, std::vector<std::string> &vec) const;
 	void write(word addr, word w); // Write to memory
 	word read(const word& addr); // Read momory at adress "addr"
 
