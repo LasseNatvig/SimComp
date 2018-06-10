@@ -12,7 +12,8 @@ private:
 	std::string name;
 	bool running = false;
 	bool dumpMode = false;
-	bool singleStepMode = false;
+    bool singleStepMode_console = false;
+    bool singleStepMode_gui = false;
 
 public:
 	LogFile logg;
@@ -43,6 +44,8 @@ public:
 	bool isRunning() { return running; }
 	bool dump() { return dumpMode; }
 	void setDumpMode(bool mode) { dumpMode = mode; }
-	bool singleStep() { return singleStepMode; }
-	void setSingleStepMode(bool mode) { singleStepMode = mode; }
+    bool singleStepConsole() { return singleStepMode_console; }
+    void setSingleStepModeConsole(bool mode) { singleStepMode_console = mode; }
+    bool singleStepGUI() { return singleStepMode_console; }
+    void setSingleStepModeGUI(bool mode) { singleStepMode_gui = mode; }
 };

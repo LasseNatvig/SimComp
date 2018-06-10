@@ -1,6 +1,0 @@
-Logfile SimCompLog.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Tue Jun  5 09:15:05 2018
-Constant named innerL given as 4000
-Constant named outerL given as 10000
-Label _outer was placed in Instruction Memory at address: 3
-Label _inner was placed in Instruction Memory at address: 6

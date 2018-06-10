@@ -6,9 +6,9 @@ run time systems and simulation. This repository is intended to accommodate the 
 
 ## Getting Started
 
-First, you should start off by cloning this repository, or at least the \_simulator part. Then you´ll need to compile the code. Example using clang-900.0.39.2:
+First, you should start off by cloning this repository, or at least the \_Simulator part. Then you´ll need to compile the code. Example using clang-900.0.39.2:
 ```
-$ clang++ -std=c++11 -o SimComp clang++ -std=c++11 main.cpp compSim.cpp config.cpp isa.cpp loader.cpp logger.cpp memory.cpp Program.cpp utils.cpp
+$ clang++ -std=c++11 -o SimComp main.cpp compSim.cpp config.cpp isa.cpp loader.cpp logger.cpp memory.cpp Program.cpp utils.cpp
 ```   
 Running this command will compile all the necessary source files to a executable named "SimComp".
 The generated binary will load all "\*.sasm" file from a directory which must be passed as an argument on execution.
