@@ -56,11 +56,7 @@ void ComputerSimulation::resetStatistics() {
 }
 
 void ComputerSimulation::run() {
-	/*
-	- Normal execution of program if currentMode == RUNNING or NOTRUNNING
-	- Executes one step if currentMode == SINGLESTEP,
-	 */
-	cpu->PC = 0;
+	/* Normal execution of program if currentMode == RUNNING or NOTRUNNING */
 	do {
 		word instr = IM.read(cpu->PC);
 		short opCode = cpu->getOpCode(instr);
@@ -72,4 +68,16 @@ void ComputerSimulation::run() {
 			cpu->doInstruction(opCode, instr, DM, IM);
 		}
 	} while (isRunning());
+  cpu->PC = 0;
+}
+
+void ComputerSimulation::step() {
+  word instr = IM.read(cpu->PC);
+  short opCode = cpu->getOpCode(instr);
+  instructionsSimulated++;
+  if (opCode == HLT) {
+    setMode(NOTRUNNING);
+    cpu->PC = 0;
+  } else
+    cpu->doInstruction(opCode, instr, DM, IM);
 }

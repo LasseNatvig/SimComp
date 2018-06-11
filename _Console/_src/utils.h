@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "compSim.h"
+#include "../../_Simulator/_src/compSim.h"
 
 std::string textMenuS(std::string question, const std::vector<std::string>& menu);
 char textMenuC(std::string question, std::vector<std::string>& menu, bool compact);

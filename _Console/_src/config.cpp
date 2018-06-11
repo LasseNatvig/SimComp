@@ -7,9 +7,7 @@
 	#include <dirent.h>
 #endif
 
-
 using namespace std;
-
 
 #ifdef _WIN64 // If Windows OS (Uses Windows.h)
 vector<string> getSASMfiles(string folder) {
