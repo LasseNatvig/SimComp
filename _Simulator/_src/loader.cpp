@@ -10,17 +10,21 @@
 #include "memory.h"
 #include "loader.h"
 #include "isa.h"
-#include "config.h"
 #include "program.h"
 
 using namespace std;
 
-void Loader::errorLoad(string msg) {
-	cerr << "Loader error " + msg + " will stop" << endl; // Why write to cerr and not log?
-	exit(-1);
+Loader::Loader(LogFile* logFile) : logFile(logFile) {
+	lines = 0;
 }
 
-word Loader::getOperand(string opStr) {
+void Loader::reportError(string errorMsg) const {
+	logFile->write("LOADER ERROR: " + errorMsg);
+	logFile->timeStamp();
+	logFile->write("\n");
+}
+
+word Loader::getOperand(string opStr) const {
 	/* Returns operand word */
 	if (opStr[0] == 'R') {
 		word op = stoi(opStr.substr(1, opStr.size() - 1));
@@ -28,20 +32,21 @@ word Loader::getOperand(string opStr) {
 		return op;
 	}
 	else {
-		errorLoad("Illegal Register-operand: " + opStr + " at line " + to_string(lines));
-		system("Pause"); // debug (WINDOWS SPECIFIC CODE?)
+		reportError("Illegal Register-operand: " + opStr + " at line " + to_string(lines));
+		exit(-1);
+		system("Pause"); // debug (WINDOWS SPECIFIC CODE? YES)
 		return (0x00); // to avoid warning
 	}
 }
 
-word Loader::getAddress(string opStr) {
+word Loader::getAddress(string opStr) const {
 	/* Return adress as word */
 	word addr = stoi(opStr);
 	assert((addr >= 0) && (addr < 64));
 	return addr;
 }
 
-word Loader::get3bitsConstant(string opStr) {
+word Loader::get3bitsConstant(string opStr) const {
 	/*  */
 	word op = stoi(opStr);
 	assert((op >= 0) && (op < 8));
@@ -59,8 +64,9 @@ void Loader::parseAlloc(Program& prog, string& name, string& type, string& size,
 			sizeValue = stoi(size); // stoi throws an exception invalid_argument if conversion cannot be done
 		}
 		catch (const invalid_argument& ia) {
-			errorLoad(" at line " + to_string(lines) + ": alloc looking for size <"
+			reportError(" at line " + to_string(lines) + ": alloc looking for size <"
 				+ size + "> not found " + ia.what());
+			exit(-1);
 		}
 	}
 	if (type == "int") {
@@ -72,19 +78,19 @@ void Loader::parseAlloc(Program& prog, string& name, string& type, string& size,
 		}
 	}
 	else {
-		cout << "Assembler error at line " << lines
-			<< ": alloc with type <" + type + "> not implemented. Skipped!" << endl;
+		cerr << "Assembler error at line " << lines; // HANDLE ERROR
+			//<< ": alloc with type <" + type + "> not implemented. Skipped!" << endl;
 	}  // End of alloc
 }
 
-void Loader::parseConst(Program& prog, string& name, string& type, string& value, Memory& DM, LogFile& logg) {
+void Loader::parseConst(Program& prog, string& name, string& type, string& value, Memory& DM) {
 	if (type == "int") {
-		prog.intConstants[name] = stoi(value); // Constants are "compile-time" (i.e. handled by the kloader), but not stored in memory
-		logg.write("Constant named " + name + " given as " + to_string(stoi(value)) + "\n");
+		prog.intConstants[name] = stoi(value); // Constants are "compile-time" (i.e. handled by the loader), but not stored in memory
+		logFile->write("Constant named " + name + " given as " + to_string(stoi(value)) + "\n");
 	}
 	else if (type == "str") { // Constant string must be stored in memory
 		// Will read and store the string in a "compile-time" table, and place string in allocated memory
-		cout << "**** const string under implementation \n";
+		//cout << "**** const string under implementation \n";
 		prog.strConstants[name] = value;
 		// Alloc as many bytes as the length of the string + 1 for \0 termination
 		word adr = DM.getNextFreeLocation();
@@ -95,13 +101,13 @@ void Loader::parseConst(Program& prog, string& name, string& type, string& value
 		}
 		DM.write(DM.getNextFreeLocation(), '\0');
 	}
-	else errorLoad(" at line " + to_string(lines) + ": const of type <" +
-		type + "> not implemented");
+	else { reportError(" at line " + to_string(lines) + ": const of type <" +
+		type + "> not implemented"); exit(-1); }
 }
 
-void Loader::generateInstruction(Program& prog, string& label, string& instr, string operand[], Isa& cpu, Memory& IM, LogFile& logg) {
+void Loader::generateInstruction(Program& prog, string& label, string& instr, string operand[], Isa& cpu, Memory& IM) {
 	if (cpu.isaMap.find(instr) == cpu.isaMap.end())
-		errorLoad("INSTRUCTION not found at line " + to_string(lines));
+		{ reportError("INSTRUCTION not found at line " + to_string(lines)); exit(-1); }
 	word machineInstruction = 0;
 	word opCode = cpu.isaMap[instr];
 	machineInstruction = machineInstruction | (opCode << 9);
@@ -155,7 +161,8 @@ void Loader::generateInstruction(Program& prog, string& label, string& instr, st
 				machineInstruction = machineInstruction | get3bitsConstant(operand[2]);
 			break;
 		default:
-			errorLoad("Illegal instruction at line " + to_string(lines));
+			reportError("Illegal instruction at line " + to_string(lines));
+			exit(-1);
 			break;
 	}
 
@@ -171,8 +178,8 @@ void Loader::generateInstruction(Program& prog, string& label, string& instr, st
 				address = IM.getNextFreeLocation();
 				IM.write(address, num);
 			}
-			else errorLoad("SET instruction use name: " + operand[1] +
-				" not found in symbolTable or intConstants.");
+			else { reportError("SET instruction use name: " + operand[1] +
+				" not found in symbolTable or intConstants."); exit(-1); }
 		}
 		else { // it is in symbol_table
 			word namedAddress = prog.symbolTable[operand[1]];
@@ -182,22 +189,24 @@ void Loader::generateInstruction(Program& prog, string& label, string& instr, st
 	}
 	if (label != "") {
 		if (opCode == SET) address--; // SET instruction takes two words, label should point to first
-		logg.write("Label " + label + " was placed in " + IM.getName() + " at address: " + to_string(address) + "\n");
+		logFile->write("Label " + label + " was placed in " + IM.getName() + " at address: " + to_string(address) + "\n");
 		prog.symbolTable[label] = address; // map name of label to address
 	}
 }
 
-bool Loader::isLabel(string& s) {
+bool Loader::isLabel(string& s) const {
 	return (s.substr(0, 1) == "_");
 }
 
-void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& IM, LogFile& logg) {
+void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& IM) {
 	ifstream asmFile;
 	asmFile.open(fileName);
-	if (asmFile.fail())
-		errorLoad("Error opening file: " + fileName);
+	if (asmFile.fail()) {
+		reportError("Error opening file: " + fileName);
+		exit(-1);
+	}
 	else
-		cout << "Assembler file:\n" << fileName << "\n...successfully loaded" << endl;
+		logFile->write("Assembler file:\n" + fileName + "\n...successfully loaded\n");
 
 	string assemblerLine;
 	while (!asmFile.eof()) {
@@ -224,14 +233,18 @@ void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& 
 				label = asm_line[0];
 			}
 			if (asm_line[1] == "const") {
-				if (asm_line.size() < 4)
-					errorLoad("Error, assembler line with const requires 4 tokens");
+				if (asm_line.size() < 4) {
+					reportError("Error, assembler line with const requires 4 tokens");
+					exit(-1);
+				}
 				else
-					parseConst(prog, asm_line[0], asm_line[2], asm_line[3], DM, logg);
+					parseConst(prog, asm_line[0], asm_line[2], asm_line[3], DM);
 			}
 			else if (asm_line[1] == "alloc"){
-				if (asm_line.size() < 4)
-					errorLoad("Error, assembler line with alloc requires 4 tokens");
+				if (asm_line.size() < 4) {
+					reportError("Error, assembler line with alloc requires 4 tokens");
+					exit(-1);
+				}
 				else
 					parseAlloc(prog, asm_line[0], asm_line[2], asm_line[3], DM);
 			}
@@ -244,19 +257,18 @@ void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& 
 				for (int j = asm_line.size(); j < 3; j++)
 					operand[j] = "";
 				// Not const or alloc, knows if label, knows mnemonc and ops
-				generateInstruction(prog, label, asm_line[mnemonicIndex], operand, cpu, IM, logg);
+				generateInstruction(prog, label, asm_line[mnemonicIndex], operand, cpu, IM);
 			}
 		}
 		else if (asm_line.size() == 1) {
 			if (asm_line[0] == "HLT")
-				generateInstruction(prog, label, asm_line[0], operand, cpu, IM, logg);
-			else
-				errorLoad("Error, assembler line with 1 token invalid, only HLT accepted");
+				generateInstruction(prog, label, asm_line[0], operand, cpu, IM);
+			else {
+				reportError("Error, assembler line with 1 token invalid, only HLT accepted");
+				exit(-1);
+			}
 		}
 		// zero token is OK, means line with only comments.
 	}
-}
-
-Loader::Loader() {
-	lines = 0;
+	prog.valid = true;
 }

@@ -2,7 +2,6 @@
 #define RUNWIDGET_H
 
 #include "../../_Simulator/_src/logger.h"
-#include "../../_Simulator/_src/utils.h"
 #include "../../_Simulator/_src/compSim.h"
 #include "globals.h"
 #include <string>
