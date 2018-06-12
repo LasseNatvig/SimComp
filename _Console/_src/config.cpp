@@ -1,7 +1,7 @@
 #include "config.h"
 
 // Include the correct filesystem library
-#if defined(_WIN64)
+#if defined(_WIN32)
 	#include <Windows.h>
 #else
 	#include <dirent.h>
@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#ifdef _WIN64 // If Windows OS (Uses Windows.h)
+#ifdef _WIN32 // If Windows OS (Uses Windows.h)
 vector<string> getSASMfiles(string folder) {
 	// code found here:
 	// https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c?rq=1
