@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <time.h>
 #include "../../_Simulator/_src/compSim.h"
 
 std::string textMenuS(std::string question, const std::vector<std::string>& menu);
