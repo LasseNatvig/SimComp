@@ -50,6 +50,7 @@ ui_*.h
 *.jsc
 Makefile*
 *build-*
+makefile
 
 # Qt unit tests
 target_wrapper.*
