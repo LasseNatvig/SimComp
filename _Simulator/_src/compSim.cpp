@@ -1,115 +1,86 @@
-#include <iomanip>
-#include <string>
 #include <time.h>
 #include "compSim.h"
-#include "memory.h"
-#include "logger.h"
-#include "config.h"
-#include "utils.h"
-#include "isa.h"
-
 
 using namespace std;
 
-
-ComputerSimulation::ComputerSimulation(string n) : name(n),
-	IM("Instruction Memory", INSTR ), DM("Data Memory", DATA) // Initialize IM and DM
+ComputerSimulation::ComputerSimulation(string name, string loggerFilename) :
+ 	name(name), loggerFilename(loggerFilename),
+	IM("Instruction Memory", INSTR, &logg), DM("Data Memory", DATA, &logg) // Initialize IM and DM
 	{
-	logg.open("SimCompLog.txt"); // Start logging to file "SimCompLog.txt"
+	logg.open(loggerFilename); // Start logging
 
-	/* Set up instruction statics table */
+  cpu = new Isa(&logg);
+  sasmLoader = new Loader(&logg);
+
+	// Set up instruction statics table
 	short i = 0;
-	for (auto it = cpu.isaMap.begin(); it != cpu.isaMap.end(); it++)
+	for (auto it = cpu->isaMap.begin(); it != cpu->isaMap.end(); it++)
 		instStatsTable[it->second] = i++;
 	reset();
 	logg.write("ComputerSimulation " + name + " started at time ");
 	logg.timeStamp();
 }
 
+ComputerSimulation::ComputerSimulation(string name) : ComputerSimulation(name, "logg.txt") {}
+
 ComputerSimulation::~ComputerSimulation() {
-	/* Dump statistics and delete statistics table */
-	if (dumpMode) {
-		IM.dumpStats(cpu);
-		DM.dumpStats(cpu);
-	}
+	/* Delete statistics table */
 	if (instStats != nullptr)
 		delete[] instStats;
+  if (cpu != nullptr)
+    delete cpu;
+  if (sasmLoader != nullptr)
+    delete sasmLoader;
+
 }
 
 void ComputerSimulation::load(string name) {
-	sasmLoader.load(name, sasmProg, cpu, DM, IM, logg);
+	sasmLoader->load(name, sasmProg, *cpu, DM, IM);
 }
 
 void ComputerSimulation::reset() {
 	/* Reset variables to default */
 	instructionsSimulated = 0;
-  singleStepMode_console = false;
-  singleStepMode_gui = false;
-	dumpMode = false;
-  running = true;
+  currentMode = NOTRUNNING;
+  resetStatistics();
 }
 
-void ComputerSimulation::resetStatistics(const Isa& isa ) {
+void ComputerSimulation::resetStatistics() {
 	/* Reset and cleanup of statistics */
 	IM.resetStats();
 	DM.resetStats();
 	if (instStats != nullptr)
 		delete[] instStats;
-	instStats = new long long[isa.maxNoInstructions];
-	for (short i = 0; i < isa.maxNoInstructions; i++) instStats[i] = 0;
+	instStats = new long long[cpu->getMaxNoInstructions()];
+	for (short i = 0; i < cpu->getMaxNoInstructions(); i++) instStats[i] = 0;
 }
 
-void ComputerSimulation::singleStep(short opCode, word instr) {
-	/* Executes a single step (equal to executing one instruction) */
-	// Uses call-by-value to show that opCode and instr cannot be changed
-
-    word thisPC = cpu.PC;
-    cpu.doInstruction(opCode, instr, DM, IM);
-    if (singleStepMode_console) {
-		cout << "(" << instructionsSimulated << ") after ";
-		cpu.printInstr(instr);
-		cout << " @" << thisPC << ":";
-		cpu.printRegisterFile();
-		cout << "next PC: " << cpu.PC << endl;
-
-		char nextAction;
-		nextAction = selectSingleStepAction();
-		switch (nextAction) {
-        case 'r': singleStepMode_console = false;
-			break;
-		case 's': ; // Just continue
-			break;
-		case 't':
-			setRunning(false);
-            singleStepMode_console = false;
-			break;
-        }
-	}
-}
-
-void ComputerSimulation::runProgram() {
+void ComputerSimulation::run() {
 	/* Normal execution of program */
-	cpu.PC = 0;
 	do {
-		word instr = IM.read(cpu.PC);
-		short opCode = cpu.getOpCode(instr);
-		if (dumpMode) instStats[instStatsTable[opCode]]++;
+		word instr = IM.read(cpu->PC);
+		short opCode = cpu->getOpCode(instr);
+    instStats[instStatsTable[opCode]]++;
 		instructionsSimulated++;
-
-		if (opCode == HLT) {
-			setRunning(false);
+		if (opCode == HLT)
+			setMode(NOTRUNNING);
+		else {
+			currentMode = RUNNING;
+			cpu->doInstruction(opCode, instr, DM, IM);
 		}
-		else singleStep(opCode, instr);
 	} while (isRunning());
+  cpu->PC = 0;
 }
 
-void ComputerSimulation::dumpStats() {
-	/* Dump current statistics */
-	IM.dumpStats(cpu);
-	DM.dumpStats(cpu);
-	cout << "Instruction statistics:" << endl;
-	for (auto it = instStatsTable.begin(); it != instStatsTable.end(); ++it) {
-		cout << "Inst w/opcode: " << hex << it->first << " "
-			<< dec << instStats[it->second] << endl;
-	}
+bool ComputerSimulation::step() {
+  word instr = IM.read(cpu->PC);
+  short opCode = cpu->getOpCode(instr);
+  instructionsSimulated++;
+  if (opCode == HLT) {
+    setMode(NOTRUNNING);
+    cpu->PC = 0;
+    return false;
+  }
+  cpu->doInstruction(opCode, instr, DM, IM);
+  return true;
 }

@@ -1,0 +1,5 @@
+Logfile logg.txt opened.
+ComputerSimulation hella started at time Mon Jun 11 13:15:03 2018
+Assembler file:
+../_sasm/test0.sasm
+...successfully loaded

@@ -1,6 +1,7 @@
 #pragma once
-#include<map>
+#include <map>
 #include "memory.h"
+#include "logger.h"
 
 typedef uint16_t word;
 
@@ -21,30 +22,31 @@ class Memory;  // Forward declaration
 #define SUB		0b0000101
 
 class Isa {
-public:
+private:
 	const int maxNoInstructions = 20;
-	std::map<std::string, word> isaMap; // Maps instruction string with binary opcode
 	const short noOfRegisters = 8;
 	word R[8]; // Value of registers is unknown when computer boots, use LDI 0 to set a register to zero
+	LogFile* logFile;
+
+public:
 	word PC = 0; // Always start at address zero
+	std::map<std::string, word> isaMap; // Maps instruction string with binary opcode
 
 	/* Constructor(s) */
-	Isa();
+	Isa(LogFile* logFile);
 
 	/* Core functionality */
-	std::string disAssembly(word instr); // Returns string representation of instruction if found
-	void printRegisterFile(); // Prints content of all registers
-	bool printInstr(word machineInstr); // NOTE special handling of SET instruction
-	void doInstruction(const short& opCode, const word& instr, Memory& DM, Memory& IM);
-	
+	void doInstruction(const short& opCode, const word& instr, Memory& DM, Memory& IM); // Excutes instruction
+	void reportError(std::string errorMsg) const;
+
 	/* Get functions */
-    std::string getRegisterFile();
-    std::string getRegisterNo(int registerNum);
-    std::string getInstr(word machineInstr);
-	short getOpCode(const word& w);
-	word getRegNo1(const word& instr);
-	word getRegNo2(const word& instr);
-	word getRegNo3(const word& instr);
-	word getImmediate(const word& instr);
-	word getAdressOffset(const word& instr);
+  std::string getRegisterFile() const;
+  std::string getRegister(int registerNum) const;
+  std::string disAssembly(word machineInstr) const;
+	word getOpCode(const word& w) const;
+	word getRegister(const word& instr, unsigned int regNo) const;
+	word getImmediate(const word& instr) const;
+	word getAdressOffset(const word& instr) const;
+	int getMaxNoInstructions() const { return maxNoInstructions; }
+	int getNumberOfRegisters() const { return noOfRegisters; }
 };

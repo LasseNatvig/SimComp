@@ -6,46 +6,60 @@
 #include "program.h"
 #include "loader.h"
 
+/* Possible modes to run computer simulation in: */
+enum Mode {
+	RUNNING,
+	SINGLESTEP,
+	NOTRUNNING
+};
 
 class ComputerSimulation {
-private:
-	std::string name;
-	bool running = false;
-	bool dumpMode = false;
-    bool singleStepMode_console = false;
-    bool singleStepMode_gui = false;
-
 public:
-	LogFile logg;
-	Memory IM; // Instruction memory
-	Memory DM; // Data memory
-
-	Loader sasmLoader; // Loader responsible for parsing and loading sasm-file to program (asm is C++ keyword, cannot be used)
-	Program sasmProg; // SimComp ASM (sasm) program
-	Isa cpu; // Instance of ISA, responsible for execution of instructions
-	long long instructionsSimulated = 0; // Instructions simulated count
-	std::map<word, short> instStatsTable; // Statistics table
-	long long* instStats = nullptr;  // Size given by Isa member constant
+	Isa* cpu; // Instance of ISA, responsible for execution of instructions
 
 	/* Destructor and constructor(s) */
 	~ComputerSimulation();
+	ComputerSimulation(std::string name, std::string loggerFilename);
 	ComputerSimulation(std::string name);
 
 	/* Core functionality */
 	void load(std::string name); // Loads(and parses) sasm-file named "name" to sasmProg
 	void reset(); // Reset varibles (sets simulator parameters to default values)
-	void singleStep(short opCode, word instr); // Executes single instruction of program
-	void runProgram(); // Normal execution of program
-	void dumpStats(); // Dump statistics
-	void resetStatistics(const Isa& isa); // Reset statistics
+	void run(); 	// Normal execution of program if currentMode == RUNNING or NOTRUNNING
+	bool step(); // Executes one step, returns true if instruction != HLT
+	void writeToLogg(std::string message) { logg.write(message); } // Write to logg
+	void resetStatistics(); // Reset statistics
 
-	/* Get/set functions */
-	void setRunning(bool mode) { running = mode; }
-	bool isRunning() { return running; }
-	bool dump() { return dumpMode; }
-	void setDumpMode(bool mode) { dumpMode = mode; }
-    bool singleStepConsole() { return singleStepMode_console; }
-    void setSingleStepModeConsole(bool mode) { singleStepMode_console = mode; }
-    bool singleStepGUI() { return singleStepMode_console; }
-    void setSingleStepModeGUI(bool mode) { singleStepMode_gui = mode; }
+	/* Get functions */
+	word getPC() { return cpu->PC; }
+	long long getInstructionsSimulated() const { return instructionsSimulated; }
+	bool isRunning() const { return (!(currentMode == NOTRUNNING)); }
+	bool singleStep() const { return (currentMode == SINGLESTEP); }
+	bool program() const { return sasmProg.valid; } // Checks if program is succesfully loaded
+	word getInstr() { return IM.read(cpu->PC); }
+	Mode getMode() const { return currentMode; }
+	std::string getName() const { return name; }
+
+	/* Set functions */
+
+	void setPC(word PC) { cpu->PC = PC; }
+
+	/* Core variables */
+	long long* instStats = nullptr;  // Used to count occurences of instructions (Size given by Isa member constant)
+	std::map<word, short> instStatsTable; // Statistics table
+	Memory IM; // Instruction memory
+	Memory DM; // Data memory
+
+private:
+	std::string name; // Name of cumputer simulation
+	std::string loggerFilename; // Logg filename
+
+	/* Core variables */
+	LogFile logg; // Logger file
+	Loader* sasmLoader; // Loader responsible for parsing and loading sasm-file to program
+	Program sasmProg; // SimComp ASM (sasm) program
+	Mode currentMode = NOTRUNNING; // Current simulation mode
+	long long instructionsSimulated = 0; // Instructions simulated count
+	void setMode(Mode mode) { currentMode = mode; }
+
 };

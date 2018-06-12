@@ -20,7 +20,7 @@ bool LogFile::open(string name) {
 		return true;
 	}
 	else {
-		cout << "Error opening file";
+		cerr << "Error opening file";
 		return false;
 	}
 }

@@ -50,6 +50,7 @@ ui_*.h
 *.jsc
 Makefile*
 *build-*
+makefile
 
 # Qt unit tests
 target_wrapper.*
@@ -66,4 +67,18 @@ CMakeLists.txt.user*
 
 # Logger files
 SimCompLog.txt
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# MS-VS
+.vs/
 

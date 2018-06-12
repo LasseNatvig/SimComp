@@ -2,19 +2,26 @@
 # Simulating Computers
 
 Simulating Computers (SimComp) is a project created as an introduction to the fundamental concepts in the areas of computer architecture and organization, instruction sets, assembler programming,
-run time systems and simulation. This repository is intended to accommodate the learning material found [here](#). Most of the documentation is found in the learning material, although following the "Getting Started" underneath should get the simulator running.
+run time systems and simulation. This repository is intended to accommodate the learning material found [here](#). Most of the documentation is found in the learning material. Currently there exists two user interfaces for the simulator, guidelines for building these is found underneath.
 
-## Getting Started
+## Build
+Both of the UI applications has been built and tested with macOS version 10.12.6 and Windows 10.
 
-First, you should start off by cloning this repository, or at least the \_Simulator part. Then you´ll need to compile the code. Example using clang-900.0.39.2:
+### Console
+To build the console application you'll need to clone both the `_Console/` and `_Simulator/` directories. If you're using *macOS* or *Linux* we recommend that you use [CMake](https://cmake.org) to build the Console-ui. Grab it [here](https://cmake.org/download/) if you don't have it. If you're using *Windows* we recommend building with [Visual Studio](https://www.visualstudio.com).
+
+For *macOS* and *Linux* users all you need to do is run [CMake](https://cmake.org) from the `_Console/_src/` directory, followed by make.
 ```
-$ clang++ -std=c++11 -o SimComp main.cpp compSim.cpp config.cpp isa.cpp loader.cpp logger.cpp memory.cpp Program.cpp utils.cpp
+_Console/_src user$ cmake .
+_Console/_src user$ make
 ```   
-Running this command will compile all the necessary source files to a executable named "SimComp".
-The generated binary will load all "\*.sasm" file from a directory which must be passed as an argument on execution.
+This will build the source code to an executable named *SimComp*. Finally, to launch the application you'll need to pass the directory with the `*.sams` files as a parameter to the binary. Example using the assembler files included in `_Simulator/_sasm/`:
+```
+_Console/_src user$ ./SimComp ../../_Simulator/_sasm/
+```
 
-<!--These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. -->
-
+### GUI
+To build the GUI application you'll need to clone both the `_GUI/` and `_Simulator/` directories. The easiest way to build the... to be continued..
 ## Structure
 
 - `_Root/`
@@ -22,9 +29,9 @@ The generated binary will load all "\*.sasm" file from a directory which must be
     - `_asm/` Example assembler programs.
     - `_src/` C++ source code for simulator.
 
-### Prerequisites
+## Dependencies
 
-Nothing this far. QT soon.
+Nothing thus far. QT soon.
 
 ```
 Give examples

@@ -1,8 +1,8 @@
 #include<iostream>
 #include<string>
 #include <vector>
+#include "utils.h"
 #include "time.h"
-#include "compSim.h"
 #include "config.h"
 
 using namespace std;
@@ -56,19 +56,7 @@ char selectSimulationMode(ComputerSimulation& sim) {
 	char mode = ' ';
 	sim.reset();
 	mode = textMenuC("\nSelect simulation mode by typing a single letter:", menuSim, false);
-	switch (mode) {
-	case 'r': sim.setRunning(true);
-		break;
-    case 's': sim.setSingleStepModeConsole(true);
-		sim.setRunning(true);
-		break;
-	case 'd': sim.setDumpMode(true);
-		sim.setRunning(true);
-		break;
-	case 'q': sim.setRunning(false);
-		break;
-	}
-	if (sim.dump()) sim.resetStatistics(sim.cpu);
+	sim.resetStatistics();
 	return(mode);
 }
 

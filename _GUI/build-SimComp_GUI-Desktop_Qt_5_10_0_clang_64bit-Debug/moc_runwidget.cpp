@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_runWidget_t {
     QByteArrayData data[8];
-    char stringdata0[72];
+    char stringdata0[68];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,14 +34,14 @@ static const qt_meta_stringdata_runWidget_t qt_meta_stringdata_runWidget = {
 QT_MOC_LITERAL(0, 0, 9), // "runWidget"
 QT_MOC_LITERAL(1, 10, 8), // "startSim"
 QT_MOC_LITERAL(2, 19, 0), // ""
-QT_MOC_LITERAL(3, 20, 8), // "nextStep"
-QT_MOC_LITERAL(4, 29, 6), // "endSim"
-QT_MOC_LITERAL(5, 36, 13), // "setButtonText"
-QT_MOC_LITERAL(6, 50, 12), // "currentIndex"
-QT_MOC_LITERAL(7, 63, 8) // "openFile"
+QT_MOC_LITERAL(3, 20, 4), // "step"
+QT_MOC_LITERAL(4, 25, 6), // "endSim"
+QT_MOC_LITERAL(5, 32, 13), // "setButtonText"
+QT_MOC_LITERAL(6, 46, 12), // "currentIndex"
+QT_MOC_LITERAL(7, 59, 8) // "openFile"
 
     },
-    "runWidget\0startSim\0\0nextStep\0endSim\0"
+    "runWidget\0startSim\0\0step\0endSim\0"
     "setButtonText\0currentIndex\0openFile"
 };
 #undef QT_MOC_LITERAL
@@ -83,7 +83,7 @@ void runWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->startSim(); break;
-        case 1: _t->nextStep(); break;
+        case 1: _t->step(); break;
         case 2: _t->endSim(); break;
         case 3: _t->setButtonText((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 4: _t->openFile(); break;
