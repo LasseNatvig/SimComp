@@ -8,51 +8,53 @@ ConsoleUi::ConsoleUi(std::string directory) {
     sim->load(selectProgram(directory));
 }
 
-void ConsoleUi::start() {
-  char simMode = ' '; // Space is no mode
-  clock_t t;
-  while (simMode != 'q') {
-    simMode = selectSimulationMode(*sim);
-    if (sim->isRunning()) {
-        std::cout << "*** Starts simulation . . ." << std::endl;
-        clock_t start = readTime();
-        while (sim->isRunning()) {
-          switch (sim->getMode()) {
-            case RUNNING:
-              sim->run();
-              break;
-            case SINGLESTEP:
-              step();
-              break;
-          }
-        }
+ConsoleUi::~ConsoleUi() {
+  delete sim;
+  sim = nullptr;
+}
 
-        t = readTime() - start;
-        std::cout << "*** Simulation ended" << std::endl;
-        if (!(simMode == 's'))  // Time and MIPS rate does not make sense in singe step mode
-            reportMIPS(t, sim->getInstructionsSimulated());
-        if (simMode == 'd')
-          dumpStats();
+void ConsoleUi::start() {
+  char simMode = selectSimulationMode(*sim);
+  clock_t t;
+  clock_t start;
+  while (simMode != 'q') {
+    std::cout << "*** Starts simulation . . ." << std::endl;
+    switch (simMode) {
+      case 's':
+        step();
+        break;
+      case 'r':
+      case 'd':
+        start = readTime();
+        sim->run();
+        break;
     }
+    t = readTime() - start;
+    std::cout << "*** Simulation ended" << std::endl;
+    if (!(simMode == 's'))  // Time and MIPS rate does not make sense in singe step mode
+      reportMIPS(t, sim->getInstructionsSimulated());
+    if (simMode == 'd')
+      dumpStats();
+    simMode = selectSimulationMode(*sim);
   }
 }
 
 void ConsoleUi::step() {
   word thisPC = sim->cpu->PC;
-  sim->step();
+  if (!(sim->step())) return;
   std::cout << "(" << sim->getInstructionsSimulated() << ") after "
-       << sim->cpu->getInstr(sim->getInstr()) << " @" << thisPC << ":"
+       << sim->cpu->disAssembly(sim->getInstr()) << " @" << thisPC << ":"
        << sim->cpu->getRegisterFile() << "next PC: "
        << sim->cpu->PC << std::endl;
 
   char nextAction;
   nextAction = selectSingleStepAction();
   switch (nextAction) {
-      case 'r': sim->setMode(RUNNING);
+      case 'r': sim->run();
       break;
-  case 's': // Just continue
+  case 's': step(); // Just continue
       break;
-  case 't': sim->setMode(NOTRUNNING);
+  case 't':
     break;
   }
 }

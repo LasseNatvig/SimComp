@@ -36,17 +36,17 @@ public:
 	Isa(LogFile* logFile);
 
 	/* Core functionality */
-	std::string disAssembly(word instr); // Returns string representation of instruction if found
 	void doInstruction(const short& opCode, const word& instr, Memory& DM, Memory& IM); // Excutes instruction
 	void reportError(std::string errorMsg) const;
 
 	/* Get functions */
   std::string getRegisterFile() const;
   std::string getRegister(int registerNum) const;
-  std::string getInstr(word machineInstr) const;
+  std::string disAssembly(word machineInstr) const;
 	word getOpCode(const word& w) const;
-	word getReg(const word& instr, unsigned int regNo) const;
+	word getRegister(const word& instr, unsigned int regNo) const;
 	word getImmediate(const word& instr) const;
 	word getAdressOffset(const word& instr) const;
-	const int getMaxNoInstructions() const { return maxNoInstructions; }
+	int getMaxNoInstructions() const { return maxNoInstructions; }
+	int getNumberOfRegisters() const { return noOfRegisters; }
 };

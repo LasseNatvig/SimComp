@@ -54,7 +54,6 @@ SOURCES       = ../_src/main.cpp \
 		../_src/mainwindow.cpp \
 		../_src/runwidget.cpp \
 		../../_Simulator/_src/compSim.cpp \
-		../../_Simulator/_src/config.cpp \
 		../../_Simulator/_src/isa.cpp \
 		../../_Simulator/_src/loader.cpp \
 		../../_Simulator/_src/logger.cpp \
@@ -66,7 +65,6 @@ OBJECTS       = main.o \
 		mainwindow.o \
 		runwidget.o \
 		compSim.o \
-		config.o \
 		isa.o \
 		loader.o \
 		logger.o \
@@ -275,7 +273,6 @@ DIST          = /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/sp
 		../_src/mainwindow.cpp \
 		../_src/runwidget.cpp \
 		../../_Simulator/_src/compSim.cpp \
-		../../_Simulator/_src/config.cpp \
 		../../_Simulator/_src/isa.cpp \
 		../../_Simulator/_src/loader.cpp \
 		../../_Simulator/_src/logger.cpp \
@@ -715,7 +712,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents ../_src/images.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../_src/mainwindow.h ../_src/globals.h ../_src/runwidget.h ../../_Simulator/_src/compSim.h ../../_Simulator/_src/config.h ../../_Simulator/_src/isa.h ../../_Simulator/_src/loader.h ../../_Simulator/_src/logger.h ../../_Simulator/_src/memory.h ../../_Simulator/_src/program.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../_src/main.cpp ../_src/mainwindow.cpp ../_src/runwidget.cpp ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/config.cpp ../../_Simulator/_src/isa.cpp ../../_Simulator/_src/loader.cpp ../../_Simulator/_src/logger.cpp ../../_Simulator/_src/memory.cpp ../../_Simulator/_src/Program.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../_src/main.cpp ../_src/mainwindow.cpp ../_src/runwidget.cpp ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/isa.cpp ../../_Simulator/_src/loader.cpp ../../_Simulator/_src/logger.cpp ../../_Simulator/_src/memory.cpp ../../_Simulator/_src/Program.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -946,11 +943,9 @@ compSim.o: ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/compSim.h \
 		../../_Simulator/_src/loader.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o compSim.o ../../_Simulator/_src/compSim.cpp
 
-config.o: ../../_Simulator/_src/config.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o config.o ../../_Simulator/_src/config.cpp
-
 isa.o: ../../_Simulator/_src/isa.cpp ../../_Simulator/_src/isa.h \
-		../../_Simulator/_src/memory.h
+		../../_Simulator/_src/memory.h \
+		../../_Simulator/_src/logger.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o isa.o ../../_Simulator/_src/isa.cpp
 
 loader.o: ../../_Simulator/_src/loader.cpp ../../_Simulator/_src/compSim.h \
@@ -965,12 +960,14 @@ logger.o: ../../_Simulator/_src/logger.cpp ../../_Simulator/_src/logger.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o logger.o ../../_Simulator/_src/logger.cpp
 
 memory.o: ../../_Simulator/_src/memory.cpp ../../_Simulator/_src/memory.h \
-		../../_Simulator/_src/isa.h
+		../../_Simulator/_src/isa.h \
+		../../_Simulator/_src/logger.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memory.o ../../_Simulator/_src/memory.cpp
 
 Program.o: ../../_Simulator/_src/Program.cpp ../../_Simulator/_src/program.h \
 		../../_Simulator/_src/memory.h \
-		../../_Simulator/_src/isa.h
+		../../_Simulator/_src/isa.h \
+		../../_Simulator/_src/logger.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Program.o ../../_Simulator/_src/Program.cpp
 
 qrc_images.o: qrc_images.cpp 

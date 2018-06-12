@@ -26,14 +26,14 @@ public:
 	void load(std::string name); // Loads(and parses) sasm-file named "name" to sasmProg
 	void reset(); // Reset varibles (sets simulator parameters to default values)
 	void run(); 	// Normal execution of program if currentMode == RUNNING or NOTRUNNING
-	void step(); // Executes one step
+	bool step(); // Executes one step, returns true if instruction != HLT
 	void writeToLogg(std::string message) { logg.write(message); } // Write to logg
 	void resetStatistics(); // Reset statistics
 
 	/* Get functions */
 	word getPC() { return cpu->PC; }
 	long long getInstructionsSimulated() const { return instructionsSimulated; }
-	bool isRunning() const { return ((currentMode == RUNNING) || (currentMode == SINGLESTEP)); }
+	bool isRunning() const { return (!(currentMode == NOTRUNNING)); }
 	bool singleStep() const { return (currentMode == SINGLESTEP); }
 	bool program() const { return sasmProg.valid; } // Checks if program is succesfully loaded
 	word getInstr() { return IM.read(cpu->PC); }
@@ -41,7 +41,7 @@ public:
 	std::string getName() const { return name; }
 
 	/* Set functions */
-	void setMode(Mode mode) { currentMode = mode; }
+
 	void setPC(word PC) { cpu->PC = PC; }
 
 	/* Core variables */
@@ -60,6 +60,6 @@ private:
 	Program sasmProg; // SimComp ASM (sasm) program
 	Mode currentMode = NOTRUNNING; // Current simulation mode
 	long long instructionsSimulated = 0; // Instructions simulated count
-
+	void setMode(Mode mode) { currentMode = mode; }
 
 };

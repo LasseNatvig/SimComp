@@ -5,6 +5,7 @@
 class ConsoleUi {
 public:
   ConsoleUi(std::string directory);
+  ~ConsoleUi();
   void start(); // Starts console user interface
 
 private:

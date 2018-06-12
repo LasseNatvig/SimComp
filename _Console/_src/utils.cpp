@@ -56,16 +56,6 @@ char selectSimulationMode(ComputerSimulation& sim) {
 	char mode = ' ';
 	sim.reset();
 	mode = textMenuC("\nSelect simulation mode by typing a single letter:", menuSim, false);
-	switch (mode) {
-	case 'r': sim.setMode(RUNNING);
-		break;
-    case 's': sim.setMode(SINGLESTEP);
-		break;
-	case 'd': sim.setMode(RUNNING);
-		break;
-	case 'q': sim.setMode(NOTRUNNING);
-		break;
-	}
 	sim.resetStatistics();
 	return(mode);
 }

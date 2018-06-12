@@ -10,6 +10,7 @@
 #include <QHeaderView>
 #include <QPixmap>
 #include <QFileDialog>
+#include <ctime>
 
 
 runWidget::runWidget(QWidget *parent) : QWidget(parent)
@@ -57,7 +58,7 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     // Create table
     table = new QTableWidget;
     tableHeader << "Instruction count" << "OpCode" << "PC";
-    for (int i = 0; i < simulator->cpu.noOfRegisters; i++)
+    for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++)
         tableHeader << QString("R") + QString::number(i);
     tableHeader << "next PC";
     table->setColumnCount(12);
@@ -113,24 +114,21 @@ void runWidget::startSim() {
     // Decide which mode to start simulator in
     switch (dropdownMenu->currentIndex()) {
     case 0: // Run program
-        start = readTime();
-        simulator->setRunning(true);
-        simulator->runProgram(); // Run program
+        start = clock();
+        simulator->run(); // Run program
         appendStats(start); // Append stats
         break;
     case 1: // Singel step program
         stats_lst->clear();
-        start = readTime();
-        simulator->setSingleStepModeGUI(true);
-        simulator->setRunning(true);
-        nextStep();
+        start = clock();
+        step();
         break;
     }
 }
 
 double runWidget::getMIPS(clock_t ticks) {
     double seconds = static_cast<double>(ticks) / CLOCKS_PER_SEC; // Calculate seconds
-    return (static_cast<double>(simulator->instructionsSimulated) / 1000000.0) / seconds; // Calculate MIPS
+    return (static_cast<double>(simulator->getInstructionsSimulated()) / 1000000.0) / seconds; // Calculate MIPS
 }
 
 void runWidget::setButtonText(int currentIndex) {
@@ -144,53 +142,42 @@ void runWidget::setButtonText(int currentIndex) {
     }
 }
 
-void runWidget::nextStep() {
+void runWidget::step() {
     /* Moves to next step */
-    word instr = simulator->IM.read(simulator->cpu.PC); // Get instruction
-    word thisPC = simulator->cpu.PC; // Save current PC-value
-    word opcode = simulator->cpu.getOpCode(instr);
+    word thisPC = simulator->cpu->PC; // Save current PC-value
 
-    if (opcode == HLT) { // End if next instruction is HLT
-        simulator->setRunning(false);
+    simulator->step(); // Make the simulator execute a step
+
+    // Add row for current step (TODO: make better!)
+    std::stringstream stepInfo;
+    table->insertRow(table->rowCount());
+
+    stepInfo << simulator->getInstructionsSimulated();
+    table->setItem(table->rowCount()-1, 0, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+    stepInfo.str(std::string());
+
+    stepInfo << simulator->cpu->disAssembly(simulator->getInstr());
+    table->setItem(table->rowCount()-1, 1, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+    stepInfo.str(std::string());
+
+    stepInfo << thisPC;
+    table->setItem(table->rowCount()-1, 2, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+    stepInfo.str(std::string());
+    for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++) {
+        stepInfo << simulator->cpu->getRegister(i);
+        table->setItem(table->rowCount()-1, i + 3, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+        stepInfo.str(std::string());
     }
+    stepInfo << simulator->cpu->PC;
+    table->setItem(table->rowCount()-1, 11, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
 
-    if (simulator->isRunning()) {
-        simulator->cpu.doInstruction(simulator->cpu.getOpCode(instr), instr, simulator->DM, simulator->IM);
-        simulator->instructionsSimulated++;
-        std::stringstream stepInfo;
-
-        // Add row for current step (TODO: make better!)
-        table->insertRow(table->rowCount());
-
-        stepInfo << simulator->instructionsSimulated;
-        table->setItem(table->rowCount()-1, 0, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-        stepInfo.str(std::string());
-
-        stepInfo << simulator->cpu.getInstr(instr);
-        table->setItem(table->rowCount()-1, 1, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-        stepInfo.str(std::string());
-
-        stepInfo << thisPC;
-        table->setItem(table->rowCount()-1, 2, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-        stepInfo.str(std::string());
-        for (int i = 0; i < simulator->cpu.noOfRegisters; i++) {
-            stepInfo << simulator->cpu.getRegisterNo(i);
-            table->setItem(table->rowCount()-1, i + 3, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-            stepInfo.str(std::string());
-        }
-        stepInfo << simulator->cpu.PC;
-        table->setItem(table->rowCount()-1, 11, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-
-        // Set color of registers that changed
-        showChange(table,table->rowCount()-1, 3, simulator->cpu.noOfRegisters);
-    }
-
+    // Set color of registers that changed
+    showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters());
 }
 
 void runWidget::endSim() {
-    simulator->setRunning(false);
-    simulator->resetStatistics(simulator->cpu);
-    simulator->cpu.PC = 0;
+    simulator->resetStatistics();
+    simulator->cpu->PC = 0;
 }
 
 void runWidget::openFile() {
@@ -207,12 +194,12 @@ void runWidget::appendStats(clock_t start) {
     // Create vector with stats
     std::vector<std::string> stats_vec;
     std::stringstream  ss;
-    ss << getMIPS(readTime()-start);
+    ss << getMIPS(clock()-start);
     stats_vec.push_back("MIPS: " + ss.str());
     ss.str(std::string());
-    simulator->IM.getStats(simulator->cpu, stats_vec);
-    simulator->DM.getStats(simulator->cpu, stats_vec);
-    simulator->resetStatistics(simulator->cpu);
+    simulator->IM.getStats(*simulator->cpu, stats_vec);
+    simulator->DM.getStats(*simulator->cpu, stats_vec);
+    simulator->resetStatistics();
 
     // Add stats to stats_lst
     for (auto &item : stats_vec) {

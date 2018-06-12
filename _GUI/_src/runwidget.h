@@ -58,7 +58,7 @@ private:
 
 private slots:
     void startSim();
-    void nextStep();
+    void step();
     void endSim();
     void setButtonText(int currentIndex);
     void openFile();

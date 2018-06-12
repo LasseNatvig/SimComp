@@ -56,7 +56,7 @@ void ComputerSimulation::resetStatistics() {
 }
 
 void ComputerSimulation::run() {
-	/* Normal execution of program if currentMode == RUNNING or NOTRUNNING */
+	/* Normal execution of program */
 	do {
 		word instr = IM.read(cpu->PC);
 		short opCode = cpu->getOpCode(instr);
@@ -72,13 +72,15 @@ void ComputerSimulation::run() {
   cpu->PC = 0;
 }
 
-void ComputerSimulation::step() {
+bool ComputerSimulation::step() {
   word instr = IM.read(cpu->PC);
   short opCode = cpu->getOpCode(instr);
   instructionsSimulated++;
   if (opCode == HLT) {
     setMode(NOTRUNNING);
     cpu->PC = 0;
-  } else
-    cpu->doInstruction(opCode, instr, DM, IM);
+    return false;
+  }
+  cpu->doInstruction(opCode, instr, DM, IM);
+  return true;
 }

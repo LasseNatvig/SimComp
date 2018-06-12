@@ -53,7 +53,7 @@ void Memory::getStats(Isa& cpu, vector<std::string> &vec) const {
     } else if (type == INSTR) {
         for (unsigned int i = 0; i < words.size(); i++) {
             ss << dec << i << " | " << hex << i << ": ";
-            if (cpu.getInstr(words[i]) == "SET") { // it is a SET instruction
+            if (cpu.disAssembly(words[i]).substr(0,2) == "SET") { // it is a SET instruction
                 ss << " " << setw(5) << hex << words[i];
                 vec.push_back(ss.str());
                 ss.str(string());

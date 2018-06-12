@@ -39,7 +39,7 @@ string Isa::getRegister(int registerNum) const {
     return stream.str();
 }
 
-string Isa::getInstr(word machineInstr) const {
+string Isa::disAssembly(word machineInstr) const {
     /* Returns instruction opcode as mnemonic, and the rest as bits. */
     word opCode = machineInstr & 0b1111111000000000;
     bitset<9> bits = machineInstr & 0b0000000111111111;
@@ -60,7 +60,7 @@ word Isa::getOpCode(const word& w) const {
 	return ((w & 0b1111111000000000) >> 9);
 }
 
-word Isa::getReg(const word& instr, unsigned int regNo) const {
+word Isa::getRegister(const word& instr, unsigned int regNo) const {
 	switch (regNo) {
 		case 1:
 			return ((0b0000000111000000 & instr) >> 6);
@@ -97,45 +97,45 @@ void Isa::doInstruction(const short& opCode, const word& instr, Memory& DM, Memo
 	/* Executes instruction */
 	switch (opCode) {
 	case ADD:
-		R[getReg(instr, 1)] = R[getReg(instr, 2)] + R[getReg(instr, 3)];
+		R[getRegister(instr, 1)] = R[getRegister(instr, 2)] + R[getRegister(instr, 3)];
 		PC++;
 		break;
 	case ADI:
-		R[getReg(instr, 1)] = R[getReg(instr, 2)] + getImmediate(instr);
+		R[getRegister(instr, 1)] = R[getRegister(instr, 2)] + getImmediate(instr);
 		PC++;
 		break;
 	case SHL:
-		R[getReg(instr,1)] = R[getReg(instr, 3)] << 1;
+		R[getRegister(instr,1)] = R[getRegister(instr, 3)] << 1;
 		PC++;
 		break;
 	case SUB:
-		R[getReg(instr, 1)] = R[getReg(instr, 2)] - R[getReg(instr, 3)];
+		R[getRegister(instr, 1)] = R[getRegister(instr, 2)] - R[getRegister(instr, 3)];
 		PC++;
 		break;
 	case BRZ:
-		if (R[getReg(instr, 2)] == 0)
+		if (R[getRegister(instr, 2)] == 0)
 			PC += getAdressOffset(instr);
 		else
 			PC++;
 		break;
 	case JMP:
-		PC = R[getReg(instr, 2)];
+		PC = R[getRegister(instr, 2)];
 		break;
 	case LDI:
-		R[getReg(instr, 1)] = getImmediate(instr);
+		R[getRegister(instr, 1)] = getImmediate(instr);
 		PC++;
 		break;
 	case LD:
-		R[getReg(instr, 1)] = DM.read(R[getReg(instr, 2)]);
+		R[getRegister(instr, 1)] = DM.read(R[getRegister(instr, 2)]);
 		PC++;
 		break;
 	case SET:
 		PC++;
-		R[getReg(instr, 1)] = IM.read(PC);
+		R[getRegister(instr, 1)] = IM.read(PC);
 		PC++;
 		break;
 	case ST:
-		DM.write(R[getReg(instr, 1)], R[getReg(instr, 2)]);
+		DM.write(R[getRegister(instr, 1)], R[getRegister(instr, 2)]);
 		PC++;
 		break;
 	default:
