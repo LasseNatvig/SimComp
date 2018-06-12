@@ -60,6 +60,7 @@ void ComputerSimulation::run() {
 	do {
 		word instr = IM.read(cpu->PC);
 		short opCode = cpu->getOpCode(instr);
+    instStats[instStatsTable[opCode]]++;
 		instructionsSimulated++;
 		if (opCode == HLT)
 			setMode(NOTRUNNING);

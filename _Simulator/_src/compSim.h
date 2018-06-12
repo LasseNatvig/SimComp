@@ -45,7 +45,7 @@ public:
 	void setPC(word PC) { cpu->PC = PC; }
 
 	/* Core variables */
-	long long* instStats = nullptr;  // Size given by Isa member constant
+	long long* instStats = nullptr;  // Used to count occurences of instructions (Size given by Isa member constant)
 	std::map<word, short> instStatsTable; // Statistics table
 	Memory IM; // Instruction memory
 	Memory DM; // Data memory
