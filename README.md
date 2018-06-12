@@ -15,7 +15,7 @@ For *macOS* and *Linux* users all you need to do is run [CMake](https://cmake.or
 _Console/_src user$ cmake .
 _Console/_src user$ make
 ```   
-This will build the source code to an executable named *SimComp*. Now, all you need to start the application is to pass the directory with the `*.sams` files as a parameter to the binary. Example using the asembler files included in `_Simulator/_sasm/`:
+This will build the source code to an executable named *SimComp*. Finally, to launch the application you'll need to pass the directory with the `*.sams` files as a parameter to the binary. Example using the assembler files included in `_Simulator/_sasm/`:
 ```
 _Console/_src user$ ./SimComp ../../_Simulator/_sasm/
 ```
@@ -31,7 +31,7 @@ To build the GUI application you'll need to clone both the `_GUI/` and `_Simulat
 
 ## Dependencies
 
-Nothing this far. QT soon.
+Nothing thus far. QT soon.
 
 ```
 Give examples
