@@ -5,41 +5,41 @@
 using namespace std;
 
 LogFile::LogFile() {
-	linesWritten = 0;
+    linesWritten = 0;
 }
 
 LogFile::~LogFile() {
-	ofs.close();
+    ofs.close();
 }
 
 bool LogFile::open(string name) {
-	ofs.open(name);
-	if (ofs.is_open()) {
-		ofs << "Logfile " + name + " opened.\n";
-		// TODO add date and time-stamp
-		return true;
-	}
-	else {
-		cerr << "Error opening file";
-		return false;
-	}
+    ofs.open(name);
+    if (ofs.is_open()) {
+        ofs << "Logfile " + name + " opened.\n";
+        // TODO add date and time-stamp
+        return true;
+    }
+    else {
+        cerr << "Error opening file";
+        return false;
+    }
 }
 
 void LogFile::write(string s) {
-	ofs << s;
+    ofs << s;
 }
 
 void LogFile::timeStamp() {
-	time_t result = time(NULL);
+    time_t result = time(NULL);
 
-	#ifdef _WIN64
-	char str[26];
-	ctime_s(str, sizeof str, &result);
-	#else
-	char* str;
-	str = ctime(&result);
-	#endif
-	ofs << str;
+#ifdef _WIN64
+    char str[26];
+    ctime_s(str, sizeof str, &result);
+#else
+    char* str;
+    str = ctime(&result);
+#endif
+    ofs << str;
 }
 
 // TODO AD LINUX-code, flytt til config ?

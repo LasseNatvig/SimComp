@@ -36,7 +36,7 @@ public:
 	bool isRunning() const { return (!(currentMode == NOTRUNNING)); }
 	bool singleStep() const { return (currentMode == SINGLESTEP); }
 	bool program() const { return sasmProg.valid; } // Checks if program is succesfully loaded
-	word getInstr() { return IM.read(cpu->PC); }
+	word getInstr(word PC) { return IM.read(PC); }
 	Mode getMode() const { return currentMode; }
 	std::string getName() const { return name; }
 
