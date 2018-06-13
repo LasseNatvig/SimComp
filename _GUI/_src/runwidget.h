@@ -28,10 +28,13 @@ private:
     ComputerSimulation* simulator;
     QString filename;
     std::string simName = "AdHoc16_V03";
+    bool simulationFinished = false;
     double getMIPS(clock_t ticks);
+    void step();
+    void run();
+    void load();
 
-
-    /* CHOOSE PROGRAM */
+    /* HEADER */
     QGroupBox* programBox;
     QLabel* program_lbl;
     QPushButton* open_btn;
@@ -45,21 +48,20 @@ private:
     QLabel* description_lbl;
     QLabel* icon_img;
     QListWidget* stats_lst;
-    void appendStats(clock_t ticks); // For appending statistics to stats_lst
+    void addStats(clock_t ticks); // For appending statistics to stats_lst
     // - BOTTOM
     QGroupBox* buttonBox;
     QPushButton* start_btn;
-    QPushButton* end_btn;
+    QPushButton* reset_btn;
 
     /* TABLE */
     QTableWidget* table;
     QStringList tableHeader;
-
+    void addStep(word PC);
 
 private slots:
     void startSim();
-    void step();
-    void endSim();
+    void resetSim();
     void setButtonText(int currentIndex);
     void openFile();
 

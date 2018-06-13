@@ -19,9 +19,11 @@ private:
 	unsigned int nextFreeLocation;
 	long long memReads;
 	long long memWrites;
-	std::vector<word> words;
+
 
 public:
+	std::vector<word> words;
+
 	std::string name; // Avoid using using namespace in .h files
 	memType type;
 
@@ -29,10 +31,11 @@ public:
 	Memory(std::string name, memType type, LogFile* logFile);
 
 	/* Core functionality */
+	void reset(); // Resets Memory: clear words, size = nextFreeLocation = 0  and call resetStats().
 	void resetStats(); // Reset statistics (Sets varibles to default values)
-  void getStats(Isa& cpu, std::vector<std::string> &vec) const;
+  void getStats(Isa& cpu, std::vector<std::string> &vec) const; // Fills vec with stats, one item per line
 	void write(word addr, word w); // Write to memory
-	word read(const word& addr); // Read momory at adress "addr"
+	word read(const word& addr); // Read word at address "addr"
 
 	/* Get funcitons */
 	std::string getName();

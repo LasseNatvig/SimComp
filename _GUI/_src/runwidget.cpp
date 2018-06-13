@@ -43,7 +43,7 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     // Create and set text of description
     description_lbl = new QLabel;
     QString description_txt = "Simulator: AdHoc16_V03\n";
-    description_txt.append("(Pressing \"End\" will stop the simulation and reset PC)");
+    description_txt.append("(Pressing \"Reset\" will stop the simulation and reset PC)");
     description_lbl->setText(description_txt);
     description_lbl->setStyleSheet("font-weight: bold;");
 
@@ -69,10 +69,10 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     // Create and group buttons
     buttonBox = new QGroupBox;
     start_btn = new QPushButton("Run");
-    end_btn = new QPushButton("End");
+    reset_btn = new QPushButton("Reset");
     QVBoxLayout* buttonsLayout = new QVBoxLayout;
     buttonsLayout->addWidget(start_btn);
-    buttonsLayout->addWidget(end_btn);
+    buttonsLayout->addWidget(reset_btn);
     buttonBox->setLayout(buttonsLayout);
 
 
@@ -95,7 +95,7 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
 
     // Make connections
     connect(start_btn, SIGNAL(clicked()), this, SLOT(startSim())); // start_btn -> startSim()
-    connect(end_btn, SIGNAL(clicked()), this, SLOT(endSim())); // end_btn -> endSim()
+    connect(reset_btn, SIGNAL(clicked()), this, SLOT(resetSim())); // reset_btn -> resetSim()
     connect(dropdownMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(setButtonText(int))); // Change in dropdown menu -> change start_btm
     connect(open_btn, SIGNAL(clicked()), this, SLOT(openFile())); // open_btn -> openFile()
 
@@ -106,21 +106,14 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
 void runWidget::startSim() {
     /* startSim() starts the simulation with the selected mode from the dropdown menu */
 
-    // Load .sasm file if not null
-    if (filename.isNull()) return;
-    simulator->load(filename.toStdString());
+    if (filename.isNull()) return; // Can not start simulation without filename
 
-    clock_t start;
     // Decide which mode to start simulator in
     switch (dropdownMenu->currentIndex()) {
     case 0: // Run program
-        start = clock();
-        simulator->run(); // Run program
-        appendStats(start); // Append stats
+        run();
         break;
     case 1: // Singel step program
-        stats_lst->clear();
-        start = clock();
         step();
         break;
     }
@@ -144,52 +137,47 @@ void runWidget::setButtonText(int currentIndex) {
 
 void runWidget::step() {
     /* Moves to next step */
-    word thisPC = simulator->cpu->PC; // Save current PC-value
+    if (simulationFinished) return; // Simulation finshed
 
-    simulator->step(); // Make the simulator execute a step
+    if (!simulator->isRunning()) load(); // Only load when simulator is not running
 
-    // Add row for current step (TODO: make better!)
-    std::stringstream stepInfo;
-    table->insertRow(table->rowCount());
+    word currentPC = simulator->cpu->PC;
+    if ((!simulator->step())) // Make simulator execute one step
+        simulationFinished = true; // Simulation finshed
 
-    stepInfo << simulator->getInstructionsSimulated();
-    table->setItem(table->rowCount()-1, 0, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-    stepInfo.str(std::string());
+    addStep(currentPC); // Add step to table
 
-    stepInfo << simulator->cpu->disAssembly(simulator->getInstr());
-    table->setItem(table->rowCount()-1, 1, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-    stepInfo.str(std::string());
-
-    stepInfo << thisPC;
-    table->setItem(table->rowCount()-1, 2, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-    stepInfo.str(std::string());
-    for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++) {
-        stepInfo << simulator->cpu->getRegister(i);
-        table->setItem(table->rowCount()-1, i + 3, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-        stepInfo.str(std::string());
-    }
-    stepInfo << simulator->cpu->PC;
-    table->setItem(table->rowCount()-1, 11, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
-
-    // Set color of registers that changed
-    showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters());
 }
 
-void runWidget::endSim() {
-    simulator->resetStatistics();
-    simulator->cpu->PC = 0;
+void runWidget::run() {
+    if (simulationFinished) return;
+    load(); // Load program
+    clock_t start = clock();
+    simulator->run();
+    simulationFinished = true;
+    addStats(start);
+}
+
+void runWidget::load() {
+    resetSim();
+    simulator->load(filename.toStdString());
+}
+
+void runWidget::resetSim() {
+    simulationFinished = false;
+    table->setRowCount(0);
+    stats_lst->clear();
 }
 
 void runWidget::openFile() {
     // Starts a file dialog which lets the user choose a assembler program to run
     filename = QFileDialog::getOpenFileName(this, tr("Open file"), "/",tr("Assembler program (*.sasm)"));
     program_lbl->setText("Program: " + filename);
+    resetSim();
 }
 
-void runWidget::appendStats(clock_t start) {
+void runWidget::addStats(clock_t start) {
     /* Appends statistics from current simulation */
-
-    stats_lst->clear(); // Clear all current stats
 
     // Create vector with stats
     std::vector<std::string> stats_vec;
@@ -205,6 +193,34 @@ void runWidget::appendStats(clock_t start) {
     for (auto &item : stats_vec) {
         stats_lst->addItem(QString::fromStdString(item));
     }
+}
+
+void runWidget::addStep(word PC) {
+    // Add row for current step (TODO: -make better!)
+    std::stringstream stepInfo;
+    table->insertRow(table->rowCount());
+
+    stepInfo << simulator->getInstructionsSimulated();
+    table->setItem(table->rowCount()-1, 0, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+    stepInfo.str(std::string());
+
+    stepInfo << simulator->cpu->disAssembly(simulator->getInstr(PC));
+    table->setItem(table->rowCount()-1, 1, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+    stepInfo.str(std::string());
+
+    stepInfo << PC;
+    table->setItem(table->rowCount()-1, 2, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+    stepInfo.str(std::string());
+    for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++) {
+        stepInfo << simulator->cpu->getRegister(i);
+        table->setItem(table->rowCount()-1, i + 3, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+        stepInfo.str(std::string());
+    }
+    stepInfo << simulator->cpu->PC;
+    table->setItem(table->rowCount()-1, 11, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+
+    // Set color of registers that changed
+    showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters());
 }
 
 void showChange(QTableWidget* table, int rowIndex, int from, int to) {

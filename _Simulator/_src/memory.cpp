@@ -11,19 +11,25 @@
 using namespace std;
 
 Memory::Memory(string name, memType type, LogFile* logFile) : name(name), type(type),
-	logFile(logFile) {
-		nextFreeLocation = 0;
-		memReads = memWrites = 0;
+    logFile(logFile) {
+    nextFreeLocation = 0;
+    memReads = memWrites = 0;
 }
 
 void Memory::reportError(string errorMsg) const {
-	logFile->write("MEMORY ERROR: NAME=" + name + " MESSAGE: " + errorMsg);
-	logFile->timeStamp();
-	logFile->write("\n");
+    logFile->write("MEMORY ERROR: NAME=" + name + " MESSAGE: " + errorMsg);
+    logFile->timeStamp();
+    logFile->write("\n");
 }
 
 void Memory::resetStats() {
-	memReads = memWrites = 0;
+    memReads = memWrites = 0;
+}
+
+void Memory::reset() {
+    size = nextFreeLocation = 0;
+    words.clear();
+    resetStats();
 }
 
 void Memory::getStats(Isa& cpu, vector<std::string> &vec) const {
@@ -34,7 +40,7 @@ void Memory::getStats(Isa& cpu, vector<std::string> &vec) const {
     ss.str(string());
 
     ss << "Words used: " << dec << nextFreeLocation <<
-        " Reads: " << memReads << " Writes: " << memWrites;
+          " Reads: " << memReads << " Writes: " << memWrites;
     vec.push_back(ss.str());
     ss.str(string());
 
@@ -62,39 +68,39 @@ void Memory::getStats(Isa& cpu, vector<std::string> &vec) const {
                 vec.push_back(ss.str());
                 ss.str(string());
             } else {
-                  ss << " " << setw(5) << hex << words[i];
-                  vec.push_back(ss.str());
-                  ss.str(string());
+                ss << " " << setw(5) << hex << words[i];
+                vec.push_back(ss.str());
+                ss.str(string());
             }
         }
     }
 }
 
 word Memory::getNextFreeLocation() {
-	words.push_back(0); // allocate one word, zeroed by default
-	return nextFreeLocation++;
+    words.push_back(0); // allocate one word, zeroed by default
+    return nextFreeLocation++;
 }
 
 void Memory::write(word addr, word w) {
-	if (addr > words.size()) {
-		 reportError("write error: illegal address " + to_string(addr)); // HANLE ERROR TODO print in hex
-		exit(-1);
-	}
-	else {
-		words[addr] = w;
-		memWrites++;
-	}
+    if (addr > words.size()) {
+        reportError("write error: illegal address " + to_string(addr)); // HANLE ERROR TODO print in hex
+        exit(-1);
+    }
+    else {
+        words[addr] = w;
+        memWrites++;
+    }
 }
 
 word Memory::read(const word& addr) {
-		if (addr > words.size()) {
-			reportError("Read error: illegal address " + to_string(addr)); // TODO print in hex
-			exit(-1);
-	}
-	else {
-		memReads++;
-		return words[addr];
-	}
+    if (addr > words.size()) {
+        reportError("Read error: illegal address " + to_string(addr)); // TODO print in hex
+        exit(-1);
+    }
+    else {
+        memReads++;
+        return words[addr];
+    }
 }
 
 string Memory::getName() { return name; }
