@@ -14,7 +14,7 @@ add_executable(
   ../../_Simulator/_src/loader.cpp
   ../../_Simulator/_src/logger.cpp
   ../../_Simulator/_src/memory.cpp
-  ../../_Simulator/_src/program.cpp
+  ../../_Simulator/_src/Program.cpp
   utils.cpp
   config.cpp
   consoleUI.cpp
