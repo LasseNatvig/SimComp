@@ -54,7 +54,6 @@ char textMenuC(string question, vector<string>& menu, bool compact) {
 
 char selectSimulationMode(ComputerSimulation& sim) {
 	char mode = ' ';
-	sim.reset();
 	mode = textMenuC("\nSelect simulation mode by typing a single letter:", menuSim, false);
 	sim.resetStatistics();
 	return(mode);

@@ -10,6 +10,7 @@ public:
 
 private:
   ComputerSimulation* sim;
+  std::string directory; // Directory with *.sasm files
   void step();
   void dumpStats();
 };
