@@ -3,9 +3,8 @@
 #include "consoleUI.h"
 #include "utils.h"
 
-ConsoleUi::ConsoleUi(std::string directory) {
+ConsoleUi::ConsoleUi(std::string directory) : directory(directory){
     sim = new ComputerSimulation("AdHoc16_V03", "logg.txt");
-    sim->load(selectProgram(directory));
 }
 
 ConsoleUi::~ConsoleUi() {
@@ -14,6 +13,7 @@ ConsoleUi::~ConsoleUi() {
 }
 
 void ConsoleUi::start() {
+  sim->load(selectProgram(directory));
   char simMode = selectSimulationMode(*sim);
   clock_t t;
   clock_t start;
@@ -35,6 +35,7 @@ void ConsoleUi::start() {
       reportMIPS(t, sim->getInstructionsSimulated());
     if (simMode == 'd')
       dumpStats();
+    sim->load(selectProgram(directory));
     simMode = selectSimulationMode(*sim);
   }
 }
@@ -43,7 +44,7 @@ void ConsoleUi::step() {
   word thisPC = sim->cpu->PC;
   if (!(sim->step())) return;
   std::cout << "(" << sim->getInstructionsSimulated() << ") after "
-       << sim->cpu->disAssembly(sim->getInstr()) << " @" << thisPC << ":"
+       << sim->cpu->disAssembly(sim->getInstr(sim->cpu->PC)) << " @" << thisPC << ":"
        << sim->cpu->getRegisterFile() << "next PC: "
        << sim->cpu->PC << std::endl;
 
