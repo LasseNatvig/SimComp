@@ -412,3 +412,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
+/_GUI/_src/.qmake.stash
+/_GUI/_src/logg.txt
