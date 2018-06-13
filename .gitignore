@@ -1,3 +1,6 @@
+# Default logger file from Simulator
+logg.txt
+
 # Prerequisites
 *.d
 
