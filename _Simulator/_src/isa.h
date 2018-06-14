@@ -10,7 +10,6 @@ class Memory;  // Forward declaration
 /* Listed alphabetically, opcode values from Morris Mano 5th ed page 458 */
 #define ADD		0b0000010
 #define ADI		0b1000010
-#define ADI		0b1000010
 #define BRZ		0b1100000
 #define HLT		0b1111111
 #define JMP		0b1110000

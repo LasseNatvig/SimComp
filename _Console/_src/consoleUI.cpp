@@ -36,12 +36,6 @@ void ConsoleUi::start() {
       reportMIPS(t, sim->getInstructionsSimulated());
     if (simMode == 'd')
       dumpStats();
-
-    std::cout << "*** TEST : \nINTSR MEM: \n";
-    std::vector<std::string> im = sim->memoryDump(0, sim->IM.words.size()-1, INSTR);
-    for (auto& item : im)
-      std::cout << item << std::endl;
-
     sim->load(directory+filename);
     simMode = selectSimulationMode(*sim);
   }

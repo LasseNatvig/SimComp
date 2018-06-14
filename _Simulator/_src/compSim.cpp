@@ -1,4 +1,5 @@
 #include <time.h>
+#include <sstream>
 #include "compSim.h"
 
 using namespace std;
@@ -91,4 +92,28 @@ bool ComputerSimulation::step() {
     instStats[instStatsTable[opCode]]++;
     cpu->doInstruction(opCode, instr, DM, IM);
     return true;
+}
+
+vector<string> ComputerSimulation::memoryDump(word fromAddr, word toAddr, memType memoryType) {
+  vector<string> vec;
+  stringstream ss;
+  if (fromAddr >= toAddr) {
+    writeToLogg("memoryDump(): Invalid fromAddr > toAddr\n");
+    return vec;
+  }
+  for (word i = fromAddr; i <= toAddr; i++) {
+    if (memoryType == DATA) {
+      if ((fromAddr < 0) || (toAddr > DM.words.size()-1)) return vec;
+      ss << "0x" << hex << DM.words[i];
+    } else if (memoryType == INSTR) {
+      if ((fromAddr < 0) || (toAddr > IM.words.size()-1)) return vec;
+      ss << cpu->disAssembly(IM.words[i]);
+    } else {
+      writeToLogg("Invalid memory type used.\n");
+      return vec;
+    }
+    vec.push_back(ss.str());
+    ss.str(string());
+  }
+  return vec;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "logger.h"
 #include "memory.h"
 #include "isa.h"
@@ -29,6 +30,7 @@ public:
 	bool step(); // Executes one step, returns true if instruction != HLT
 	void writeToLogg(std::string message) { logg.write(message); } // Write to logg
 	void resetStatistics(); // Reset statistics
+	std::vector<std::string> memoryDump(word fromAddr, word toAddr, memType memory);
 
 	/* Get functions */
 	word getPC() { return cpu->PC; }

@@ -33,7 +33,7 @@ public:
 	/* Core functionality */
 	void reset(); // Resets Memory: clear words, size = nextFreeLocation = 0  and call resetStats().
 	void resetStats(); // Reset statistics (Sets varibles to default values)
-  void getStats(Isa& cpu, std::vector<std::string> &vec) const; // Fills vec with stats, one item per line
+  std::vector<std::string> getStats(Isa& cpu) const; // Returns vector with stats, one item per line
 	void write(word addr, word w); // Write to memory
 	word read(const word& addr); // Read word at address "addr"
 
