@@ -1,10 +1,7 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Wed Jun 13 15:06:40 2018
+ComputerSimulation AdHoc16_V03 started at time Thu Jun 14 18:04:12 2018
 Assembler file:
-../../_Simulator/_sasm/test0.sasm
-...successfully loaded
-Assembler file:
-../../_Simulator/_sasm/test1.sasm
+../../_Simulator/_sasm/../../_Simulator/_sasm/test1.sasm
 ...successfully loaded
 Constant named size given as 20
 Label _start was placed in Instruction Memory at address: 0
@@ -12,18 +9,10 @@ Label _next was placed in Instruction Memory at address: 5
 Label _next2 was placed in Instruction Memory at address: 16
 Label _next3 was placed in Instruction Memory at address: 25
 Assembler file:
-../../_Simulator/_sasm/test3_correctness_asm3b.sasm
+../../_Simulator/_sasm/../../_Simulator/_sasm/test1.sasm
 ...successfully loaded
-Constant named innerL given as 1000
-Constant named outerL given as 10000
-Label _outer was placed in Instruction Memory at address: 3
-Label _inner was placed in Instruction Memory at address: 6
-Assembler file:
-../../_Simulator/_sasm/test0.sasm
-...successfully loaded
-Assembler file:
-../../_Simulator/_sasm/test0.sasm
-...successfully loaded
-Assembler file:
-../../_Simulator/_sasm/test0.sasm
-...successfully loaded
+Constant named size given as 20
+Label _start was placed in Instruction Memory at address: 0
+Label _next was placed in Instruction Memory at address: 5
+Label _next2 was placed in Instruction Memory at address: 16
+Label _next3 was placed in Instruction Memory at address: 25
