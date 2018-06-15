@@ -8,7 +8,7 @@ run time systems and simulation. This repository is intended to accommodate the 
 Both of the UI applications has been built and tested with macOS version 10.12.6 and Windows 10.
 
 ### Console
-To build the console application you'll need to clone both the `_Console/` and `_Simulator/` directories. If you're using *macOS* or *Linux* we recommend that you use [CMake](https://cmake.org) to build the Console-ui. Grab it [here](https://cmake.org/download/) if you don't have it. If you're using *Windows* we recommend building with [Visual Studio](https://www.visualstudio.com).
+To build the console application you'll need to clone both the `_Console/` and `_Simulator/` directories. If you're using *macOS* or *Linux* we recommend that you use [CMake](https://cmake.org) to build the Console-ui. Grab it [here](https://cmake.org/download/) if you don't have it. If you're using *Windows* we recommend building with [Visual Studio](https://www.visualstudio.com) using the `SimComp/_Console/_src/SimComp_Console.vcxproj` file.
 
 For *macOS* and *Linux* users all you need to do is run [CMake](https://cmake.org) from the `_Console/_src/` directory, followed by make.
 ```
@@ -21,21 +21,27 @@ _Console/_src user$ ./SimComp ../../_Simulator/_sasm/
 ```
 
 ### GUI
-To build the GUI application you'll need to clone both the `_GUI/` and `_Simulator/` directories. The easiest way to build the... to be continued..
+To build the GUI application you'll need to clone both the `_GUI/` and `_Simulator/` directories. We recommend building with [QMake](http://doc.qt.io/qt-5/qmake-manual.html) which is possible through [Qt Creator](http://doc.qt.io/qtcreator/). The project does also include a [Visual Studio](https://www.visualstudio.com) project file which can used if you have the [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools-19123) installed.   
 ## Structure
 
 - `_Root/`
+  - `_Console/` Everything related to the console application.
+    - `_src/` Source code.
   - `_Simulator/` Everything related to the core simulator.
     - `_asm/` Example assembler programs.
-    - `_src/` C++ source code for simulator.
+    - `_src/` Source code.
+  - `_GUI/` Everything related to the GUI application
+      - `_img/` Images.
+      - `_src/` Source code.
 
 ## Dependencies
 
-Nothing thus far. QT soon.
+### Console
+- None
 
-```
-Give examples
-```
+### GUI
+- Qt 5.10 or newer.
+
 
 <!--
 ### Installing
@@ -97,7 +103,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Lasse Natvig** - *Initial work* - [NTNU](https://innsida.ntnu.no/person/lasse)
+* **Lasse Natvig** - *Initial work and Project Manager* - [NTNU](https://innsida.ntnu.no/person/lasse)
 * **Ole Bjørn Eithun Pedersen** - *GUI and general development* - [LinkedIn](http://linkedin.com/in/eithunpedersen/)
 
 See also the list of [contributors](https://github.com/LasseNatvig/SimComp/contributors) who participated in this project.

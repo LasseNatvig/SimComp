@@ -42,7 +42,7 @@ string Isa::getRegister(int registerNum) const {
 string Isa::disAssembly(word machineInstr) const {
     /* Returns instruction opcode as mnemonic, and the rest as bits. */
     word opCode = machineInstr & 0b1111111000000000;
-    bitset<9> bits = machineInstr & 0b0000000111111111;
+    word operandBits = machineInstr & 0b0000000111111111;
     string mnemonic;
     // TODO can be made faster by using a reverse map, but performance is not of interest here
     for (auto it = isaMap.begin(); it != isaMap.end(); it++) {
@@ -51,8 +51,38 @@ string Isa::disAssembly(word machineInstr) const {
             break;
         }
     }
+    stringstream operand;
+    switch (opCode >> 9) {
+      case ADD:
+      case SUB:
+        operand << "R" << dec << ((operandBits  & 0b111000000) >> 6) ;
+        operand << " R" << dec << ((operandBits & 0b111000) >> 3);
+        operand << " R" << dec << (operandBits & 0b111);
+        break;
+      case ADI:
+        operand << "R" << dec << ((operandBits & 0b111000000) >> 6);
+        operand << " R" << dec << ((operandBits & 0b111000) >> 3);
+        operand << " " <<dec << (operandBits & 0b111);
+        break;
+      case LD:
+      case SHL:
+      case ST:
+        operand << "R" << dec << ((operandBits & 0b111000000) >> 6);
+        operand << " R " << dec << ((operandBits & 0b111000) >> 3);
+        break;
+      case LDI:
+          operand << "R" << dec << ((operandBits & 0b111000000) >> 6);
+          operand << " " << dec << (operandBits & 0b111111);
+          break;
+      case JMP:
+      case SET:
+        operand << "R" << dec << ((operandBits & 0b111000000) >> 6);
+        break;
+      case HLT:
+        break;
+    }
     stringstream ret;
-    ret << mnemonic << " " << bits;
+    ret << mnemonic << " " << operand.str();
     return ret.str();
 }
 
@@ -70,7 +100,7 @@ word Isa::getRegister(const word& instr, unsigned int regNo) const {
         return (0b0000000000000111 & instr);
     default:
         stringstream error;
-        error << "Register number: " << regNo << " not found.";
+        error << "Max three registers in instruction.";
         reportError(error.str());
         return 0;
     }
@@ -92,7 +122,6 @@ void Isa::reportError(string errorMsg) const {
     logFile->write("\n");
 }
 
-// Spørsmål til Lasse: Er register HARDKODET??
 void Isa::doInstruction(const short& opCode, const word& instr, Memory& DM, Memory& IM) {
     /* Executes instruction */
     switch (opCode) {

@@ -13,7 +13,8 @@ ConsoleUi::~ConsoleUi() {
 }
 
 void ConsoleUi::start() {
-  sim->load(selectProgram(directory));
+  filename = selectProgram(directory);
+  sim->load(directory+filename);
   char simMode = selectSimulationMode(*sim);
   clock_t t;
   clock_t start;
@@ -35,7 +36,7 @@ void ConsoleUi::start() {
       reportMIPS(t, sim->getInstructionsSimulated());
     if (simMode == 'd')
       dumpStats();
-    sim->load(selectProgram(directory));
+    sim->load(directory+filename);
     simMode = selectSimulationMode(*sim);
   }
 }
@@ -62,10 +63,8 @@ void ConsoleUi::step() {
 
 void ConsoleUi::dumpStats() {
 	/* Dump memory statistics */
-  std::vector<std::string> imStats;
-  std::vector<std::string> dmStats;
-  sim->IM.getStats(*sim->cpu, imStats);
-  sim->DM.getStats(*sim->cpu, dmStats);
+  std::vector<std::string> imStats = sim->IM.getStats(*sim->cpu);
+  std::vector<std::string> dmStats = sim->DM.getStats(*sim->cpu);
 	for (auto &line : imStats)
     std::cout << line << std::endl;
   for (auto &line : dmStats)

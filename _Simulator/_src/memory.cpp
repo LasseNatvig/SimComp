@@ -32,8 +32,9 @@ void Memory::reset() {
     resetStats();
 }
 
-void Memory::getStats(Isa& cpu, vector<std::string> &vec) const {
-    /* Fills vec with stats, one item per line */
+vector<string> Memory::getStats(Isa& cpu) const {
+    /* Returns vec with stats, one item per line. (Function is needed for console version) */
+    vector<string> vec;
     stringstream ss;
     ss << "Memory stats for " << name << " is:";
     vec.push_back(ss.str());
@@ -74,6 +75,7 @@ void Memory::getStats(Isa& cpu, vector<std::string> &vec) const {
             }
         }
     }
+    return vec;
 }
 
 word Memory::getNextFreeLocation() {
