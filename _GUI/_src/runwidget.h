@@ -3,6 +3,7 @@
 
 #include "../../_Simulator/_src/logger.h"
 #include "../../_Simulator/_src/compSim.h"
+#include "memorywindowwidget.h"
 #include "globals.h"
 #include <string>
 #include <QWidget>
@@ -53,17 +54,22 @@ private:
     QGroupBox* buttonBox;
     QPushButton* start_btn;
     QPushButton* reset_btn;
+    QPushButton* dump_btn;
 
     /* TABLE */
     QTableWidget* table;
     QStringList tableHeader;
     void addStep(word PC);
 
+    /* MEMORY DUMP WINDOW */
+    memoryWindowWidget* memoryWindow;
+
 private slots:
     void startSim();
     void resetSim();
-    void setButtonText(int currentIndex);
     void openFile();
+    void memoryDump();
+    void setButtonText(int currentIndex);
 
 signals:
 

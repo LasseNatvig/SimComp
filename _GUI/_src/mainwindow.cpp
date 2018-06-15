@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     runW = new runWidget(this);
     runW->setAttribute(Qt::WA_DeleteOnClose);
     setCentralWidget(runW);
-
 }
 
 MainWindow::~MainWindow()

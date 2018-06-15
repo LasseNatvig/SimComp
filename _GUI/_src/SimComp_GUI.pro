@@ -27,12 +27,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        runwidget.cpp
+        runwidget.cpp \
+    memorywindowwidget.cpp
 
 HEADERS += \
         mainwindow.h \
         globals.h \
-        runwidget.h
+        runwidget.h \
+    memorywindowwidget.h
 
 RESOURCES += \
     images.qrc

@@ -69,10 +69,13 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     // Create and group buttons
     buttonBox = new QGroupBox;
     start_btn = new QPushButton("Run");
+    dump_btn = new QPushButton("Memory Dump");
     reset_btn = new QPushButton("Reset");
+
     QVBoxLayout* buttonsLayout = new QVBoxLayout;
     buttonsLayout->addWidget(start_btn);
     buttonsLayout->addWidget(reset_btn);
+    buttonsLayout->addWidget(dump_btn);
     buttonBox->setLayout(buttonsLayout);
 
 
@@ -96,6 +99,7 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     // Make connections
     connect(start_btn, SIGNAL(clicked()), this, SLOT(startSim())); // start_btn -> startSim()
     connect(reset_btn, SIGNAL(clicked()), this, SLOT(resetSim())); // reset_btn -> resetSim()
+    connect(dump_btn, SIGNAL(clicked()), this, SLOT(memoryDump())); // dump_btn -> memoryDump()
     connect(dropdownMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(setButtonText(int))); // Change in dropdown menu -> change start_btm
     connect(open_btn, SIGNAL(clicked()), this, SLOT(openFile())); // open_btn -> openFile()
 
@@ -163,6 +167,12 @@ void runWidget::load() {
     simulator->load(filename.toStdString());
 }
 
+void runWidget::memoryDump() {
+    memoryWindow = new memoryWindowWidget(nullptr, simulator);
+    memoryWindow->setAttribute(Qt::WA_DeleteOnClose);
+    memoryWindow->show();
+}
+
 void runWidget::resetSim() {
     simulationFinished = false;
     table->setRowCount(0);
@@ -180,19 +190,21 @@ void runWidget::addStats(clock_t start) {
     /* Appends statistics from current simulation */
 
     // Create vector with stats
-    std::vector<std::string> stats_vec;
+    std::vector<std::string> im_vec;
+    std::vector<std::string> dm_vec;
     std::stringstream  ss;
     ss << getMIPS(clock()-start);
-    stats_vec.push_back("MIPS: " + ss.str());
+    stats_lst->addItem(QString::fromStdString("MIPS: " + ss.str()));
     ss.str(std::string());
-    simulator->IM.getStats(*simulator->cpu, stats_vec);
-    simulator->DM.getStats(*simulator->cpu, stats_vec);
+    im_vec = simulator->IM.getStats(*simulator->cpu);
+    dm_vec = simulator->DM.getStats(*simulator->cpu);
     simulator->resetStatistics();
 
     // Add stats to stats_lst
-    for (auto &item : stats_vec) {
+    for (auto &item : im_vec)
         stats_lst->addItem(QString::fromStdString(item));
-    }
+    for (auto &item : dm_vec)
+        stats_lst->addItem(QString::fromStdString(item));
 }
 
 void runWidget::addStep(word PC) {

@@ -31,11 +31,6 @@ void ConsoleUi::start() {
         break;
     }
     t = readTime() - start;
-    std::cout << "*** Simulation ended" << std::endl;
-    if (!(simMode == 's'))  // Time and MIPS rate does not make sense in singe step mode
-      reportMIPS(t, sim->getInstructionsSimulated());
-    if (simMode == 'd')
-      dumpStats();
     sim->load(directory+filename);
     simMode = selectSimulationMode(*sim);
   }
