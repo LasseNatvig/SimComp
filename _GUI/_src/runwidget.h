@@ -14,6 +14,8 @@
 #include <QTableWidget>
 #include <QGroupBox>
 #include <QListWidget>
+#include <QFileDialog>
+
 
 void showChange(QTableWidget* table, int rowIndex, int from, int to);
 
@@ -29,6 +31,7 @@ private:
     ComputerSimulation* simulator;
     QString filename;
     std::string simName = "AdHoc16_V03";
+
     bool simulationFinished = false;
     double getMIPS(clock_t ticks);
     void step();
@@ -63,6 +66,10 @@ private:
 
     /* MEMORY DUMP WINDOW */
     memoryWindowWidget* memoryWindow;
+
+    /* Settings functions */
+    void writeSettings();
+    void readSettings();
 
 private slots:
     void startSim();

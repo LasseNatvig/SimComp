@@ -9,12 +9,13 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QPixmap>
+#include <QSettings>
 #include <QFileDialog>
 #include <ctime>
 
 
 runWidget::runWidget(QWidget *parent) : QWidget(parent)
-{
+{ 
     // Create instance of ComputerSimulation
     simulator = new ComputerSimulation(simName);
 
@@ -180,9 +181,21 @@ void runWidget::resetSim() {
 
 void runWidget::openFile() {
     // Starts a file dialog which lets the user choose a assembler program to run
-    filename = QFileDialog::getOpenFileName(this, tr("Open file"), "/",tr("Assembler program (*.sasm)"));
-    program_lbl->setText("Program: " + filename);
-    resetSim();
+    const QString DEFAULT_DIR_KEY("/");
+    QSettings settings; // Will be using application informations
+    // for correct location of your settings
+
+    QString selectedFile = QFileDialog::getOpenFileName(
+                this, "Open", settings.value(DEFAULT_DIR_KEY).toString(), tr("Assembler program (*.sasm)"));
+
+    if (!selectedFile.isEmpty()) {
+        QDir CurrentDir;
+        settings.setValue(DEFAULT_DIR_KEY,
+                            CurrentDir.absoluteFilePath(selectedFile));
+        filename = selectedFile;
+        program_lbl->setText("Program: " + filename);
+        resetSim();
+    }
 }
 
 void runWidget::addStats(clock_t start) {
@@ -224,6 +237,14 @@ void runWidget::addStep(word PC) {
 
     // Set color of registers that changed
     showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters()+3);
+}
+
+void runWidget::writeSettings() {
+
+}
+
+void runWidget::readSettings() {
+
 }
 
 void showChange(QTableWidget* table, int rowIndex, int from, int to) {

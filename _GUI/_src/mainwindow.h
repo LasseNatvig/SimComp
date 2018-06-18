@@ -5,6 +5,7 @@
 #include "globals.h"
 #include <QMainWindow>
 #include <QIcon>
+#include <QSettings>
 
 
 class MainWindow : public QMainWindow
