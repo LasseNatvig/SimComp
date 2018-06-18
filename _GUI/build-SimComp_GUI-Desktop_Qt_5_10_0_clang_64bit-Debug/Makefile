@@ -53,6 +53,7 @@ OBJECTS_DIR   = ./
 SOURCES       = ../_src/main.cpp \
 		../_src/mainwindow.cpp \
 		../_src/runwidget.cpp \
+		../_src/memorywindowwidget.cpp \
 		../../_Simulator/_src/compSim.cpp \
 		../../_Simulator/_src/isa.cpp \
 		../../_Simulator/_src/loader.cpp \
@@ -60,10 +61,12 @@ SOURCES       = ../_src/main.cpp \
 		../../_Simulator/_src/memory.cpp \
 		../../_Simulator/_src/Program.cpp qrc_images.cpp \
 		moc_mainwindow.cpp \
-		moc_runwidget.cpp
+		moc_runwidget.cpp \
+		moc_memorywindowwidget.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		runwidget.o \
+		memorywindowwidget.o \
 		compSim.o \
 		isa.o \
 		loader.o \
@@ -72,7 +75,8 @@ OBJECTS       = main.o \
 		Program.o \
 		qrc_images.o \
 		moc_mainwindow.o \
-		moc_runwidget.o
+		moc_runwidget.o \
+		moc_memorywindowwidget.o
 DIST          = /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/spec_pre.prf \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/qdevice.pri \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/device_config.prf \
@@ -263,6 +267,7 @@ DIST          = /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/sp
 		../_src/SimComp_GUI.pro ../_src/mainwindow.h \
 		../_src/globals.h \
 		../_src/runwidget.h \
+		../_src/memorywindowwidget.h \
 		../../_Simulator/_src/compSim.h \
 		../../_Simulator/_src/config.h \
 		../../_Simulator/_src/isa.h \
@@ -272,6 +277,7 @@ DIST          = /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/sp
 		../../_Simulator/_src/program.h ../_src/main.cpp \
 		../_src/mainwindow.cpp \
 		../_src/runwidget.cpp \
+		../_src/memorywindowwidget.cpp \
 		../../_Simulator/_src/compSim.cpp \
 		../../_Simulator/_src/isa.cpp \
 		../../_Simulator/_src/loader.cpp \
@@ -711,8 +717,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../_src/images.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../_src/mainwindow.h ../_src/globals.h ../_src/runwidget.h ../../_Simulator/_src/compSim.h ../../_Simulator/_src/config.h ../../_Simulator/_src/isa.h ../../_Simulator/_src/loader.h ../../_Simulator/_src/logger.h ../../_Simulator/_src/memory.h ../../_Simulator/_src/program.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../_src/main.cpp ../_src/mainwindow.cpp ../_src/runwidget.cpp ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/isa.cpp ../../_Simulator/_src/loader.cpp ../../_Simulator/_src/logger.cpp ../../_Simulator/_src/memory.cpp ../../_Simulator/_src/Program.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../_src/mainwindow.h ../_src/globals.h ../_src/runwidget.h ../_src/memorywindowwidget.h ../../_Simulator/_src/compSim.h ../../_Simulator/_src/config.h ../../_Simulator/_src/isa.h ../../_Simulator/_src/loader.h ../../_Simulator/_src/logger.h ../../_Simulator/_src/memory.h ../../_Simulator/_src/program.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../_src/main.cpp ../_src/mainwindow.cpp ../_src/runwidget.cpp ../_src/memorywindowwidget.cpp ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/isa.cpp ../../_Simulator/_src/loader.cpp ../../_Simulator/_src/logger.cpp ../../_Simulator/_src/memory.cpp ../../_Simulator/_src/Program.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -750,9 +756,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/data/dummy.cpp
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.10 -Wall -W -dM -E -o moc_predefs.h /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_runwidget.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_runwidget.cpp moc_memorywindowwidget.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_runwidget.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_runwidget.cpp moc_memorywindowwidget.cpp
 moc_mainwindow.cpp: ../_src/runwidget.h \
 		../../_Simulator/_src/logger.h \
 		../../_Simulator/_src/compSim.h \
@@ -760,9 +766,10 @@ moc_mainwindow.cpp: ../_src/runwidget.h \
 		../../_Simulator/_src/isa.h \
 		../../_Simulator/_src/program.h \
 		../../_Simulator/_src/loader.h \
-		../_src/globals.h \
+		../_src/memorywindowwidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../_src/globals.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QString \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLabel \
@@ -792,9 +799,10 @@ moc_runwidget.cpp: ../../_Simulator/_src/logger.h \
 		../../_Simulator/_src/isa.h \
 		../../_Simulator/_src/program.h \
 		../../_Simulator/_src/loader.h \
-		../_src/globals.h \
+		../_src/memorywindowwidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../_src/globals.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QString \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLabel \
@@ -813,6 +821,13 @@ moc_runwidget.cpp: ../../_Simulator/_src/logger.h \
 		moc_predefs.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc
 	/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/macx-clang -I'/Users/olebjorn/Desktop/SimComp - TDT4102/Git Repo/SimComp/_GUI/_src' -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib ../_src/runwidget.h -o moc_runwidget.cpp
+
+moc_memorywindowwidget.cpp: /Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../_src/memorywindowwidget.h \
+		moc_predefs.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc
+	/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/macx-clang -I'/Users/olebjorn/Desktop/SimComp - TDT4102/Git Repo/SimComp/_GUI/_src' -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib ../_src/memorywindowwidget.h -o moc_memorywindowwidget.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -840,9 +855,10 @@ main.o: ../_src/main.cpp ../_src/mainwindow.h \
 		../../_Simulator/_src/isa.h \
 		../../_Simulator/_src/program.h \
 		../../_Simulator/_src/loader.h \
-		../_src/globals.h \
+		../_src/memorywindowwidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../_src/globals.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QString \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLabel \
@@ -873,9 +889,10 @@ mainwindow.o: ../_src/mainwindow.cpp ../_src/mainwindow.h \
 		../../_Simulator/_src/isa.h \
 		../../_Simulator/_src/program.h \
 		../../_Simulator/_src/loader.h \
-		../_src/globals.h \
+		../_src/memorywindowwidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../_src/globals.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QString \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLabel \
@@ -905,9 +922,10 @@ runwidget.o: ../_src/runwidget.cpp ../_src/runwidget.h \
 		../../_Simulator/_src/isa.h \
 		../../_Simulator/_src/program.h \
 		../../_Simulator/_src/loader.h \
-		../_src/globals.h \
+		../_src/memorywindowwidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../_src/globals.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QString \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLabel \
@@ -934,6 +952,11 @@ runwidget.o: ../_src/runwidget.cpp ../_src/runwidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o runwidget.o ../_src/runwidget.cpp
+
+memorywindowwidget.o: ../_src/memorywindowwidget.cpp ../_src/memorywindowwidget.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memorywindowwidget.o ../_src/memorywindowwidget.cpp
 
 compSim.o: ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/compSim.h \
 		../../_Simulator/_src/logger.h \
@@ -978,6 +1001,9 @@ moc_mainwindow.o: moc_mainwindow.cpp
 
 moc_runwidget.o: moc_runwidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_runwidget.o moc_runwidget.cpp
+
+moc_memorywindowwidget.o: moc_memorywindowwidget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_memorywindowwidget.o moc_memorywindowwidget.cpp
 
 ####### Install
 
