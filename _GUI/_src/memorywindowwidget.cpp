@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-memoryWindowWidget::memoryWindowWidget(QWidget *parent, ComputerSimulation* simulator) : QWidget(parent),
+MemoryWindowWidget::MemoryWindowWidget(QWidget *parent, ComputerSimulation* simulator) : QWidget(parent),
     simulator(simulator)
 {
     /* Allocate objects */
@@ -86,11 +86,11 @@ memoryWindowWidget::memoryWindowWidget(QWidget *parent, ComputerSimulation* simu
     this->setWindowTitle("Memory Dump");
 }
 
-void memoryWindowWidget::clearDisplay() {
+void MemoryWindowWidget::clearDisplay() {
     memoryDisplay->setRowCount(0);
 }
 
-void memoryWindowWidget::update() {
+void MemoryWindowWidget::update() {
     int fromAddr = fromAddr_spnbox->value();
     int toAddr = toAddr_spnbox->value();
 

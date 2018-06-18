@@ -11,11 +11,11 @@
 #include <QSpacerItem>
 #include <QRadioButton>
 
-class memoryWindowWidget : public QWidget
+class MemoryWindowWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit memoryWindowWidget(QWidget *parent, ComputerSimulation* simulator);
+    explicit MemoryWindowWidget(QWidget *parent, ComputerSimulation* simulator);
 private:
     ComputerSimulation* simulator;
     QLabel* title_lbl;

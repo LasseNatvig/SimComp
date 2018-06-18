@@ -21,7 +21,8 @@ private:
     QIcon* appIcon;
 
     // Child widgets
-    runWidget* runW;
+    RunWidget* runW;
+
 
 public slots:
 };

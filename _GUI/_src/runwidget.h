@@ -4,6 +4,7 @@
 #include "../../_Simulator/_src/logger.h"
 #include "../../_Simulator/_src/compSim.h"
 #include "memorywindowwidget.h"
+#include "idewidget.h"
 #include "globals.h"
 #include <string>
 #include <QWidget>
@@ -15,16 +16,17 @@
 #include <QGroupBox>
 #include <QListWidget>
 #include <QFileDialog>
-
+#include <QMenuBar>
+#include <QAction>
+#include <QTabWidget>
 
 void showChange(QTableWidget* table, int rowIndex, int from, int to);
 
-class runWidget : public QWidget
+class RunWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit runWidget(QWidget *parent = nullptr);
-    void setFilename(QString filename);
+    explicit RunWidget(QWidget *parent = nullptr);
 
 private:
     /* Core variables and functions */
@@ -38,10 +40,23 @@ private:
     void run();
     void load();
 
-    /* HEADER */
+    /* MENU BAR */
+    QMenuBar* menuBar;
+    QMenu* fileMenu;
+    QAction* newAction;
+    QAction* openAction;
+    QAction* saveAction;
+    QAction* saveAsAction;
+    QMenu* editMenu;
+    QAction* undoAction;
+    QAction* redoAction;
+
+    void createMenuBar();
+
+    /* PROGRAM INFO */
     QGroupBox* programBox;
     QLabel* program_lbl;
-    QPushButton* open_btn;
+    void createProgramInfo();
 
     /* SIDE PANEL: */
     // - TOP
@@ -56,25 +71,30 @@ private:
     // - BOTTOM
     QGroupBox* buttonBox;
     QPushButton* start_btn;
+    QAction* startAction;
     QPushButton* reset_btn;
+    QAction* resetAction;
     QPushButton* dump_btn;
+    QAction* dumpAction;
+    void createSidePanel();
 
-    /* TABLE */
+    /* TAB WIDGET */
+    QTabWidget* tabs;
     QTableWidget* table;
     QStringList tableHeader;
+    IdeWidget* ide;
+
     void addStep(word PC);
+    void createTabs();
 
     /* MEMORY DUMP WINDOW */
-    memoryWindowWidget* memoryWindow;
-
-    /* Settings functions */
-    void writeSettings();
-    void readSettings();
+    MemoryWindowWidget* memoryWindow;
 
 private slots:
     void startSim();
     void resetSim();
     void openFile();
+    void newFile();
     void memoryDump();
     void setButtonText(int currentIndex);
 

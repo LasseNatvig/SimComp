@@ -14,73 +14,18 @@
 #include <ctime>
 
 
-runWidget::runWidget(QWidget *parent) : QWidget(parent)
+RunWidget::RunWidget(QWidget *parent) : QWidget(parent)
 { 
     // Create instance of ComputerSimulation
     simulator = new ComputerSimulation(simName);
 
-    // Program label and choose file
-    program_lbl = new QLabel("Choose file to read instructions from: ");
-    program_lbl->setStyleSheet("font-weight: bold;");
-    open_btn = new QPushButton("Open file");
-    programBox = new QGroupBox;
-    QHBoxLayout* programLayout = new QHBoxLayout;
-    programLayout->addWidget(program_lbl);
-    programLayout->addWidget(open_btn);
-    programBox->setLayout(programLayout);
-
-    // Create dropdown menu and group with label and add to
-    dropdownMenuBox = new QGroupBox;
-    select_mode_lbl = new QLabel("Select simulation mode");
-    dropdownMenu = new QComboBox;
-    select_mode_lbl->setStyleSheet("font-weight: bold;");
-    QVBoxLayout* dropdownMenuLayout = new QVBoxLayout;
-    dropdownMenu->addItem("Run");
-    dropdownMenu->addItem("Singel step");
-    dropdownMenuLayout->addWidget(select_mode_lbl, 0, Qt::AlignCenter);
-    dropdownMenuLayout->addWidget(dropdownMenu);
-    dropdownMenuBox->setLayout(dropdownMenuLayout);
-
-    // Create and set text of description
-    description_lbl = new QLabel;
-    QString description_txt = "Simulator: AdHoc16_V03\n";
-    description_txt.append("(Pressing \"Reset\" will stop the simulation and reset PC)");
-    description_lbl->setText(description_txt);
-    description_lbl->setStyleSheet("font-weight: bold;");
-
-    // Create list with statistics
-    stats_lst = new QListWidget;
-
-    // Create icon as QPixmap in a QLabel
-    icon_img = new QLabel;
-    QPixmap icon(":/images/../_img/SimComp_icon.png");
-    icon_img->setPixmap(icon);
-
-    // Create table
-    table = new QTableWidget;
-    tableHeader << "Instruction count" << "OpCode" << "PC";
-    for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++)
-        tableHeader << QString("R") + QString::number(i);
-    tableHeader << "next PC";
-    table->setColumnCount(12);
-    table->setSelectionMode(QAbstractItemView::NoSelection);
-    table->setHorizontalHeaderLabels(tableHeader);
-    table->verticalHeader()->setVisible(false);
-
-    // Create and group buttons
-    buttonBox = new QGroupBox;
-    start_btn = new QPushButton("Run");
-    dump_btn = new QPushButton("Memory Dump");
-    reset_btn = new QPushButton("Reset");
-
-    QVBoxLayout* buttonsLayout = new QVBoxLayout;
-    buttonsLayout->addWidget(start_btn);
-    buttonsLayout->addWidget(reset_btn);
-    buttonsLayout->addWidget(dump_btn);
-    buttonBox->setLayout(buttonsLayout);
+    createTabs();
+    createMenuBar();
+    createProgramInfo();
+    createSidePanel();
 
 
-    // Create sidepanel
+    // Group sidepanel in one layout
     QVBoxLayout* sidePanelLayout = new QVBoxLayout;
     sidePanelLayout->addWidget(icon_img, 0, Qt::AlignCenter); // TOP
     sidePanelLayout->addWidget(stats_lst, 0, Qt::AlignCenter); // MIDDLE
@@ -89,12 +34,13 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
 
     // Make main layout
     QGridLayout* mainLayout = new QGridLayout;
+    mainLayout->setMenuBar(menuBar);
     mainLayout->addWidget(programBox, 1, 1);
     mainLayout->addWidget(dropdownMenuBox, 1, 2);
-    mainLayout->addWidget(table, 2, 1);
+    mainLayout->addWidget(tabs, 2, 1);
     mainLayout->addLayout(sidePanelLayout, 2, 2);
 
-    // Set main layout of runWidget
+    // Set main layout of RunWidget
     setLayout(mainLayout);
 
     // Make connections
@@ -102,13 +48,13 @@ runWidget::runWidget(QWidget *parent) : QWidget(parent)
     connect(reset_btn, SIGNAL(clicked()), this, SLOT(resetSim())); // reset_btn -> resetSim()
     connect(dump_btn, SIGNAL(clicked()), this, SLOT(memoryDump())); // dump_btn -> memoryDump()
     connect(dropdownMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(setButtonText(int))); // Change in dropdown menu -> change start_btm
-    connect(open_btn, SIGNAL(clicked()), this, SLOT(openFile())); // open_btn -> openFile()
 
     // Set minimum size of this window
     this->setMinimumSize(QSize(MIN_WIDTH, MIN_HEIGHT));
 }
 
-void runWidget::startSim() {
+/* SLOTS */
+void RunWidget::startSim() {
     /* startSim() starts the simulation with the selected mode from the dropdown menu */
 
     if (filename.isNull()) return; // Can not start simulation without filename
@@ -124,12 +70,7 @@ void runWidget::startSim() {
     }
 }
 
-double runWidget::getMIPS(clock_t ticks) {
-    double seconds = static_cast<double>(ticks) / CLOCKS_PER_SEC; // Calculate seconds
-    return (static_cast<double>(simulator->getInstructionsSimulated()) / 1000000.0) / seconds; // Calculate MIPS
-}
-
-void runWidget::setButtonText(int currentIndex) {
+void RunWidget::setButtonText(int currentIndex) {
     switch (currentIndex) {
     case 0:
         start_btn->setText("Run");
@@ -140,7 +81,7 @@ void runWidget::setButtonText(int currentIndex) {
     }
 }
 
-void runWidget::step() {
+void RunWidget::step() {
     /* Moves to next step */
     if (simulationFinished) return; // Simulation finshed
 
@@ -153,7 +94,7 @@ void runWidget::step() {
 
 }
 
-void runWidget::run() {
+void RunWidget::run() {
     if (simulationFinished) return;
     load(); // Load program
     clock_t start = clock();
@@ -162,43 +103,47 @@ void runWidget::run() {
     addStats(start);
 }
 
-void runWidget::load() {
+void RunWidget::load() {
     resetSim();
     simulator->load(filename.toStdString());
 }
 
-void runWidget::memoryDump() {
-    memoryWindow = new memoryWindowWidget(nullptr, simulator);
+void RunWidget::memoryDump() {
+    memoryWindow = new MemoryWindowWidget(nullptr, simulator);
     memoryWindow->setAttribute(Qt::WA_DeleteOnClose); 
     memoryWindow->show();
 }
 
-void runWidget::resetSim() {
+void RunWidget::resetSim() {
     simulationFinished = false;
     table->setRowCount(0);
     stats_lst->clear();
 }
 
-void runWidget::openFile() {
+void RunWidget::openFile() {
     // Starts a file dialog which lets the user choose a assembler program to run
     const QString DEFAULT_DIR_KEY("/");
-    QSettings settings; // Will be using application informations
-    // for correct location of your settings
+    QSettings settings;
 
     QString selectedFile = QFileDialog::getOpenFileName(
                 this, "Open", settings.value(DEFAULT_DIR_KEY).toString(), tr("Assembler program (*.sasm)"));
 
     if (!selectedFile.isEmpty()) {
-        QDir CurrentDir;
+        QDir currentDir;
         settings.setValue(DEFAULT_DIR_KEY,
-                            CurrentDir.absoluteFilePath(selectedFile));
+                            currentDir.absoluteFilePath(selectedFile));
         filename = selectedFile;
-        program_lbl->setText("Program: " + filename);
+        program_lbl->setText("<b>Program:</b> " + filename);
+        ide->open(filename);
         resetSim();
     }
 }
 
-void runWidget::addStats(clock_t start) {
+void RunWidget::newFile() {
+
+}
+
+void RunWidget::addStats(clock_t start) {
     /* Appends statistics from current simulation */
 
     // Create vector with stats
@@ -211,7 +156,7 @@ void runWidget::addStats(clock_t start) {
   //  ss << simulator->IM
 }
 
-void runWidget::addStep(word PC) {
+void RunWidget::addStep(word PC) {
     // Add row for current step (TODO: -make better!)
     std::stringstream stepInfo;
     table->insertRow(table->rowCount());
@@ -239,12 +184,118 @@ void runWidget::addStep(word PC) {
     showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters()+3);
 }
 
-void runWidget::writeSettings() {
+
+/* CREATE */
+void RunWidget::createMenuBar() {
+    menuBar = new QMenuBar;
+
+    fileMenu = menuBar->addMenu(tr("&File"));
+    newAction = new QAction(tr("&New"));
+    openAction = new QAction(tr("&Open"));
+    saveAction = new QAction(tr("&Save"));
+    saveAsAction = new QAction(tr("&Save As"));
+
+    newAction->setShortcut(QKeySequence::New);
+    openAction->setShortcut(QKeySequence::Open);
+    saveAction->setShortcut(QKeySequence::Save);
+    saveAsAction->setShortcut(QKeySequence::SaveAs);
+
+    fileMenu->addAction(newAction);
+    fileMenu->addAction(openAction);
+    fileMenu->addSeparator();
+    fileMenu->addAction(saveAction);
+    fileMenu->addAction(saveAsAction);
+
+    connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
+    connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
+    connect(saveAction, SIGNAL(triggered()), ide, SLOT(save()));
+    connect(saveAsAction, SIGNAL(triggered()), ide, SLOT(saveAs()));
+
+    editMenu = menuBar->addMenu(tr("&Edit"));
+    undoAction = new QAction(tr("&Undo"));
+    redoAction = new QAction(tr("&Redo"));
+    undoAction->setShortcut(QKeySequence::Undo);
+    redoAction->setShortcut(QKeySequence::Redo);
+    editMenu->addAction(undoAction);
+    editMenu->addAction(redoAction);
+    connect(undoAction, SIGNAL(triggered()), ide, SLOT(undo()));
+    connect(redoAction, SIGNAL(triggered()), ide, SLOT(redo()));
 
 }
 
-void runWidget::readSettings() {
+void RunWidget::createProgramInfo() {
+    program_lbl = new QLabel("<b>Computer Simulation</b><br>"
+                             "Go to <i>File->Open/New</i> to open or create a new file.");
+    programBox = new QGroupBox;
+    QHBoxLayout* programLayout = new QHBoxLayout;
+    programLayout->addWidget(program_lbl);
+    programBox->setLayout(programLayout);
+}
 
+void RunWidget::createSidePanel() {
+    // Create dropdown menu and group with label and add to
+    dropdownMenuBox = new QGroupBox;
+    select_mode_lbl = new QLabel("Select simulation mode");
+    dropdownMenu = new QComboBox;
+    select_mode_lbl->setStyleSheet("font-weight: bold;");
+    QVBoxLayout* dropdownMenuLayout = new QVBoxLayout;
+    dropdownMenu->addItem("Run");
+    dropdownMenu->addItem("Singel step");
+    dropdownMenuLayout->addWidget(select_mode_lbl, 0, Qt::AlignCenter);
+    dropdownMenuLayout->addWidget(dropdownMenu);
+    dropdownMenuBox->setLayout(dropdownMenuLayout);
+
+    // Create and set text of description
+    description_lbl = new QLabel;
+    QString description_txt = "Simulator: AdHoc16_V03\n";
+    description_txt.append("(Pressing \"Reset\" will stop the simulation and reset PC)");
+    description_lbl->setText(description_txt);
+    description_lbl->setStyleSheet("font-weight: bold;");
+
+    // Create list with statistics
+    stats_lst = new QListWidget;
+
+    // Create icon as QPixmap in a QLabel
+    icon_img = new QLabel;
+    QPixmap icon(":/images/../_img/SimComp_icon.png");
+    icon_img->setPixmap(icon);
+
+    // Create and group buttons
+    buttonBox = new QGroupBox;
+    start_btn = new QPushButton("Run");
+    dump_btn = new QPushButton("Memory Dump");
+    reset_btn = new QPushButton("Reset");
+
+    QVBoxLayout* buttonsLayout = new QVBoxLayout;
+    buttonsLayout->addWidget(start_btn);
+    buttonsLayout->addWidget(reset_btn);
+    buttonsLayout->addWidget(dump_btn);
+    buttonBox->setLayout(buttonsLayout);
+}
+
+void RunWidget::createTabs() {
+    tabs = new QTabWidget;
+
+    table = new QTableWidget;
+    tableHeader << "Instruction count" << "OpCode" << "PC";
+    for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++)
+        tableHeader << QString("R") + QString::number(i);
+    tableHeader << "next PC";
+    table->setColumnCount(12);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setHorizontalHeaderLabels(tableHeader);
+    table->verticalHeader()->setVisible(false);
+
+    ide = new IdeWidget(this);
+    tabs->addTab(table, "Execution");
+    tabs->addTab(ide, "Editor");
+}
+
+
+/* UTILS */
+double RunWidget::getMIPS(clock_t ticks) {
+    double seconds = static_cast<double>(ticks) / CLOCKS_PER_SEC; // Calculate seconds
+    return (static_cast<double>(simulator->getInstructionsSimulated()) / 1000000.0) / seconds; // Calculate MIPS
 }
 
 void showChange(QTableWidget* table, int rowIndex, int from, int to) {

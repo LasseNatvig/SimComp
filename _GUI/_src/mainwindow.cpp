@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <iostream>
 #include <QStyle>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -14,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowIcon(*appIcon);
     this->setWindowTitle("Simulating Computers");
 
-    // Make runWidget central widget (Takes over window)
-    runW = new runWidget(this);
+    // Make RunWidget central widget (Takes over window)
+    runW = new RunWidget(this);
     runW->setAttribute(Qt::WA_DeleteOnClose);
     setCentralWidget(runW);
 }
