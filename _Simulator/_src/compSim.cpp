@@ -97,7 +97,7 @@ bool ComputerSimulation::step() {
 vector<string> ComputerSimulation::memoryDump(word fromAddr, word toAddr, memType memoryType) {
   vector<string> vec;
   stringstream ss;
-  if (fromAddr >= toAddr) {
+  if (fromAddr > toAddr) {
     writeToLogg("memoryDump(): Invalid fromAddr > toAddr\n");
     return vec;
   }
@@ -108,6 +108,8 @@ vector<string> ComputerSimulation::memoryDump(word fromAddr, word toAddr, memTyp
     } else if (memoryType == INSTR) {
       if ((fromAddr < 0) || (toAddr > IM.words.size()-1)) return vec;
       ss << cpu->disAssembly(IM.words[i]);
+      if (((IM.words[i] & 0b1111111000000000) >> 9) == SET)
+        ss << " " << IM.words[++i];
     } else {
       writeToLogg("Invalid memory type used.\n");
       return vec;

@@ -146,10 +146,9 @@ void runWidget::step() {
     if (!simulator->isRunning()) load(); // Only load when simulator is not running
 
     word currentPC = simulator->cpu->PC;
+    addStep(currentPC);
     if ((!simulator->step())) // Make simulator execute one step
         simulationFinished = true; // Simulation finshed
-
-    addStep(currentPC); // Add step to table
 
 }
 
@@ -169,7 +168,7 @@ void runWidget::load() {
 
 void runWidget::memoryDump() {
     memoryWindow = new memoryWindowWidget(nullptr, simulator);
-    memoryWindow->setAttribute(Qt::WA_DeleteOnClose);
+    memoryWindow->setAttribute(Qt::WA_DeleteOnClose); 
     memoryWindow->show();
 }
 
@@ -190,21 +189,13 @@ void runWidget::addStats(clock_t start) {
     /* Appends statistics from current simulation */
 
     // Create vector with stats
-    std::vector<std::string> im_vec;
     std::vector<std::string> dm_vec;
+    std::vector<std::string> im_vec;
     std::stringstream  ss;
     ss << getMIPS(clock()-start);
     stats_lst->addItem(QString::fromStdString("MIPS: " + ss.str()));
     ss.str(std::string());
-    im_vec = simulator->IM.getStats(*simulator->cpu);
-    dm_vec = simulator->DM.getStats(*simulator->cpu);
-    simulator->resetStatistics();
-
-    // Add stats to stats_lst
-    for (auto &item : im_vec)
-        stats_lst->addItem(QString::fromStdString(item));
-    for (auto &item : dm_vec)
-        stats_lst->addItem(QString::fromStdString(item));
+  //  ss << simulator->IM
 }
 
 void runWidget::addStep(word PC) {
@@ -216,7 +207,7 @@ void runWidget::addStep(word PC) {
     table->setItem(table->rowCount()-1, 0, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
     stepInfo.str(std::string());
 
-    stepInfo << simulator->cpu->disAssembly(simulator->getInstr(PC));
+    stepInfo << simulator->memoryDump(PC, PC, INSTR)[0];
     table->setItem(table->rowCount()-1, 1, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
     stepInfo.str(std::string());
 
@@ -232,7 +223,7 @@ void runWidget::addStep(word PC) {
     table->setItem(table->rowCount()-1, 11, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
 
     // Set color of registers that changed
-    showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters());
+    showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters()+3);
 }
 
 void showChange(QTableWidget* table, int rowIndex, int from, int to) {

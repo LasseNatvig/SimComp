@@ -68,7 +68,7 @@ string Isa::disAssembly(word machineInstr) const {
       case SHL:
       case ST:
         operand << "R" << dec << ((operandBits & 0b111000000) >> 6);
-        operand << " R " << dec << ((operandBits & 0b111000) >> 3);
+        operand << " R" << dec << ((operandBits & 0b111000) >> 3);
         break;
       case LDI:
           operand << "R" << dec << ((operandBits & 0b111000000) >> 6);

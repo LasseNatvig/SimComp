@@ -94,19 +94,23 @@ void memoryWindowWidget::update() {
     int fromAddr = fromAddr_spnbox->value();
     int toAddr = toAddr_spnbox->value();
 
-    if (fromAddr >= toAddr) return;
+    if (fromAddr > toAddr) return;
     clearDisplay();
     std::vector<std::string> dump;
     memType memtyp = INSTR;
-    if (dm_btn->isChecked())
+    unsigned int columnCount = 1;
+    if (dm_btn->isChecked()) {
         memtyp = DATA;
+        columnCount = 10;
+    }
+    memoryDisplay->setColumnCount(columnCount);
     dump = simulator->memoryDump(fromAddr, toAddr, memtyp);
     if (dump.empty()) return;
 
     for (int i = 0; i < dump.size(); i++) {
-        if (i % 10 == 0)
+        if (i % columnCount == 0)
             memoryDisplay->insertRow(memoryDisplay->rowCount());
-        memoryDisplay->setItem(memoryDisplay->rowCount()-1, i % 10, new QTableWidgetItem(QString::fromStdString(dump[i])));
+        memoryDisplay->setItem(memoryDisplay->rowCount()-1, i % columnCount, new QTableWidgetItem(QString::fromStdString(dump[i])));
     }
 }
 
