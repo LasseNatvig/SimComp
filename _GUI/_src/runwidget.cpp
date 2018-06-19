@@ -53,6 +53,7 @@ RunWidget::RunWidget(QWidget *parent) : QWidget(parent)
     this->setMinimumSize(QSize(MIN_WIDTH, MIN_HEIGHT));
 }
 
+
 /* SLOTS */
 void RunWidget::startSim() {
     /* startSim() starts the simulation with the selected mode from the dropdown menu */
@@ -187,6 +188,11 @@ void RunWidget::updateProgramLabel(QString filename) {
     program_lbl->setText("<b>Program:</b> " + filename);
 }
 
+void RunWidget::runFromShortCut() {
+    dropdownMenu->setCurrentIndex(0);
+    startSim();
+}
+
 /* CREATE */
 void RunWidget::createMenuBar() {
     menuBar = new QMenuBar;
@@ -196,18 +202,15 @@ void RunWidget::createMenuBar() {
     openAction = new QAction(tr("&Open"));
     saveAction = new QAction(tr("&Save"));
     saveAsAction = new QAction(tr("&Save As"));
-
     newAction->setShortcut(QKeySequence::New);
     openAction->setShortcut(QKeySequence::Open);
     saveAction->setShortcut(QKeySequence::Save);
     saveAsAction->setShortcut(QKeySequence::SaveAs);
-
     fileMenu->addAction(newAction);
     fileMenu->addAction(openAction);
     fileMenu->addSeparator();
     fileMenu->addAction(saveAction);
     fileMenu->addAction(saveAsAction);
-
     connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
     connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
     connect(saveAction, SIGNAL(triggered()), ide, SLOT(save()));
@@ -222,6 +225,12 @@ void RunWidget::createMenuBar() {
     editMenu->addAction(redoAction);
     connect(undoAction, SIGNAL(triggered()), ide, SLOT(undo()));
     connect(redoAction, SIGNAL(triggered()), ide, SLOT(redo()));
+
+    buildMenu = menuBar->addMenu(tr("&Build"));
+    runAction = new QAction(tr("&Run"));
+    runAction->setShortcut(QKeySequence::Refresh);
+    buildMenu->addAction(runAction);
+    connect(runAction, SIGNAL(triggered()), this, SLOT(runFromShortCut()));
 
 }
 

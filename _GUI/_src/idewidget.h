@@ -12,6 +12,7 @@ class QSize;
 class QWidget;
 
 class LineNumberArea;
+class BreakPointArea;
 
 
 class IdeWidget : public QPlainTextEdit
@@ -21,13 +22,18 @@ class IdeWidget : public QPlainTextEdit
 public:
     IdeWidget(QWidget *parent = 0);
 
-    void lineNumberAreaPaintEvent(QPaintEvent *event);
+    void lineNumberAreaPaintEvent(QPaintEvent* event);
+    void breakPointAreaPaintEvent(QPaintEvent* event);
     int lineNumberAreaWidth();
+    int breakPointAreaWidth();
+    void setBreakPoint(QPoint breakPoint);
 
 public slots:
     void save();
     void saveAs();
     void open(QString filename);
+    void updateBreakPoints(int lines);
+    void clearBreakPoints();
 
 signals:
     void updateLabel(QString label);
@@ -36,12 +42,17 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-    void updateLineNumberAreaWidth(int newBlockCount);
+    void updateSideAreaWidth(int newBlockCount);
     void highlightCurrentLine();
     void updateLineNumberArea(const QRect &, int);
+    void updateBreakPointArea(const QRect &, int dy);
 
 private:
     QWidget* lineNumberArea;
+    QWidget* breakPointArea;
+    int* breakPoints;
+    int lines;
+    QPoint breakPoint;
     QTextDocument* doc;
     QString filename;
 };
@@ -51,26 +62,44 @@ class LineNumberArea : public QWidget
 {
 public:
     LineNumberArea(IdeWidget *editor) : QWidget(editor) {
-        IdeWidget = editor;
+        ideWidget = editor;
     }
 
     QSize sizeHint() const override {
-        return QSize(IdeWidget->lineNumberAreaWidth(), 0);
+        return QSize(ideWidget->lineNumberAreaWidth(), 0);
     }
 
 protected:
     void paintEvent(QPaintEvent *event) override {
-        IdeWidget->lineNumberAreaPaintEvent(event);
+        ideWidget->lineNumberAreaPaintEvent(event);
     }
 
 private:
-    IdeWidget* IdeWidget;
+    IdeWidget* ideWidget;
 };
 
 
-
-
-
+class BreakPointArea : public QWidget
+{
+public:
+    BreakPointArea(IdeWidget* editor) : QWidget(editor) {
+        ideWidget = editor;
+    }
+    QSize sizeHint() const override {
+        return QSize(10, 0);
+    }
+protected:
+    void paintEvent(QPaintEvent* event) override {
+        ideWidget->breakPointAreaPaintEvent(event);
+    }
+    void mousePressEvent(QMouseEvent* event) override {
+        if (event->button() == Qt::LeftButton)
+            ideWidget->setBreakPoint(event->pos());
+        update();
+    }
+private:
+    IdeWidget* ideWidget;
+};
 
 
 #endif // IDEWIDGET_H
