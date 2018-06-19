@@ -133,7 +133,6 @@ void RunWidget::openFile() {
         settings.setValue(DEFAULT_DIR_KEY,
                             currentDir.absoluteFilePath(selectedFile));
         filename = selectedFile;
-        program_lbl->setText("<b>Program:</b> " + filename);
         ide->open(filename);
         resetSim();
     }
@@ -184,6 +183,9 @@ void RunWidget::addStep(word PC) {
     showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters()+3);
 }
 
+void RunWidget::updateProgramLabel(QString filename) {
+    program_lbl->setText("<b>Program:</b> " + filename);
+}
 
 /* CREATE */
 void RunWidget::createMenuBar() {
@@ -289,6 +291,7 @@ void RunWidget::createTabs() {
     ide = new IdeWidget(this);
     tabs->addTab(table, "Execution");
     tabs->addTab(ide, "Editor");
+    connect(ide, SIGNAL(updateLabel(QString)), this, SLOT(updateProgramLabel(QString)));
 }
 
 

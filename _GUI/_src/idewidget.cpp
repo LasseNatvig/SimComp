@@ -2,6 +2,8 @@
 #include <QGridLayout>
 #include <QtWidgets>
 #include <QPlainTextDocumentLayout>
+#include <QFileDialog>
+#include <QSettings>
 
 // See http://doc.qt.io/qt-5/qtwidgets-widgets-codeeditor-example.html
 
@@ -9,10 +11,9 @@
 IdeWidget::IdeWidget(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
-
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
     connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
-    connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
+ //   connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
@@ -102,21 +103,35 @@ void IdeWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
 }
 
 void IdeWidget::save() {
-
+    if (filename.isEmpty())
+        saveAs();
+    std::ofstream file;
+    file.open(filename.toStdString());
+    doc = this->document();
+    file << (doc->toPlainText()).toStdString();
+    file.close();
 }
 
 void IdeWidget::saveAs() {
-
+    const QString DEFAULT_DIR_KEY("/");
+    QSettings settings;
+    filename = QFileDialog::getSaveFileName(
+                this, "Save", settings.value(DEFAULT_DIR_KEY).toString(), tr("Assembler program (*.sasm)"));
+    if (filename.isEmpty())
+        return;
+    emit updateLabel(filename);
+    save();
 }
 
 void IdeWidget::open(QString filename) {
+    this->filename = filename;
     std::ifstream file;
     file.open(filename.toStdString());
     std::stringstream ss;
     std::string line;
     while (getline(file, line))
         ss << line;
-
+    file.close();
     doc = new QTextDocument(QString::fromStdString(ss.str()));
     QPlainTextDocumentLayout* plainDoc = new QPlainTextDocumentLayout(doc);
     doc->setDocumentLayout(plainDoc);

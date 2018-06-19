@@ -97,6 +97,7 @@ private slots:
     void newFile();
     void memoryDump();
     void setButtonText(int currentIndex);
+    void updateProgramLabel(QString filename);
 
 signals:
 

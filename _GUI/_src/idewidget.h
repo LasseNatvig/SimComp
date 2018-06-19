@@ -29,6 +29,9 @@ public slots:
     void saveAs();
     void open(QString filename);
 
+signals:
+    void updateLabel(QString label);
+
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
@@ -40,6 +43,7 @@ private slots:
 private:
     QWidget* lineNumberArea;
     QTextDocument* doc;
+    QString filename;
 };
 
 
@@ -60,7 +64,7 @@ protected:
     }
 
 private:
-    IdeWidget *IdeWidget;
+    IdeWidget* IdeWidget;
 };
 
 
