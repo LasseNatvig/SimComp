@@ -17,7 +17,7 @@
 RunWidget::RunWidget(QWidget *parent) : QWidget(parent)
 { 
     // Create instance of ComputerSimulation
-    simulator = new ComputerSimulation(simName);
+    simulator = new ComputerSimulation(simName, "/Users/olebjorn/Desktop/GUI_logg.txt");
 
     createTabs();
     createMenuBar();
@@ -45,7 +45,7 @@ RunWidget::RunWidget(QWidget *parent) : QWidget(parent)
 
     // Make connections
     connect(start_btn, SIGNAL(clicked()), this, SLOT(startSim())); // start_btn -> startSim()
-    connect(reset_btn, SIGNAL(clicked()), this, SLOT(resetSim())); // reset_btn -> resetSim()
+    connect(reset_btn, SIGNAL(clicked()), this, SLOT(reset())); // reset_btn -> reset()
     connect(dump_btn, SIGNAL(clicked()), this, SLOT(memoryDump())); // dump_btn -> memoryDump()
     connect(dropdownMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(setButtonText(int))); // Change in dropdown menu -> change start_btm
 
@@ -68,6 +68,9 @@ void RunWidget::startSim() {
     case 1: // Singel step program
         step();
         break;
+    case 2:
+        next();
+        break;
     }
 }
 
@@ -79,6 +82,8 @@ void RunWidget::setButtonText(int currentIndex) {
     case 1:
         start_btn->setText("Step");
         break;
+    case 2:
+        start_btn->setText("Next");
     }
 }
 
@@ -104,8 +109,19 @@ void RunWidget::run() {
     addStats(start);
 }
 
+void RunWidget::next() {
+    if (simulationFinished) return;
+
+    if (!simulator->isRunning()) load();
+    std::vector<int> vev = ide->getBreakPoints();;
+    simulator->setBreakPoints(vev);
+    if (!simulator->next())
+       simulationFinished = true;
+    addStep(simulator->cpu->PC);
+}
+
 void RunWidget::load() {
-    resetSim();
+    reset();
     simulator->load(filename.toStdString());
 }
 
@@ -115,8 +131,9 @@ void RunWidget::memoryDump() {
     memoryWindow->show();
 }
 
-void RunWidget::resetSim() {
+void RunWidget::reset() {
     simulationFinished = false;
+    simulator->reset();
     table->setRowCount(0);
     stats_lst->clear();
 }
@@ -135,12 +152,12 @@ void RunWidget::openFile() {
                             currentDir.absoluteFilePath(selectedFile));
         filename = selectedFile;
         ide->open(filename);
-        resetSim();
+        reset();
     }
 }
 
 void RunWidget::newFile() {
-
+    ide->newFile();
 }
 
 void RunWidget::addStats(clock_t start) {
@@ -184,7 +201,8 @@ void RunWidget::addStep(word PC) {
     showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters()+3);
 }
 
-void RunWidget::updateProgramLabel(QString filename) {
+void RunWidget::updateFilename(QString filename) {
+    this->filename = filename;
     program_lbl->setText("<b>Program:</b> " + filename);
 }
 
@@ -192,6 +210,7 @@ void RunWidget::runFromShortCut() {
     dropdownMenu->setCurrentIndex(0);
     startSim();
 }
+
 
 /* CREATE */
 void RunWidget::createMenuBar() {
@@ -228,10 +247,13 @@ void RunWidget::createMenuBar() {
 
     buildMenu = menuBar->addMenu(tr("&Build"));
     runAction = new QAction(tr("&Run"));
+    resetAction = new QAction(tr("&Reset"));
     runAction->setShortcut(QKeySequence::Refresh);
+    resetAction->setShortcut(QKeySequence::Close);
     buildMenu->addAction(runAction);
+    buildMenu->addAction(resetAction);
     connect(runAction, SIGNAL(triggered()), this, SLOT(runFromShortCut()));
-
+    connect(resetAction, SIGNAL(triggered()), this, SLOT(reset()));
 }
 
 void RunWidget::createProgramInfo() {
@@ -252,6 +274,7 @@ void RunWidget::createSidePanel() {
     QVBoxLayout* dropdownMenuLayout = new QVBoxLayout;
     dropdownMenu->addItem("Run");
     dropdownMenu->addItem("Singel step");
+    dropdownMenu->addItem("Next breakpoint");
     dropdownMenuLayout->addWidget(select_mode_lbl, 0, Qt::AlignCenter);
     dropdownMenuLayout->addWidget(dropdownMenu);
     dropdownMenuBox->setLayout(dropdownMenuLayout);
@@ -300,7 +323,7 @@ void RunWidget::createTabs() {
     ide = new IdeWidget(this);
     tabs->addTab(table, "Execution");
     tabs->addTab(ide, "Editor");
-    connect(ide, SIGNAL(updateLabel(QString)), this, SLOT(updateProgramLabel(QString)));
+    connect(ide, SIGNAL(filenameChange(QString)), this, SLOT(updateFilename(QString)));
 }
 
 

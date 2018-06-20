@@ -38,6 +38,7 @@ private:
     double getMIPS(clock_t ticks);
     void step();
     void run();
+    void next();
     void load();
 
     /* MENU BAR */
@@ -52,6 +53,7 @@ private:
     QAction* redoAction;
     QMenu* buildMenu;
     QAction* runAction;
+    QAction* resetAction;
 
     void createMenuBar();
 
@@ -73,11 +75,8 @@ private:
     // - BOTTOM
     QGroupBox* buttonBox;
     QPushButton* start_btn;
-    QAction* startAction;
     QPushButton* reset_btn;
-    QAction* resetAction;
     QPushButton* dump_btn;
-    QAction* dumpAction;
     void createSidePanel();
 
     /* TAB WIDGET */
@@ -94,12 +93,12 @@ private:
 
 private slots:
     void startSim();
-    void resetSim();
+    void reset();
     void openFile();
     void newFile();
     void memoryDump();
     void setButtonText(int currentIndex);
-    void updateProgramLabel(QString filename);
+    void updateFilename(QString filename);
     void runFromShortCut();
 
 signals:

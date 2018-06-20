@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <QPlainTextEdit>
 #include <QObject>
 
@@ -27,16 +28,18 @@ public:
     int lineNumberAreaWidth();
     int breakPointAreaWidth();
     void setBreakPoint(QPoint breakPoint);
+    std::vector<int> getBreakPoints();
 
 public slots:
     void save();
     void saveAs();
     void open(QString filename);
+    void newFile();
     void updateBreakPoints(int lines);
     void clearBreakPoints();
 
 signals:
-    void updateLabel(QString label);
+    void filenameChange(QString label);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -46,6 +49,7 @@ private slots:
     void highlightCurrentLine();
     void updateLineNumberArea(const QRect &, int);
     void updateBreakPointArea(const QRect &, int dy);
+    bool saveWarning();
 
 private:
     QWidget* lineNumberArea;
@@ -86,7 +90,7 @@ public:
         ideWidget = editor;
     }
     QSize sizeHint() const override {
-        return QSize(10, 0);
+        return QSize(ideWidget->breakPointAreaWidth(), 0);
     }
 protected:
     void paintEvent(QPaintEvent* event) override {

@@ -27,6 +27,7 @@ bool LogFile::open(string name) {
 
 void LogFile::write(string s) {
     ofs << s;
+    ofs.flush();
 }
 
 void LogFile::timeStamp() {

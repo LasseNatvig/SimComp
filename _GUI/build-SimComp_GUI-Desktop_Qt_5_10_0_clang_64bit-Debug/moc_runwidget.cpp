@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_RunWidget_t {
     QByteArrayData data[12];
-    char stringdata0[128];
+    char stringdata0[121];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,21 +34,21 @@ static const qt_meta_stringdata_RunWidget_t qt_meta_stringdata_RunWidget = {
 QT_MOC_LITERAL(0, 0, 9), // "RunWidget"
 QT_MOC_LITERAL(1, 10, 8), // "startSim"
 QT_MOC_LITERAL(2, 19, 0), // ""
-QT_MOC_LITERAL(3, 20, 8), // "resetSim"
-QT_MOC_LITERAL(4, 29, 8), // "openFile"
-QT_MOC_LITERAL(5, 38, 7), // "newFile"
-QT_MOC_LITERAL(6, 46, 10), // "memoryDump"
-QT_MOC_LITERAL(7, 57, 13), // "setButtonText"
-QT_MOC_LITERAL(8, 71, 12), // "currentIndex"
-QT_MOC_LITERAL(9, 84, 18), // "updateProgramLabel"
-QT_MOC_LITERAL(10, 103, 8), // "filename"
-QT_MOC_LITERAL(11, 112, 15) // "runFromShortCut"
+QT_MOC_LITERAL(3, 20, 5), // "reset"
+QT_MOC_LITERAL(4, 26, 8), // "openFile"
+QT_MOC_LITERAL(5, 35, 7), // "newFile"
+QT_MOC_LITERAL(6, 43, 10), // "memoryDump"
+QT_MOC_LITERAL(7, 54, 13), // "setButtonText"
+QT_MOC_LITERAL(8, 68, 12), // "currentIndex"
+QT_MOC_LITERAL(9, 81, 14), // "updateFilename"
+QT_MOC_LITERAL(10, 96, 8), // "filename"
+QT_MOC_LITERAL(11, 105, 15) // "runFromShortCut"
 
     },
-    "RunWidget\0startSim\0\0resetSim\0openFile\0"
+    "RunWidget\0startSim\0\0reset\0openFile\0"
     "newFile\0memoryDump\0setButtonText\0"
-    "currentIndex\0updateProgramLabel\0"
-    "filename\0runFromShortCut"
+    "currentIndex\0updateFilename\0filename\0"
+    "runFromShortCut"
 };
 #undef QT_MOC_LITERAL
 
@@ -95,12 +95,12 @@ void RunWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->startSim(); break;
-        case 1: _t->resetSim(); break;
+        case 1: _t->reset(); break;
         case 2: _t->openFile(); break;
         case 3: _t->newFile(); break;
         case 4: _t->memoryDump(); break;
         case 5: _t->setButtonText((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 6: _t->updateProgramLabel((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 6: _t->updateFilename((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 7: _t->runFromShortCut(); break;
         default: ;
         }

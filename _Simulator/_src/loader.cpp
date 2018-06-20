@@ -19,7 +19,7 @@ Loader::Loader(LogFile* logFile) : logFile(logFile) {
 }
 
 void Loader::reportError(string errorMsg) const {
-    logFile->write("LOADER ERROR: " + errorMsg);
+    logFile->write("LOADER ERROR: " + errorMsg + " ");
     logFile->timeStamp();
     logFile->write("\n");
 }
@@ -169,6 +169,7 @@ void Loader::generateInstruction(Program& prog, string& label, string& instr, st
     word address;
     address = IM.getNextFreeLocation();
     IM.write(address, machineInstruction); // Write the instruction to next free location
+    *(pcValue.end()-1) = IM.words.size()-1;
     if (opCode == SET) {
         if (prog.symbolTable.find(operand[1]) == prog.symbolTable.end()) { // NOT found as ordinary symbol (e.g. named address of variable), can be named integer constant
             if (operand[1][0] == '#') {
@@ -206,12 +207,13 @@ void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& 
         exit(-1);
     }
     else
-        logFile->write("Assembler file:\n" + fileName + "\n...successfully loaded\n");
-
+        logFile->write("Assembler file:\n" + fileName + "\n...successfully opened\n");
+    pcValue.clear();
     string assemblerLine;
     while (!asmFile.eof()) {
         stringstream ss;
         getline(asmFile, assemblerLine);
+        pcValue.push_back(-1);
         ss << assemblerLine;
         ++lines;
         vector<string> asm_line;
@@ -224,6 +226,7 @@ void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& 
                 asm_line.push_back(s);
             }
         }
+
         string label = "";
         string operand[3];
         operand[0] = operand[1] = operand[2] = ""; // Max 3 Operands

@@ -5,6 +5,7 @@
 #include <QPlainTextDocumentLayout>
 #include <QFileDialog>
 #include <QSettings>
+#include <QMessageBox>
 
 // See http://doc.qt.io/qt-5/qtwidgets-widgets-codeeditor-example.html
 
@@ -13,16 +14,14 @@ IdeWidget::IdeWidget(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
     breakPointArea = new BreakPointArea(this);
+    doc = new QTextDocument;
     lines = 1;
     breakPoints = new int[lines] {};
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSideAreaWidth(int)));
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateBreakPoints(int)));
     connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
     connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateBreakPointArea(QRect,int)));
- //   connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
-
     updateSideAreaWidth(0);
-    highlightCurrentLine();
 }
 
 
@@ -184,13 +183,21 @@ void IdeWidget::setBreakPoint(QPoint breakPoint) {
     }
 }
 
+std::vector<int> IdeWidget::getBreakPoints() {
+    std::vector<int> ret;
+    for (int i = 0; i < lines; i++)
+        if (breakPoints[i])
+            ret.push_back(i+1);
+    return ret;
+}
+
 
 /* CORE */
 void IdeWidget::save() {
-    if (filename.isEmpty())
+    if (filename.isEmpty() || filename == "untitled.sasm")
         saveAs();
     std::ofstream file;
-    file.open(filename.toStdString());
+    file.open(filename.toStdString(), std::ios::out | std::ios::binary);
     doc = this->document();
     file << (doc->toPlainText()).toStdString();
     file.close();
@@ -203,21 +210,21 @@ void IdeWidget::saveAs() {
                 this, "Save", settings.value(DEFAULT_DIR_KEY).toString(), tr("Assembler program (*.sasm)"));
     if (filename.isEmpty())
         return;
-    emit updateLabel(filename);
+    emit filenameChange(filename);
     save();
 }
 
 void IdeWidget::open(QString filename) {
     this->filename = filename;
     std::ifstream file;
-    file.open(filename.toStdString());
+    file.open(filename.toStdString(), std::ios::in | std::ios::binary);
     if (file.fail()) return;
-    emit updateLabel(filename);
+    emit filenameChange(filename);
 
     std::stringstream ss;
     std::string line;
-    while (getline(file, line))
-        ss << line;
+    while (std::getline(file, line))
+        ss << line << std::endl;
     file.close();
 
     doc = new QTextDocument(QString::fromStdString(ss.str()));
@@ -225,4 +232,30 @@ void IdeWidget::open(QString filename) {
     QPlainTextDocumentLayout* plainDoc = new QPlainTextDocumentLayout(doc);
     doc->setDocumentLayout(plainDoc);
     setDocument(doc);
+}
+
+void IdeWidget::newFile() {
+    if (!doc->isEmpty()) {
+        if (!saveWarning()) return;
+    }
+    filename = "untitled.sasm";
+    emit filenameChange(filename);
+    doc = new QTextDocument;
+    QPlainTextDocumentLayout* plainDoc = new QPlainTextDocumentLayout(doc);
+    doc->setDocumentLayout(plainDoc);
+    setDocument(doc);
+}
+
+bool IdeWidget::saveWarning() {
+    int ans = QMessageBox::warning(this, tr("SimComp"), tr("The document has changes, do you want to save them?"),
+                                   QMessageBox::Save | QMessageBox::Discard
+                                   | QMessageBox::Cancel, QMessageBox::Save);
+    switch (ans) {
+        case QMessageBox::Cancel:
+            return false;
+        case QMessageBox::Save:
+            save();
+        case QMessageBox::Discard:
+            return true;
+    }
 }

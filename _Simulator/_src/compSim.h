@@ -28,6 +28,7 @@ public:
 	void reset(); // Reset varibles (sets simulator parameters to default values)
 	void run(); 	// Normal execution of program if currentMode == RUNNING or NOTRUNNING
 	bool step(); // Executes one step, returns true if instruction != HLT
+	bool next(); // Execute to next breakpoint, returns true if instruction != HLT
 	void writeToLogg(std::string message) { logg.write(message); } // Write to logg
 	void resetStatistics(); // Reset statistics
 	std::vector<std::string> memoryDump(word fromAddr, word toAddr, memType memory);
@@ -37,13 +38,13 @@ public:
 	long long getInstructionsSimulated() const { return instructionsSimulated; }
 	bool isRunning() const { return (!(currentMode == NOTRUNNING)); }
 	bool singleStep() const { return (currentMode == SINGLESTEP); }
-	bool program() const { return sasmProg.valid; } // Checks if program is succesfully loaded
+	bool validProgram() const { return sasmProg.valid; } // Checks if program is succesfully loaded
 	word getInstr(word PC) { return IM.read(PC); }
 	Mode getMode() const { return currentMode; }
 	std::string getName() const { return name; }
 
 	/* Set functions */
-
+	void setBreakPoints(const std::vector<int> &lineBreakPoints); // Set breakPoints at lines given in lineBreakPoints
 	void setPC(word PC) { cpu->PC = PC; }
 
 	/* Core variables */
@@ -61,7 +62,9 @@ private:
 	Loader* sasmLoader; // Loader responsible for parsing and loading sasm-file to program
 	Program sasmProg; // SimComp ASM (sasm) program
 	Mode currentMode = NOTRUNNING; // Current simulation mode
+	std::vector<int> breakPoints; // Holds breakPoints one element per opcode,
 	long long instructionsSimulated = 0; // Instructions simulated count
 	void setMode(Mode mode) { currentMode = mode; }
+	bool nextInstruction();
 
 };
