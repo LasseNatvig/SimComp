@@ -54,7 +54,7 @@ RunWidget::RunWidget(QWidget *parent) : QWidget(parent)
 }
 
 
-/* SLOTS */
+/* CORE SLOTS */
 void RunWidget::startSim() {
     /* startSim() starts the simulation with the selected mode from the dropdown menu */
 
@@ -211,6 +211,16 @@ void RunWidget::runFromShortCut() {
     startSim();
 }
 
+void RunWidget::stepFromShortCut() {
+    dropdownMenu->setCurrentIndex(1);
+    startSim();
+}
+
+void RunWidget::nextFromShortCut() {
+    dropdownMenu->setCurrentIndex(2);
+    startSim();
+}
+
 
 /* CREATE */
 void RunWidget::createMenuBar() {
@@ -247,12 +257,21 @@ void RunWidget::createMenuBar() {
 
     buildMenu = menuBar->addMenu(tr("&Build"));
     runAction = new QAction(tr("&Run"));
+    stepAction = new QAction(tr("&Step"));
+    nextAction = new QAction(tr("&Next"));
     resetAction = new QAction(tr("&Reset"));
     runAction->setShortcut(QKeySequence::Refresh);
     resetAction->setShortcut(QKeySequence::Close);
+    stepAction->setShortcut(QKeySequence(tr("Shift+s")));
+    nextAction->setShortcut(QKeySequence(tr("Shift+n")));
     buildMenu->addAction(runAction);
+    buildMenu->addAction(stepAction);
+    buildMenu->addAction(nextAction);
+    buildMenu->addSeparator();
     buildMenu->addAction(resetAction);
     connect(runAction, SIGNAL(triggered()), this, SLOT(runFromShortCut()));
+    connect(stepAction, SIGNAL(triggered()), this, SLOT(stepFromShortCut()));
+    connect(nextAction, SIGNAL(triggered()), this, SLOT(nextFromShortCut()));
     connect(resetAction, SIGNAL(triggered()), this, SLOT(reset()));
 }
 
@@ -308,7 +327,7 @@ void RunWidget::createSidePanel() {
 }
 
 void RunWidget::createTabs() {
-    tabs = new QTabWidget;
+    tabs = new QTabWidget(this);
 
     table = new QTableWidget;
     tableHeader << "Instruction count" << "OpCode" << "PC";

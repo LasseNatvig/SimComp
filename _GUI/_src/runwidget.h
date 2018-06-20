@@ -54,6 +54,8 @@ private:
     QMenu* buildMenu;
     QAction* runAction;
     QAction* resetAction;
+    QAction* stepAction;
+    QAction* nextAction;
 
     void createMenuBar();
 
@@ -100,6 +102,8 @@ private slots:
     void setButtonText(int currentIndex);
     void updateFilename(QString filename);
     void runFromShortCut();
+    void stepFromShortCut();
+    void nextFromShortCut();
 
 signals:
 
