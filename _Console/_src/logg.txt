@@ -1,5 +1,5 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Fri Jun 15 13:48:00 2018
+ComputerSimulation AdHoc16_V03 started at time Tue Jun 19 15:57:06 2018
 Assembler file:
 ../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
 ...successfully loaded

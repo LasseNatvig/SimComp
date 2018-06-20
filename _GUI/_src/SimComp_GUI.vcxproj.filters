@@ -43,6 +43,9 @@
     <ClCompile Include="..\..\_Simulator\_src\compSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="idewidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\_Simulator\_src\isa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -61,6 +64,9 @@
     <ClCompile Include="..\..\_Simulator\_src\memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="memorywindowwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="runwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,6 +81,9 @@
     <ClInclude Include="globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <QtMoc Include="idewidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <ClInclude Include="..\..\_Simulator\_src\isa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -90,6 +99,9 @@
     <ClInclude Include="..\..\_Simulator\_src\memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <QtMoc Include="memorywindowwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <ClInclude Include="..\..\_Simulator\_src\program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -98,6 +110,10 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    
+    
+    
+    
     
     
     <CustomBuild Include="debug\moc_predefs.h.cbt">

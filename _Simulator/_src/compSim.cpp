@@ -1,5 +1,6 @@
 #include <time.h>
 #include <sstream>
+#include <algorithm>
 #include "compSim.h"
 
 using namespace std;
@@ -9,7 +10,6 @@ ComputerSimulation::ComputerSimulation(string name, string loggerFilename) :
     IM("Instruction Memory", INSTR, &logg), DM("Data Memory", DATA, &logg) // Initialize IM and DM
 {
     logg.open(loggerFilename); // Start logging
-
     cpu = new Isa(&logg);
     sasmLoader = new Loader(&logg);
 
@@ -37,6 +37,7 @@ ComputerSimulation::~ComputerSimulation() {
 void ComputerSimulation::load(string name) {
     reset();
     sasmLoader->load(name, sasmProg, *cpu, DM, IM);
+    breakPoints.resize(IM.words.size(),0);
 }
 
 void ComputerSimulation::reset() {
@@ -47,6 +48,7 @@ void ComputerSimulation::reset() {
     cpu->PC = 0;
     instructionsSimulated = 0;
     currentMode = NOTRUNNING;
+    breakPoints.clear();
     IM.reset();
     DM.reset();
     resetStatistics();
@@ -64,34 +66,33 @@ void ComputerSimulation::resetStatistics() {
 
 void ComputerSimulation::run() {
     /* Normal execution of program */
+    setMode(RUNNING);
     do {
-        word instr = IM.read(cpu->PC);
-        short opCode = cpu->getOpCode(instr);
-        if (opCode == HLT) {
-            instructionsSimulated++;
-            setMode(NOTRUNNING);
-        } else {
-            setMode(RUNNING);
-            instructionsSimulated++;
-            instStats[instStatsTable[opCode]]++;
-            cpu->doInstruction(opCode, instr, DM, IM);
-        }
+      nextInstruction();
     } while (isRunning());
 }
 
 bool ComputerSimulation::step() {
-    word instr = IM.read(cpu->PC);
-    short opCode = cpu->getOpCode(instr);
-    if (opCode == HLT) {
-        instructionsSimulated++;
-        setMode(NOTRUNNING);
-        return false;
-    }
     setMode(SINGLESTEP);
-    instructionsSimulated++;
-    instStats[instStatsTable[opCode]]++;
-    cpu->doInstruction(opCode, instr, DM, IM);
-    return true;
+    return nextInstruction();
+}
+
+bool ComputerSimulation::next() {
+  bool ret;
+  setMode(RUNNING);
+   do {
+    ret = nextInstruction();
+  } while (isRunning() && !(breakPoints[cpu->PC]));
+  return ret;
+}
+
+void ComputerSimulation::setBreakPoints(const vector<int> &lineBreakPoints) {
+    breakPoints.clear();
+    breakPoints.resize(IM.words.size(),0);
+    for (auto& lineBreakPoint : lineBreakPoints) {
+        if (sasmLoader->pcValue[lineBreakPoint-1] > -1)
+            breakPoints[sasmLoader->pcValue[lineBreakPoint-1]] = 1;
+    }
 }
 
 vector<string> ComputerSimulation::memoryDump(word fromAddr, word toAddr, memType memoryType) {
@@ -118,4 +119,18 @@ vector<string> ComputerSimulation::memoryDump(word fromAddr, word toAddr, memTyp
     ss.str(string());
   }
   return vec;
+}
+
+bool ComputerSimulation::nextInstruction() {
+  word instr = IM.read(cpu->PC);
+  short opCode = cpu->getOpCode(instr);
+  if (opCode == HLT) {
+      instructionsSimulated++;
+      setMode(NOTRUNNING);
+      return false;
+  }
+  instructionsSimulated++;
+  instStats[instStatsTable[opCode]]++;
+  cpu->doInstruction(opCode, instr, DM, IM);
+  return true;
 }

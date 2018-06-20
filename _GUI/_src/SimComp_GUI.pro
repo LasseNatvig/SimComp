@@ -28,13 +28,15 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         runwidget.cpp \
-    memorywindowwidget.cpp
+    memorywindowwidget.cpp \
+    idewidget.cpp
 
 HEADERS += \
         mainwindow.h \
         globals.h \
         runwidget.h \
-    memorywindowwidget.h
+    memorywindowwidget.h \
+    idewidget.h
 
 RESOURCES += \
     images.qrc

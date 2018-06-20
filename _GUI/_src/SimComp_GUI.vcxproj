@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{77CBA820-6ABC-3E1B-98DB-505CC47B8578}</ProjectGuid>
+    <ProjectGuid>{E114CF47-DED8-3B94-98CF-7D10CC94FAD2}</ProjectGuid>
     <RootNamespace>SimComp_GUI</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
@@ -167,10 +167,10 @@
     </ResourceCompile>
     <QtRcc>
       <QTDIR>$(QTDIR)</QTDIR>
-      <InputFile>%(FullPath)</InputFile>
-      <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
-      <InitFuncName>images</InitFuncName>
       <Compression>default</Compression>
+      <InitFuncName>images</InitFuncName>
+      <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
+      <InputFile>%(FullPath)</InputFile>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtRcc>
     <QtMoc>
@@ -188,24 +188,30 @@
   <ItemGroup>
     <ClCompile Include="..\..\_Simulator\_src\Program.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\compSim.cpp" />
+    <ClCompile Include="idewidget.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\isa.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\loader.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\memory.cpp" />
+    <ClCompile Include="memorywindowwidget.cpp" />
     <ClCompile Include="runwidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\_Simulator\_src\compSim.h" />
     <ClInclude Include="..\..\_Simulator\_src\config.h" />
     <ClInclude Include="globals.h" />
+    <QtMoc Include="idewidget.h">
+    </QtMoc>
     <ClInclude Include="..\..\_Simulator\_src\isa.h" />
     <ClInclude Include="..\..\_Simulator\_src\loader.h" />
     <ClInclude Include="..\..\_Simulator\_src\logger.h" />
     <QtMoc Include="mainwindow.h">
     </QtMoc>
     <ClInclude Include="..\..\_Simulator\_src\memory.h" />
+    <QtMoc Include="memorywindowwidget.h">
+    </QtMoc>
     <ClInclude Include="..\..\_Simulator\_src\program.h" />
     <QtMoc Include="runwidget.h">
     </QtMoc>

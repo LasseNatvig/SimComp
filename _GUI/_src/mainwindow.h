@@ -5,6 +5,7 @@
 #include "globals.h"
 #include <QMainWindow>
 #include <QIcon>
+#include <QSettings>
 
 
 class MainWindow : public QMainWindow
@@ -20,7 +21,8 @@ private:
     QIcon* appIcon;
 
     // Child widgets
-    runWidget* runW;
+    RunWidget* runW;
+
 
 public slots:
 };
