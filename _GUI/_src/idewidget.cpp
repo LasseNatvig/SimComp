@@ -204,7 +204,7 @@ void IdeWidget::save() {
 }
 
 void IdeWidget::saveAs() {
-    const QString DEFAULT_DIR_KEY("/");
+    const QString DEFAULT_DIR_KEY("\\");
     QSettings settings;
     filename = QFileDialog::getSaveFileName(
                 this, "Save", settings.value(DEFAULT_DIR_KEY).toString(), tr("Assembler program (*.sasm)"));

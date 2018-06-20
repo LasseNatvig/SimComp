@@ -140,7 +140,7 @@ void RunWidget::reset() {
 
 void RunWidget::openFile() {
     // Starts a file dialog which lets the user choose a assembler program to run
-    const QString DEFAULT_DIR_KEY("/");
+    const QString DEFAULT_DIR_KEY("\\");
     QSettings settings;
 
     QString selectedFile = QFileDialog::getOpenFileName(
