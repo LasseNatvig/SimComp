@@ -5,7 +5,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,14 +29,16 @@ SOURCES += \
         mainwindow.cpp \
         runwidget.cpp \
     memorywindowwidget.cpp \
-    idewidget.cpp
+    idewidget.cpp \
+    performancechart.cpp
 
 HEADERS += \
         mainwindow.h \
         globals.h \
         runwidget.h \
     memorywindowwidget.h \
-    idewidget.h
+    idewidget.h \
+    performancechart.h
 
 RESOURCES += \
     images.qrc

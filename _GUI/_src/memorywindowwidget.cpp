@@ -6,11 +6,18 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-MemoryWindowWidget::MemoryWindowWidget(QWidget *parent, ComputerSimulation* simulator) : QWidget(parent),
-    simulator(simulator)
+MemoryWindowWidget::MemoryWindowWidget(QWidget *parent,
+                                       ComputerSimulation* simulator) :
+    QWidget(parent),
+    simulator(simulator),
+    lastInstructionCount(simulator->getInstructionsSimulated())
 {
-    /* Allocate objects */
+    /* Core */
     title_lbl = new QLabel("Memory display");
+    closeAction = new QAction(tr("&Close"));
+    closeAction->setShortcut(QKeySequence::Close);
+    this->addAction(closeAction);
+    connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
 
     // Table
     memoryDisplay = new QTableWidget;
@@ -34,7 +41,6 @@ MemoryWindowWidget::MemoryWindowWidget(QWidget *parent, ComputerSimulation* simu
     btmSidepanel_box = new QGroupBox; // - BOTTOM
     update_btn = new QPushButton("Update");
     clear_btn = new QPushButton("Clear");
-    exit_btn = new QPushButton("Exit");
 
     /* Add styling */
     title_lbl->setStyleSheet("font-weight: bold");
@@ -62,7 +68,6 @@ MemoryWindowWidget::MemoryWindowWidget(QWidget *parent, ComputerSimulation* simu
     QVBoxLayout* btmSidepanel_layout = new QVBoxLayout; // - BOTTOM
     btmSidepanel_layout->addWidget(update_btn);
     btmSidepanel_layout->addWidget(clear_btn);
-    btmSidepanel_layout->addWidget(exit_btn);
     btmSidepanel_box->setLayout(btmSidepanel_layout);
 
     QVBoxLayout* sidepanel_layout = new QVBoxLayout;
@@ -79,11 +84,13 @@ MemoryWindowWidget::MemoryWindowWidget(QWidget *parent, ComputerSimulation* simu
     /* Make connections */
     connect(clear_btn, SIGNAL(clicked()), this, SLOT(clearDisplay()));
     connect(update_btn, SIGNAL(clicked()), this, SLOT(update()));
-    connect(exit_btn, SIGNAL(clicked(bool)), this, SLOT(close()));
+    connect(fromAddr_spnbox, SIGNAL(editingFinished()), this,SLOT(update()));
 
     /* Configure window */
     this->setLayout(mainLayout);
-    this->setWindowTitle("Memory Dump");
+    this->setWindowTitle("Memory Window");
+    this->setMinimumSize(
+                QSize(MEMORYWINDOW_MIN_WIDTH, MEMORYWINDOW_MIN_HEIGHT));
 }
 
 void MemoryWindowWidget::clearDisplay() {
@@ -91,6 +98,7 @@ void MemoryWindowWidget::clearDisplay() {
 }
 
 void MemoryWindowWidget::update() {
+    if (simulator->getMode() == RUNNING) return;
     int fromAddr = fromAddr_spnbox->value();
     int toAddr = toAddr_spnbox->value();
 
@@ -105,12 +113,16 @@ void MemoryWindowWidget::update() {
     }
     memoryDisplay->setColumnCount(columnCount);
     dump = simulator->memoryDump(fromAddr, toAddr, memtyp);
-    if (dump.empty()) return;
 
     for (int i = 0; i < dump.size(); i++) {
         if (i % columnCount == 0)
             memoryDisplay->insertRow(memoryDisplay->rowCount());
-        memoryDisplay->setItem(memoryDisplay->rowCount()-1, i % columnCount, new QTableWidgetItem(QString::fromStdString(dump[i])));
+        memoryDisplay->setItem(memoryDisplay->rowCount()-1, i % columnCount,
+                               new QTableWidgetItem(QString::fromStdString(dump[i])));
     }
+
 }
 
+void MemoryWindowWidget::showErrorMessage(QString errorMsg) {
+
+}
