@@ -233,7 +233,7 @@ void RunWidget::addRunStats(clock_t start) {
     /* Appends statistics from current simulation */
     std::stringstream  ss;
 
-    writeInfo("**** RUN STASISTICS *****");
+    writeInfo("**** RUN STATISTICS *****");
     ss << getMIPS(clock()-start);
     writeInfo(QString::fromStdString("MIPS: " + ss.str()));
     ss.str(std::string());
