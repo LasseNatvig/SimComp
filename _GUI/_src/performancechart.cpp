@@ -10,13 +10,13 @@ PerformanceChart::PerformanceChart(QGraphicsItem *parent, Qt::WindowFlags wFlags
     QChart(QChart::ChartTypeCartesian, parent, wFlags),
     x(0),
     y(0),
-    yRange(PLOT_YRANGE)
+    yRange(globals::PLOT_YRANGE)
 {
     newSeries();
 
     // Chart configuration
-    setMinimumSize(QSize(PERFORMANCEWINDOW_MIN_WIDTH,
-                         PERFORMANCEWINDOW_MIN_HEIGHT));
+    setMinimumSize(QSize(globals::PERFORMANCEWINDOW_MIN_WIDTH,
+                         globals::PERFORMANCEWINDOW_MIN_HEIGHT));
     legend()->hide();
  }
 
@@ -37,20 +37,20 @@ void PerformanceChart::newSeries() {
     addSeries(series);
     createDefaultAxes();
     setAxisX(axis, series);
-    axis->setTickCount(PLOT_XRANGE);
+    axis->setTickCount(globals::PLOT_XRANGE);
 
-    axisX()->setRange(0, PLOT_XRANGE);
+    axisX()->setRange(0, globals::PLOT_XRANGE);
     axisY()->setRange(0, yRange);
     axisX()->setTitleText("Time elapsed [s]");
     axisY()->setTitleText("MIPS");
 }
 
 void PerformanceChart::updatePerformance(double mips) {
-    double dx = static_cast<double>(TIMER_UPDATE)/static_cast<double>(1000);
+    double dx = static_cast<double>(globals::TIMER_UPDATE)/static_cast<double>(1000);
     x += dx;
     y = mips;
     double tick_dx = plotArea().width() / axis->tickCount()*dx;
-    if (x > PLOT_XRANGE)
+    if (x > globals::PLOT_XRANGE)
         scroll(tick_dx,0);
 
     series->append(x, y);
@@ -69,6 +69,6 @@ void PerformanceChart::reset() {
 
     newSeries();
 
-    yRange = PLOT_YRANGE;
+    yRange = globals::PLOT_YRANGE;
     axisY()->setRange(0, yRange);
 }

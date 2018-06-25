@@ -23,6 +23,7 @@ MemoryWindowWidget::MemoryWindowWidget(QWidget *parent,
     memoryDisplay = new QTableWidget;
     memoryDisplay->setColumnCount(10);
     memoryDisplay->setSelectionMode(QAbstractItemView::NoSelection);
+    memoryDisplay->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // Side panel
     topSidepanel_box = new QGroupBox; // - TOP
@@ -90,7 +91,7 @@ MemoryWindowWidget::MemoryWindowWidget(QWidget *parent,
     this->setLayout(mainLayout);
     this->setWindowTitle("Memory Window");
     this->setMinimumSize(
-                QSize(MEMORYWINDOW_MIN_WIDTH, MEMORYWINDOW_MIN_HEIGHT));
+                QSize(globals::MEMORYWINDOW_MIN_WIDTH, globals::MEMORYWINDOW_MIN_HEIGHT));
 }
 
 void MemoryWindowWidget::clearDisplay() {
@@ -113,14 +114,13 @@ void MemoryWindowWidget::update() {
     }
     memoryDisplay->setColumnCount(columnCount);
     dump = simulator->memoryDump(fromAddr, toAddr, memtyp);
-
     for (int i = 0; i < dump.size(); i++) {
         if (i % columnCount == 0)
             memoryDisplay->insertRow(memoryDisplay->rowCount());
         memoryDisplay->setItem(memoryDisplay->rowCount()-1, i % columnCount,
                                new QTableWidgetItem(QString::fromStdString(dump[i])));
     }
-
+    memoryDisplay->resizeColumnsToContents();
 }
 
 void MemoryWindowWidget::showErrorMessage(QString errorMsg) {

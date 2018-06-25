@@ -70,6 +70,10 @@ string Isa::disAssembly(word machineInstr) const {
         operand << "R" << dec << ((operandBits & 0b111000000) >> 6);
         operand << " R" << dec << ((operandBits & 0b111000) >> 3);
         break;
+      case BRZ:
+        operand << "R" << ((operandBits & 0b111000) >> 3);
+        operand << " " << dec << ((operandBits & 0b111));
+        break;
       case LDI:
           operand << "R" << dec << ((operandBits & 0b111000000) >> 6);
           operand << " " << dec << (operandBits & 0b111111);
