@@ -55,7 +55,7 @@ RunWidget::RunWidget(QWidget *parent) : QWidget(parent)
     connect(dropdownMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(setButtonText(int))); // Change in dropdown menu -> change start_btm
 
     // Set minimum size of this window
-    this->setMinimumSize(QSize(MAINWINDOW_MIN_WIDTH, MAINWINDOW_MIN_HEIGHT));
+    this->setMinimumSize(QSize(globals::MAINWINDOW_MIN_WIDTH, globals::MAINWINDOW_MIN_HEIGHT));
 }
 
 
@@ -120,7 +120,7 @@ void RunWidget::run() {
 
 
 
-    progressTimer->start(TIMER_UPDATE); // Start timer for updating progress
+    progressTimer->start(globals::TIMER_UPDATE); // Start timer for updating progress
     runStart = clock();
     simThread->start();
 }
@@ -282,6 +282,8 @@ void RunWidget::addStep(word PC) {
 
     // Set color of registers that changed
     showChange(table,table->rowCount()-1, 3, simulator->cpu->getNumberOfRegisters()+3);
+
+    table->resizeColumnsToContents();
     table->scrollToBottom();
 }
 
@@ -307,7 +309,7 @@ void RunWidget::nextFromShortCut() {
 
 void RunWidget::updatePerformance() {
     int instructionCount = simulator->getInstructionsSimulated();
-    double mips = (instructionCount - lastInstructionCount)/(TIMER_UPDATE*1000);
+    double mips = (instructionCount - lastInstructionCount)/(globals::TIMER_UPDATE*1000);
     lastInstructionCount = instructionCount;
     performanceChart->updatePerformance(mips);
 }
@@ -464,6 +466,7 @@ void RunWidget::createTabs() {
     table->setSelectionMode(QAbstractItemView::NoSelection);
     table->setHorizontalHeaderLabels(tableHeader);
     table->verticalHeader()->setVisible(false);
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ide = new IdeWidget(this);
     tabs->addTab(table, "Execution");
     tabs->addTab(ide, "Editor");
@@ -485,8 +488,9 @@ void RunWidget::createWindows() {
     performanceChartView->setWindowTitle("Performance");
     performanceChartView->setRenderHint(QPainter::Antialiasing);
     performanceChartView->setWindowFlag(Qt::Tool);
-    performanceChartView->setFixedSize(QSize(PERFORMANCEWINDOW_MIN_WIDTH,
-                                             PERFORMANCEWINDOW_MIN_HEIGHT));
+    performanceChartView->setFixedSize(
+                QSize(globals::PERFORMANCEWINDOW_MIN_WIDTH,
+                      globals::PERFORMANCEWINDOW_MIN_HEIGHT));
 }
 
 
