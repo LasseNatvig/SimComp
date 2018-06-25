@@ -75,6 +75,8 @@ string Isa::disAssembly(word machineInstr) const {
           operand << " " << dec << (operandBits & 0b111111);
           break;
       case JMP:
+        operand << "R" << dec << ((operandBits & 0b111000) >> 3);
+        break;
       case SET:
         operand << "R" << dec << ((operandBits & 0b111000000) >> 6);
         break;

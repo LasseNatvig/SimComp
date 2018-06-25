@@ -101,13 +101,18 @@ vector<string> ComputerSimulation::memoryDump(word fromAddr, word toAddr, memTyp
   if (fromAddr > toAddr) {
     writeToLogg("memoryDump(): Invalid fromAddr > toAddr\n");
     return vec;
+  } else if (fromAddr < 0) {
+    writeToLogg("memoryDump(): Invalid fromAddr < 0\n");
+    return vec;
   }
   for (word i = fromAddr; i <= toAddr; i++) {
     if (memoryType == DATA) {
-      if ((fromAddr < 0) || (toAddr > DM.words.size()-1)) return vec;
+      if (!DM.words.size()) return vec;
+      if (i > DM.words.size()-1) return vec;
       ss << "0x" << hex << DM.words[i];
     } else if (memoryType == INSTR) {
-      if ((fromAddr < 0) || (toAddr > IM.words.size()-1)) return vec;
+      if (!IM.words.size()) return vec;
+      if (i > IM.words.size()-1) return vec;
       ss << cpu->disAssembly(IM.words[i]);
       if (((IM.words[i] & 0b1111111000000000) >> 9) == SET)
         ss << " " << IM.words[++i];
