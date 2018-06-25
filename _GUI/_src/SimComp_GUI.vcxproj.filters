@@ -67,6 +67,9 @@
     <ClCompile Include="memorywindowwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="performancechart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="runwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,6 +105,9 @@
     <QtMoc Include="memorywindowwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <ClInclude Include="performancechart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\_Simulator\_src\program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
