@@ -24,6 +24,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QtCharts/QChartView>
+#include <QToolBar>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -36,6 +37,7 @@ class RunWidget : public QWidget
     Q_OBJECT
 public:
     explicit RunWidget(QWidget *parent = nullptr);
+    ComputerSimulation* getSimulator();
 private:
     /* Core variables and functions */
     ComputerSimulation* simulator;
@@ -43,101 +45,63 @@ private:
     std::string simName = "AdHoc16_V03";
     QTimer* progressTimer;
     SimulatorThread* simThread;
+
     bool runStop;
     int lastInstructionCount = 0;
     bool simulationFinished = false;
     clock_t runStart;
-    void step();
-    void run();
-    void next();
     void load();
-
-    /* MENU BAR */
-    QMenuBar* menuBar;
-    QMenu* fileMenu;
-    QAction* newAction;
-    QAction* openAction;
-    QAction* saveAction;
-    QAction* saveAsAction;
-    QMenu* editMenu;
-    QAction* undoAction;
-    QAction* redoAction;
-    QMenu* buildMenu;
-    QAction* runAction;
-    QAction* resetAction;
-    QAction* stepAction;
-    QAction* nextAction;
-    QMenu* viewMenu;
-    QAction* memoryAction;
-    QAction* performanceAction;
-    void createMenuBar();
-
-    /* PROGRAM INFO */
-    QGroupBox* programBox;
-    QLabel* program_lbl;
-    void createProgramInfo();
-
-    /* SIDE PANEL: */
-    // - TOP
-    QGroupBox* dropdownMenuBox;
-    QLabel* select_mode_lbl;
-    QComboBox* dropdownMenu;
-    // - MIDDLE
-    QLabel* description_lbl;
-    QLabel* icon_img;
-    QListWidget* info_lst;
-    void addRunStats(clock_t ticks); // For appending statistics to info_lst
-    // - BOTTOM
-    QGroupBox* buttonBox;
-    QPushButton* start_btn;
-    QPushButton* reset_btn;
-    void createSidePanel();
 
     /* TAB WIDGET */
     QTabWidget* tabs;
-    QTableWidget* table;
+    QTableWidget* executionTable;
     QStringList tableHeader;
-    IdeWidget* ide;
     void addStep(word PC);
+    void addNextPC();
+    IdeWidget* ide;
     void createTabs();
 
-    /* WINDOWS */
-    MemoryWindowWidget* memoryWindow;
-    PerformanceChart* performanceChart;
-    QChartView* performanceChartView;
-    QAction* closePerformanceAction;
-    void createWindows();
+
 
     /* UTILS */
     double getMIPS(clock_t ticks);
-private slots:
-    void reset();
-    void openFile();
-    void newFile();
-    void openMemoryWindow();
-    void openPreformanceWindow();
-    void setButtonText(int currentIndex);
-    void updateFilename(QString filename);
-    void runFromShortCut();
-    void stepFromShortCut();
-    void nextFromShortCut();
-    void runFinished();
-    void updatePerformance();
-    void writeInfo(QString info);
-
-signals:
+    bool validStart();
 
 public slots:
-    void startSim();
+    /* SIMULATOR SLOTS */
+    void step();
+    void run();
+    void next();
+    void reset();
+
+    /* EDITOR SLOTS */
+    void openFile();
+    void newFile();
+    void save();
+    void saveAs();
+    void undo();
+    void redo();
+
+private slots:
+    void updateFilename(QString filename);
+    void runFinished();
+    void updatePerformance();
+
+signals:
+    void performanceChanged(double MIPS);
+    void output(QString message);
+    void instructionCountChanged(int instructionCount);
 };
 
 
 class SimulatorThread : public QThread {
     Q_OBJECT
+
 public:
     SimulatorThread(ComputerSimulation* simulator);
     ~SimulatorThread();
     void run() override;
+
 private:
     ComputerSimulation* simulator;
 };

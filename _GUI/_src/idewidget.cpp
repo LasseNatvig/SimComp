@@ -210,7 +210,7 @@ void IdeWidget::saveAs() {
                 this, "Save", settings.value(DEFAULT_DIR_KEY).toString(), tr("Assembler program (*.sasm)"));
     if (filename.isEmpty())
         return;
-    emit filenameChange(filename);
+    emit filenameChanged(filename);
     save();
 }
 
@@ -219,7 +219,7 @@ void IdeWidget::open(QString filename) {
     std::ifstream file;
     file.open(filename.toStdString(), std::ios::in | std::ios::binary);
     if (file.fail()) return;
-    emit filenameChange(filename);
+    emit filenameChanged(filename);
 
     std::stringstream ss;
     std::string line;
@@ -239,7 +239,7 @@ void IdeWidget::newFile() {
         if (!saveWarning()) return;
     }
     filename = "untitled.sasm";
-    emit filenameChange(filename);
+    emit filenameChanged(filename);
     doc = new QTextDocument;
     QPlainTextDocumentLayout* plainDoc = new QPlainTextDocumentLayout(doc);
     doc->setDocumentLayout(plainDoc);

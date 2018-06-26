@@ -120,7 +120,6 @@ void MemoryWindowWidget::update() {
         memoryDisplay->setItem(memoryDisplay->rowCount()-1, i % columnCount,
                                new QTableWidgetItem(QString::fromStdString(dump[i])));
     }
-    memoryDisplay->resizeColumnsToContents();
 }
 
 void MemoryWindowWidget::showErrorMessage(QString errorMsg) {

@@ -39,7 +39,7 @@ public slots:
     void clearBreakPoints();
 
 signals:
-    void filenameChange(QString label);
+    void filenameChanged(QString label);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
