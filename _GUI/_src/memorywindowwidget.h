@@ -13,6 +13,9 @@
 #include <QRadioButton>
 #include <QString>
 #include <QAction>
+#include <QSplitter>
+#include <QLineEdit>
+#include <QStringList>
 
 class MemoryWindowWidget : public QWidget
 {
@@ -21,41 +24,52 @@ public:
     explicit MemoryWindowWidget(QWidget *parent, ComputerSimulation* simulator);
 private:
     ComputerSimulation* simulator;
-    QLabel* title_lbl;
-    QTableWidget* memoryDisplay;
-    QAction* closeAction;
+    memType memtyp = INSTR;
     int lastInstructionCount;
-    int imTopRange;
-    int dmTopRange;
+    int fromAddr = 0;
+    int toAddr = 0;
+    int columnCount = 1;
 
-    /*SIDE PANEL*/
-    // -TOP
-    QGroupBox* topSidepanel_box;
-    QLabel* topDescription_lbl;
-    QSpacerItem* sidepanel_spacer;
-    QLabel* fromAddr_lbl;
-    QSpinBox* fromAddr_spnbox;
-    QLabel* toAddr_lbl;
-    QSpinBox* toAddr_spnbox;
-    // -MIDDLE
-    QGroupBox* midSidepanel_box;
-    QLabel* midDescription_lbl;
-    QRadioButton* im_btn;
-    QRadioButton* dm_btn;
+    /* MAIN FRAME */
+    QSplitter* mainFrame;
 
-    // -BOTTOM
-    QGroupBox* btmSidepanel_box;
-    QPushButton* update_btn;
-    QPushButton* clear_btn;
+    // LEFT SIDE
+    QTableWidget* memoryDisplay;
+    QStringList topDisplayHeader;
+    QStringList sideDisplayHeader;
 
+    // RIGHT SIDE
+    QWidget* rightContainer;
+        // -TOP
+    QGroupBox* topRightBox;
+    QLabel* topDescriptionLbl;
+    QSpacerItem* rightSpacer;
+    QLabel* fromAddrLbl;
+    QSpinBox* fromAddrSpnbox;
+    QLabel* toAddrLbl;
+    QSpinBox* toAddrSpnbox;
+        // -MIDDLE
+    QGroupBox* midRightBox;
+    QLabel* midDescriptionLbl;
+    QRadioButton* imBtn;
+    QRadioButton* dmBtn;
+        // -BOTTOM
+    QGroupBox* btmRightBox;
+    QLineEdit* nameInput;
+    QLabel* setWindowNameLbl;
+    QPushButton* updateBtn;
+    QPushButton* clearBtn;
+    void createMainFrame();
 signals:
+    void windowNameChanged(QString name);
 
 public slots:
 
 private slots:
     void clearDisplay();
-    void update();
-    void showErrorMessage(QString errorMsg);
+    void updateDisplayHeaders();
+    void updateConfig();
+    void updateDisplay();
 };
 
 #endif // MEMORYWINDOWWIDGET_H

@@ -11,6 +11,7 @@
 #include <QToolBar>
 #include <QStatusBar>
 #include <QVector>
+#include <QPair>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -47,6 +48,8 @@ private:
     QMenu* viewMenu;
     QAction* memoryAction;
     QAction* performanceAction;
+    QAction* actionAction;
+    QMenu* memoryMenu;
     void createMenuBar();
     void createStatusBar();
 
@@ -57,16 +60,16 @@ private:
     QPushButton* nextBtn;
     QPushButton* resetBtn;
     QListWidget* outputLst;
+    QAction* closePerformanceAction;
     void createActionDock();
 
     // Performance Dock
     PerformanceChart* performanceChart;
     QChartView* performanceChartView;
-    QAction* closePerformanceAction;
     void createPerformanceDock();
 
     // Memory Windows
-    QVector<MemoryWindowWidget*> memoryWindows;
+    QVector<QPair<MemoryWindowWidget*,QAction*>> memoryWindows;
 
 public slots:
     void newMemoryWindow();

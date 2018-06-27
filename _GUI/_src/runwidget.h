@@ -91,6 +91,7 @@ signals:
     void performanceChanged(double MIPS);
     void output(QString message);
     void instructionCountChanged(int instructionCount);
+    void memoryChanged();
 };
 
 

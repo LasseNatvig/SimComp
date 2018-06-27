@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_RunWidget_t {
-    QByteArrayData data[22];
-    char stringdata0[204];
+    QByteArrayData data[23];
+    char stringdata0[218];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,28 +39,29 @@ QT_MOC_LITERAL(4, 35, 6), // "output"
 QT_MOC_LITERAL(5, 42, 7), // "message"
 QT_MOC_LITERAL(6, 50, 23), // "instructionCountChanged"
 QT_MOC_LITERAL(7, 74, 16), // "instructionCount"
-QT_MOC_LITERAL(8, 91, 4), // "step"
-QT_MOC_LITERAL(9, 96, 3), // "run"
-QT_MOC_LITERAL(10, 100, 4), // "next"
-QT_MOC_LITERAL(11, 105, 5), // "reset"
-QT_MOC_LITERAL(12, 111, 8), // "openFile"
-QT_MOC_LITERAL(13, 120, 7), // "newFile"
-QT_MOC_LITERAL(14, 128, 4), // "save"
-QT_MOC_LITERAL(15, 133, 6), // "saveAs"
-QT_MOC_LITERAL(16, 140, 4), // "undo"
-QT_MOC_LITERAL(17, 145, 4), // "redo"
-QT_MOC_LITERAL(18, 150, 14), // "updateFilename"
-QT_MOC_LITERAL(19, 165, 8), // "filename"
-QT_MOC_LITERAL(20, 174, 11), // "runFinished"
-QT_MOC_LITERAL(21, 186, 17) // "updatePerformance"
+QT_MOC_LITERAL(8, 91, 13), // "memoryChanged"
+QT_MOC_LITERAL(9, 105, 4), // "step"
+QT_MOC_LITERAL(10, 110, 3), // "run"
+QT_MOC_LITERAL(11, 114, 4), // "next"
+QT_MOC_LITERAL(12, 119, 5), // "reset"
+QT_MOC_LITERAL(13, 125, 8), // "openFile"
+QT_MOC_LITERAL(14, 134, 7), // "newFile"
+QT_MOC_LITERAL(15, 142, 4), // "save"
+QT_MOC_LITERAL(16, 147, 6), // "saveAs"
+QT_MOC_LITERAL(17, 154, 4), // "undo"
+QT_MOC_LITERAL(18, 159, 4), // "redo"
+QT_MOC_LITERAL(19, 164, 14), // "updateFilename"
+QT_MOC_LITERAL(20, 179, 8), // "filename"
+QT_MOC_LITERAL(21, 188, 11), // "runFinished"
+QT_MOC_LITERAL(22, 200, 17) // "updatePerformance"
 
     },
     "RunWidget\0performanceChanged\0\0MIPS\0"
     "output\0message\0instructionCountChanged\0"
-    "instructionCount\0step\0run\0next\0reset\0"
-    "openFile\0newFile\0save\0saveAs\0undo\0"
-    "redo\0updateFilename\0filename\0runFinished\0"
-    "updatePerformance"
+    "instructionCount\0memoryChanged\0step\0"
+    "run\0next\0reset\0openFile\0newFile\0save\0"
+    "saveAs\0undo\0redo\0updateFilename\0"
+    "filename\0runFinished\0updatePerformance"
 };
 #undef QT_MOC_LITERAL
 
@@ -70,37 +71,39 @@ static const uint qt_meta_data_RunWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      16,   14, // methods
+      17,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       3,       // signalCount
+       4,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   94,    2, 0x06 /* Public */,
-       4,    1,   97,    2, 0x06 /* Public */,
-       6,    1,  100,    2, 0x06 /* Public */,
+       1,    1,   99,    2, 0x06 /* Public */,
+       4,    1,  102,    2, 0x06 /* Public */,
+       6,    1,  105,    2, 0x06 /* Public */,
+       8,    0,  108,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       8,    0,  103,    2, 0x0a /* Public */,
-       9,    0,  104,    2, 0x0a /* Public */,
-      10,    0,  105,    2, 0x0a /* Public */,
-      11,    0,  106,    2, 0x0a /* Public */,
-      12,    0,  107,    2, 0x0a /* Public */,
-      13,    0,  108,    2, 0x0a /* Public */,
-      14,    0,  109,    2, 0x0a /* Public */,
-      15,    0,  110,    2, 0x0a /* Public */,
-      16,    0,  111,    2, 0x0a /* Public */,
-      17,    0,  112,    2, 0x0a /* Public */,
-      18,    1,  113,    2, 0x08 /* Private */,
-      20,    0,  116,    2, 0x08 /* Private */,
-      21,    0,  117,    2, 0x08 /* Private */,
+       9,    0,  109,    2, 0x0a /* Public */,
+      10,    0,  110,    2, 0x0a /* Public */,
+      11,    0,  111,    2, 0x0a /* Public */,
+      12,    0,  112,    2, 0x0a /* Public */,
+      13,    0,  113,    2, 0x0a /* Public */,
+      14,    0,  114,    2, 0x0a /* Public */,
+      15,    0,  115,    2, 0x0a /* Public */,
+      16,    0,  116,    2, 0x0a /* Public */,
+      17,    0,  117,    2, 0x0a /* Public */,
+      18,    0,  118,    2, 0x0a /* Public */,
+      19,    1,  119,    2, 0x08 /* Private */,
+      21,    0,  122,    2, 0x08 /* Private */,
+      22,    0,  123,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Double,    3,
     QMetaType::Void, QMetaType::QString,    5,
     QMetaType::Void, QMetaType::Int,    7,
+    QMetaType::Void,
 
  // slots: parameters
     QMetaType::Void,
@@ -113,7 +116,7 @@ static const uint qt_meta_data_RunWidget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,   19,
+    QMetaType::Void, QMetaType::QString,   20,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -129,19 +132,20 @@ void RunWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 0: _t->performanceChanged((*reinterpret_cast< double(*)>(_a[1]))); break;
         case 1: _t->output((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 2: _t->instructionCountChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 3: _t->step(); break;
-        case 4: _t->run(); break;
-        case 5: _t->next(); break;
-        case 6: _t->reset(); break;
-        case 7: _t->openFile(); break;
-        case 8: _t->newFile(); break;
-        case 9: _t->save(); break;
-        case 10: _t->saveAs(); break;
-        case 11: _t->undo(); break;
-        case 12: _t->redo(); break;
-        case 13: _t->updateFilename((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 14: _t->runFinished(); break;
-        case 15: _t->updatePerformance(); break;
+        case 3: _t->memoryChanged(); break;
+        case 4: _t->step(); break;
+        case 5: _t->run(); break;
+        case 6: _t->next(); break;
+        case 7: _t->reset(); break;
+        case 8: _t->openFile(); break;
+        case 9: _t->newFile(); break;
+        case 10: _t->save(); break;
+        case 11: _t->saveAs(); break;
+        case 12: _t->undo(); break;
+        case 13: _t->redo(); break;
+        case 14: _t->updateFilename((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 15: _t->runFinished(); break;
+        case 16: _t->updatePerformance(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -164,6 +168,13 @@ void RunWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
             typedef void (RunWidget::*_t)(int );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&RunWidget::instructionCountChanged)) {
                 *result = 2;
+                return;
+            }
+        }
+        {
+            typedef void (RunWidget::*_t)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&RunWidget::memoryChanged)) {
+                *result = 3;
                 return;
             }
         }
@@ -195,13 +206,13 @@ int RunWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 16)
+        if (_id < 17)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 16;
+        _id -= 17;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 16)
+        if (_id < 17)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 16;
+        _id -= 17;
     }
     return _id;
 }
@@ -225,6 +236,12 @@ void RunWidget::instructionCountChanged(int _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
+}
+
+// SIGNAL 3
+void RunWidget::memoryChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 3, nullptr);
 }
 struct qt_meta_stringdata_SimulatorThread_t {
     QByteArrayData data[1];

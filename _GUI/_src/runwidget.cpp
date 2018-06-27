@@ -48,7 +48,8 @@ void RunWidget::step() {
                                          // running
     word currentPC = simulator->cpu->PC;
     addStep(currentPC);
-    if ((!simulator->step())) // Make simulator execute one step
+    emit memoryChanged();
+    if (!simulator->step()) // Make simulator execute one step
         simulationFinished = true;; // Simulation finshed
 
     // Add next PC to table
@@ -77,6 +78,7 @@ void RunWidget::runFinished() {
         emit output("Simulation stopped.");
     else {
         simulationFinished = true;
+        emit memoryChanged();
     }
 }
 
@@ -88,15 +90,15 @@ void RunWidget::next() {
     std::vector<int> vev = ide->getBreakPoints();;
     simulator->setBreakPoints(vev);
 
-
     if (!simulator->next())
-       simulationFinished = true;;
+       simulationFinished = true;
     addStep(simulator->cpu->PC);
     addNextPC();
 
     tabs->setCurrentIndex(0);
     emit instructionCountChanged(
                 simulator->getInstructionsSimulated());
+    emit memoryChanged();
 }
 
 
@@ -121,6 +123,7 @@ void RunWidget::reset() {
     }
     simulator->reset(); // Reset simulator
     executionTable->setRowCount(0); // Clear execution table
+    emit memoryChanged();
 }
 
 void RunWidget::openFile() {
@@ -197,6 +200,7 @@ void RunWidget::addStep(word PC) {
     showChange(executionTable, executionTable->rowCount()-1, 2,
                simulator->cpu->getNumberOfRegisters()+2);
     executionTable->scrollToBottom();
+    executionTable->resizeColumnToContents(1);
 }
 
 void RunWidget::addNextPC() {
@@ -252,9 +256,10 @@ void RunWidget::createTabs() {
     executionTable->setHorizontalHeaderLabels(tableHeader);
     executionTable->verticalHeader()->setVisible(false);
     executionTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    executionTable->resizeColumnsToContents();
-    executionTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
+    for (int i = 0; i < 11; i++) {
+        if (!(i == 1))
+            executionTable->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
+    }
     tabs->addTab(executionTable, "Execution");
 
     ide = new IdeWidget(this);

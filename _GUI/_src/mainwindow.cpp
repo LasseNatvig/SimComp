@@ -19,15 +19,14 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(runW);
 
     createPerformanceDock();
-    createMenuBar();
     createActionDock();
     createStatusBar();
+    createMenuBar();
 
     // Cosmetic operations
     appIcon = new QIcon(":/images/../_img/SimComp_icon.png");
     this->setWindowIcon(*appIcon);
     this->setWindowTitle("Simulating Computers");
-
 }
 
 MainWindow::~MainWindow()
@@ -37,10 +36,11 @@ MainWindow::~MainWindow()
 void MainWindow::createActionDock() {
     QDockWidget* actionDock = new QDockWidget("Output", this);
     actionDock->setAllowedAreas(Qt::TopDockWidgetArea |
-                                     Qt::BottomDockWidgetArea);
+                                Qt::BottomDockWidgetArea);
     actionDock->setFeatures(
                 QDockWidget::DockWidgetMovable |
-                QDockWidget::DockWidgetFloatable);
+                QDockWidget::DockWidgetFloatable |
+                QDockWidget::DockWidgetClosable);
     actionToolBox = new QGroupBox;
 
     runBtn = new QPushButton(tr("&Run"));
@@ -67,6 +67,7 @@ void MainWindow::createActionDock() {
     actionToolBox->setLayout(actionToolBoxLayout);
 
     actionDock->setWidget(actionToolBox);
+    actionAction = actionDock->toggleViewAction();
     addDockWidget(Qt::BottomDockWidgetArea, actionDock);
 }
 
@@ -82,11 +83,6 @@ void MainWindow::createPerformanceDock() {
 
     performanceChart = new PerformanceChart;
     performanceChartView = new QChartView(performanceChart, this);
-    closePerformanceAction = new QAction(tr("&Close"));
-    closePerformanceAction->setShortcut(QKeySequence::Close);
-    performanceChartView->addAction(closePerformanceAction);
-    connect(closePerformanceAction, SIGNAL(triggered()),
-            performanceChartView, SLOT(close()));
     performanceChartView->setWindowTitle("Performance");
     performanceChartView->setRenderHint(QPainter::Antialiasing);
     performanceChartView->setWindowFlag(Qt::Tool);
@@ -156,11 +152,18 @@ void MainWindow::createMenuBar() {
     connect(resetAction, SIGNAL(triggered()), this, SLOT(reset()));
 
     viewMenu = menuBar->addMenu(tr("&View"));
+
+    performanceAction->setShortcut(QKeySequence(tr("Ctrl+p")));
+    actionAction->setShortcut(QKeySequence(tr("Ctrl+a")));
+
+    memoryMenu = viewMenu->addMenu(tr("&Memory Window"));
     memoryAction = new QAction(tr("&New Memory Window"));
     memoryAction->setShortcut(QKeySequence(tr("Ctrl+m")));
-    performanceAction->setShortcut(QKeySequence(tr("Ctrl+p")));
-    viewMenu->addAction(memoryAction);
+    memoryMenu->addAction(memoryAction);
+    memoryMenu->addSeparator();
+
     viewMenu->addAction(performanceAction);
+    viewMenu->addAction(actionAction);
     connect(memoryAction, SIGNAL(triggered()),
             this, SLOT(newMemoryWindow()));
 
@@ -172,14 +175,32 @@ void MainWindow::createStatusBar() {
 }
 
 
+
 /* SLOTS */
 void MainWindow::newMemoryWindow() {
+    QDockWidget* memoryDock = new QDockWidget("Memory Window #" +
+                                              QString::number(
+                                                  memoryWindows.size()), this);
+    memoryDock->setAllowedAreas(Qt::LeftDockWidgetArea |
+                                Qt::RightDockWidgetArea);
+    memoryDock->setFeatures(
+                QDockWidget::DockWidgetMovable |
+                QDockWidget::DockWidgetFloatable |
+                QDockWidget::DockWidgetClosable);
+
     MemoryWindowWidget* window = new MemoryWindowWidget(this,
                                                         runW->getSimulator());
-    window->setWindowFlags(Qt::Window);
-    window->setAttribute(Qt::WA_DeleteOnClose);
-    window->show();
-    memoryWindows.push_back(window);
+    connect(window, SIGNAL(windowNameChanged(QString)),
+            memoryDock, SLOT(setWindowTitle(QString)));
+    connect(runW, SIGNAL(memoryChanged()), window, SLOT(updateDisplay()));
+
+    QAction* toggleAction = memoryDock->toggleViewAction();
+    memoryMenu->addAction(toggleAction);
+    memoryWindows.push_back(
+                QPair<MemoryWindowWidget*, QAction*>(window, toggleAction));
+
+    memoryDock->setWidget(window);
+    addDockWidget(Qt::LeftDockWidgetArea, memoryDock);
 }
 
 void MainWindow::writeOutput(QString message) {
