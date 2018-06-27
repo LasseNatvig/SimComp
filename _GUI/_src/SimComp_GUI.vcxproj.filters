@@ -140,5 +140,14 @@
     <QtRcc Include="images.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+    <None Include="..\_img\next.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\_img\run.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\_img\step.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
