@@ -12,9 +12,14 @@
 
 IdeWidget::IdeWidget(QWidget *parent) : QPlainTextEdit(parent)
 {
-    lineNumberArea = new LineNumberArea(this);
     breakPointArea = new BreakPointArea(this);
+    lineNumberArea = new LineNumberArea(this);
+
     doc = new QTextDocument;
+    QFont font = doc->defaultFont();
+    font.setFamily("Courier New");
+    doc->setDefaultFont(font);
+
     lines = 1;
     breakPoints = new int[lines] {};
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSideAreaWidth(int)));
@@ -232,6 +237,7 @@ void IdeWidget::open(QString filename) {
     QPlainTextDocumentLayout* plainDoc = new QPlainTextDocumentLayout(doc);
     doc->setDocumentLayout(plainDoc);
     setDocument(doc);
+    updateSideAreaWidth(0);
 }
 
 void IdeWidget::newFile() {
@@ -241,6 +247,9 @@ void IdeWidget::newFile() {
     filename = "untitled.sasm";
     emit filenameChanged(filename);
     doc = new QTextDocument;
+    QFont font = doc->defaultFont();
+    font.setFamily("Courier New");
+    doc->setDefaultFont(font);
     QPlainTextDocumentLayout* plainDoc = new QPlainTextDocumentLayout(doc);
     doc->setDocumentLayout(plainDoc);
     setDocument(doc);
