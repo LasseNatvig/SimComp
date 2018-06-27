@@ -1,41 +1,23 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Sat Jun 23 12:46:29 2018
+ComputerSimulation AdHoc16_V03 started at time Wed Jun 27 17:38:23 2018
 Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
+../../_Simulator/_sasm/../../_Simulator/_sasm/test3.sasm
 ...successfully opened
+Constant named innerL given as 4000
+Constant named outerL given as 10000
+Label _outer was placed in Instruction Memory at address: 3
+Label _inner was placed in Instruction Memory at address: 6
 Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
+../../_Simulator/_sasm/../../_Simulator/_sasm/test3.sasm
 ...successfully opened
+Constant named innerL given as 4000
+Constant named outerL given as 10000
+Label _outer was placed in Instruction Memory at address: 3
+Label _inner was placed in Instruction Memory at address: 6
 Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
+../../_Simulator/_sasm/../../_Simulator/_sasm/test3.sasm
 ...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
+Constant named innerL given as 4000
+Constant named outerL given as 10000
+Label _outer was placed in Instruction Memory at address: 3
+Label _inner was placed in Instruction Memory at address: 6
