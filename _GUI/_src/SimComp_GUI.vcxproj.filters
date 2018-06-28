@@ -64,6 +64,9 @@
     <ClCompile Include="..\..\_Simulator\_src\memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="memorymap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="memorywindowwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,6 +105,9 @@
     <ClInclude Include="..\..\_Simulator\_src\memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <QtMoc Include="memorymap.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="memorywindowwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -116,6 +122,8 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    
+    
     
     
     

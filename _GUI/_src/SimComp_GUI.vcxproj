@@ -120,9 +120,9 @@
       <InitFuncName>images</InitFuncName>
       <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
       <QTDIR>$(QTDIR)</QTDIR>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
       <Compression>default</Compression>
       <InputFile>%(FullPath)</InputFile>
-      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -167,11 +167,11 @@
     </ResourceCompile>
     <QtRcc>
       <QTDIR>$(QTDIR)</QTDIR>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
       <Compression>default</Compression>
       <InitFuncName>images</InitFuncName>
       <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
       <InputFile>%(FullPath)</InputFile>
-      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtRcc>
     <QtMoc>
       <QTDIR>$(QTDIR)</QTDIR>
@@ -195,6 +195,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\memory.cpp" />
+    <ClCompile Include="memorymap.cpp" />
     <ClCompile Include="memorywindowwidget.cpp" />
     <ClCompile Include="performancechart.cpp" />
     <ClCompile Include="runwidget.cpp" />
@@ -211,6 +212,8 @@
     <QtMoc Include="mainwindow.h">
     </QtMoc>
     <ClInclude Include="..\..\_Simulator\_src\memory.h" />
+    <QtMoc Include="memorymap.h">
+    </QtMoc>
     <QtMoc Include="memorywindowwidget.h">
     </QtMoc>
     <ClInclude Include="performancechart.h" />
@@ -240,6 +243,9 @@
     <None Include="..\_img\SimComp_icon.png" />
     <QtRcc Include="images.qrc">
     </QtRcc>
+    <None Include="..\_img\next.png" />
+    <None Include="..\_img\run.png" />
+    <None Include="..\_img\step.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -40,6 +40,7 @@ void MainWindow::createActionDock() {
                 QDockWidget::DockWidgetMovable |
                 QDockWidget::DockWidgetFloatable |
                 QDockWidget::DockWidgetClosable);
+	actionDock->setMaximumHeight(125);
     actionToolBox = new QGroupBox;
 
     runBtn = new QPushButton(tr("&Run"));
@@ -56,13 +57,13 @@ void MainWindow::createActionDock() {
     connect(nextBtn, SIGNAL(clicked()), runW, SLOT(next()));
     connect(resetBtn, SIGNAL(clicked()), this, SLOT(reset()));
 
-    outputLst = new QListWidget;
+    outputLst = new QListWidget(this);
     connect(runW, SIGNAL(output(QString)), this, SLOT(writeOutput(QString)));
 
     QGridLayout* actionToolBoxLayout = new QGridLayout;
-    actionToolBoxLayout->addLayout(buttonLayout, 0, 0);
+    actionToolBoxLayout->addLayout(buttonLayout, 0, 0, 0, 1);
     actionToolBoxLayout->addWidget(outputLst, 0, 1, 0, 5);
-    actionToolBoxLayout->addWidget(resetBtn, 0, 6);
+    actionToolBoxLayout->addWidget(resetBtn, 0, 6, 0 , 1);
     actionToolBox->setLayout(actionToolBoxLayout);
 
     actionDock->setWidget(actionToolBox);

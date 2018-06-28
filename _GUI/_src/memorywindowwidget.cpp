@@ -99,16 +99,20 @@ void MemoryWindowWidget::createMainFrame() {
     memoryMapBoxLayout->setSpacing(1);
     memoryMapBox->setLayout(memoryMapBoxLayout);
     memoryMapBox->setFixedSize(memoryMapBox->sizeHint());
-
-    toggleBtn = new QPushButton(
-                QIcon(QApplication::style()->standardIcon(
-                          QStyle::SP_TitleBarShadeButton)), "", this);
-    connect(toggleBtn, SIGNAL(clicked()), this, SLOT(toggleMemoryMapMenu()));
+	
+	toggleBtn = new QPushButton(
+		QIcon(QApplication::style()->standardIcon(
+			QStyle::SP_TitleBarShadeButton)), "", this);
+	connect(toggleBtn, SIGNAL(clicked()), this, SLOT(toggleMemoryMapMenu()));
+	QVBoxLayout* configLayout = new QVBoxLayout;
+	configLayout->addWidget(memoryMapBox);
+	configLayout->addWidget(toggleBtn);
+	configBox = new QGroupBox(this);
+	configBox->setLayout(configLayout);
 
     QVBoxLayout* memoryMapContainerLayout = new QVBoxLayout;
     memoryMapContainerLayout->addWidget(memoryMap);
-    memoryMapContainerLayout->addWidget(memoryMapBox);
-    memoryMapContainerLayout->addWidget(toggleBtn, 0, Qt::AlignBottom);
+    memoryMapContainerLayout->addWidget(configBox, 0, Qt::AlignBottom);
     memoryMapContainer->setLayout(memoryMapContainerLayout);
 
     leftTabs->addTab(memoryDisplay, "Table");
