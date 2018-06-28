@@ -3,6 +3,7 @@
 
 #include "../../_Simulator/_src/compSim.h"
 #include "globals.h"
+#include "memorymap.h"
 #include <QWidget>
 #include <QLabel>
 #include <QSpinBox>
@@ -16,6 +17,7 @@
 #include <QSplitter>
 #include <QLineEdit>
 #include <QStringList>
+#include <QTabWidget>
 
 class MemoryWindowWidget : public QWidget
 {
@@ -34,9 +36,27 @@ private:
     QSplitter* mainFrame;
 
     // LEFT SIDE
+    QTabWidget* leftTabs;
+        // Memory Display
     QTableWidget* memoryDisplay;
     QStringList topDisplayHeader;
     QStringList sideDisplayHeader;
+        // Memory Map
+    QWidget* memoryMapContainer;
+    MemoryMap* memoryMap;
+    QGroupBox* memoryMapBox;
+    QPushButton* toggleBtn;
+    QLabel* setPixelSizeLbl;
+    QLineEdit* pixelSizeIn;
+    QIntValidator* pixelInVal;
+    QLabel* setWidthLbl;
+    QLineEdit* widthIn;
+    QIntValidator* widthInVal;
+    QLabel* setHeightLbl;
+    QLineEdit* heightIn;
+    QIntValidator* heightInVal;
+    QPushButton* memoryMapUpdateBtn;
+    QPushButton* memoryMapClearBtn;
 
     // RIGHT SIDE
     QWidget* rightContainer;
@@ -67,9 +87,12 @@ public slots:
 
 private slots:
     void clearDisplay();
+    void clearMemoryMap();
     void updateDisplayHeaders();
     void updateConfig();
-    void updateDisplay();
+    void updateDisplays();
+    void updateMemoryMap();
+    void toggleMemoryMapMenu();
 };
 
 #endif // MEMORYWINDOWWIDGET_H

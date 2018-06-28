@@ -11,7 +11,6 @@
 #include <QPixmap>
 #include <QSettings>
 #include <QFileDialog>
-#include <QApplication>
 
 
 RunWidget::RunWidget(QWidget *parent) : QWidget(parent)

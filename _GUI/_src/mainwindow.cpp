@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Import stylesheet
     #ifdef STYLESHEET
     #endif
-
     runW = new RunWidget(this);
     runW->setAttribute(Qt::WA_DeleteOnClose);
     connect(runW, SIGNAL(instructionCountChanged(int)),
@@ -86,9 +85,9 @@ void MainWindow::createPerformanceDock() {
     performanceChartView->setWindowTitle("Performance");
     performanceChartView->setRenderHint(QPainter::Antialiasing);
     performanceChartView->setWindowFlag(Qt::Tool);
-    performanceChartView->setFixedSize(
+    performanceChartView->setMinimumSize(
                 QSize(globals::PERFORMANCEWINDOW_MIN_WIDTH,
-                      globals::PERFORMANCEWINDOW_MIN_HEIGHT));
+                      globals::PERFORMANCEWINDOW_MIN_HEIGHT));    
     connect(runW, &RunWidget::performanceChanged, performanceChart,
             &PerformanceChart::updatePerformance);
 
@@ -192,7 +191,7 @@ void MainWindow::newMemoryWindow() {
                                                         runW->getSimulator());
     connect(window, SIGNAL(windowNameChanged(QString)),
             memoryDock, SLOT(setWindowTitle(QString)));
-    connect(runW, SIGNAL(memoryChanged()), window, SLOT(updateDisplay()));
+    connect(runW, SIGNAL(memoryChanged()), window, SLOT(updateDisplays()));
 
     QAction* toggleAction = memoryDock->toggleViewAction();
     memoryMenu->addAction(toggleAction);

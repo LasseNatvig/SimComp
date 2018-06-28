@@ -10,9 +10,12 @@ namespace globals {
     const unsigned int MEMORYWINDOW_MIN_WIDTH = 300;
     const unsigned int MEMORYWINDOW_MIN_HEIGHT = 240;
     const unsigned int MEMORYWINDOW_COLCOUNT = 8;
+    const unsigned int MEMORYWINDOW_PIXMAP_WIDTH = 200;
+    const unsigned int MEMORYWINDOW_PIXMAP_HEIGHT = 200;
+    const unsigned int MEMORYWINDOW_PIXMAP_PIXSIZE = 10;
 
-    const unsigned int PERFORMANCEWINDOW_MIN_WIDTH = 350;
-    const unsigned int PERFORMANCEWINDOW_MIN_HEIGHT = 250;
+    const unsigned int PERFORMANCEWINDOW_MIN_WIDTH = 280;
+    const unsigned int PERFORMANCEWINDOW_MIN_HEIGHT = 200;
 
     const unsigned int ACTIONSWINDOW_MIN_WIDTH = 350;
     const unsigned int ACTIONSWINDOW_MIN_HEIGHT = 200;

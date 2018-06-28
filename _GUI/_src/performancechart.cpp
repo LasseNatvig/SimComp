@@ -17,6 +17,8 @@ PerformanceChart::PerformanceChart(QGraphicsItem *parent, Qt::WindowFlags wFlags
     // Chart configuration
     setMinimumSize(QSize(globals::PERFORMANCEWINDOW_MIN_WIDTH,
                          globals::PERFORMANCEWINDOW_MIN_HEIGHT));
+    setMaximumSize(QSize(globals::PERFORMANCEWINDOW_MIN_WIDTH,
+                         globals::PERFORMANCEWINDOW_MIN_HEIGHT));
     legend()->hide();
  }
 

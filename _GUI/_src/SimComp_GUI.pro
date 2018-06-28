@@ -30,7 +30,8 @@ SOURCES += \
         runwidget.cpp \
     memorywindowwidget.cpp \
     idewidget.cpp \
-    performancechart.cpp
+    performancechart.cpp \
+    memorymap.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +39,8 @@ HEADERS += \
         runwidget.h \
     memorywindowwidget.h \
     idewidget.h \
-    performancechart.h
+    performancechart.h \
+    memorymap.h
 
 RESOURCES += \
     images.qrc
