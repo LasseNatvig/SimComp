@@ -45,7 +45,7 @@ private:
     QWidget* memoryMapContainer;
     MemoryMap* memoryMap;
 	QGroupBox* configBox;
-    QGroupBox* memoryMapBox;
+    QWidget* configContainer;
     QPushButton* toggleBtn;
     QLabel* setPixelSizeLbl;
     QLineEdit* pixelSizeIn;

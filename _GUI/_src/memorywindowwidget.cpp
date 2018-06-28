@@ -89,7 +89,7 @@ void MemoryWindowWidget::createMainFrame() {
     setHeightLayout->addWidget(setHeightLbl);
     setHeightLayout->addWidget(heightIn);
 
-    memoryMapBox = new QGroupBox;
+    configContainer = new QWidget;
     QVBoxLayout* memoryMapBoxLayout = new QVBoxLayout;
     memoryMapBoxLayout->addLayout(setPixelSizeLayout);
     memoryMapBoxLayout->addLayout(setWidthLayout);
@@ -97,15 +97,15 @@ void MemoryWindowWidget::createMainFrame() {
     memoryMapBoxLayout->addWidget(memoryMapUpdateBtn);
     memoryMapBoxLayout->addWidget(memoryMapClearBtn);
     memoryMapBoxLayout->setSpacing(1);
-    memoryMapBox->setLayout(memoryMapBoxLayout);
-    memoryMapBox->setFixedSize(memoryMapBox->sizeHint());
+    configContainer->setLayout(memoryMapBoxLayout);
+    configContainer->setMinimumSize(configContainer->sizeHint());
 	
 	toggleBtn = new QPushButton(
 		QIcon(QApplication::style()->standardIcon(
 			QStyle::SP_TitleBarShadeButton)), "", this);
 	connect(toggleBtn, SIGNAL(clicked()), this, SLOT(toggleMemoryMapMenu()));
 	QVBoxLayout* configLayout = new QVBoxLayout;
-	configLayout->addWidget(memoryMapBox);
+    configLayout->addWidget(configContainer);
 	configLayout->addWidget(toggleBtn);
 	configBox = new QGroupBox(this);
 	configBox->setLayout(configLayout);
@@ -258,12 +258,12 @@ void MemoryWindowWidget::clearMemoryMap() {
 }
 
 void MemoryWindowWidget::toggleMemoryMapMenu() {
-    if (memoryMapBox->isVisible()) {
-        memoryMapBox->hide();
+    if (configContainer->isVisible()) {
+        configContainer->hide();
         toggleBtn->setIcon(QIcon(QApplication::style()->standardIcon(
                                    QStyle::SP_TitleBarUnshadeButton)));
     } else {
-        memoryMapBox->show();
+        configContainer->show();
         toggleBtn->setIcon(QIcon(QApplication::style()->standardIcon(
                                    QStyle::SP_TitleBarShadeButton)));
     }
