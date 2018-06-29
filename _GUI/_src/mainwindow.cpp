@@ -2,7 +2,6 @@
 #include <QStyle>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QDockWidget>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -26,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     appIcon = new QIcon(":/images/../_img/SimComp_icon.png");
     this->setWindowIcon(*appIcon);
     this->setWindowTitle("Simulating Computers");
+
+    setDocumentMode(true);
 }
 
 MainWindow::~MainWindow()
@@ -187,10 +188,9 @@ void MainWindow::newMemoryWindow() {
                 QDockWidget::DockWidgetMovable |
                 QDockWidget::DockWidgetFloatable |
                 QDockWidget::DockWidgetClosable);
-    memoryDock->setAttribute(Qt::WA_DeleteOnClose);
 
-    MemoryWindowWidget* window = new MemoryWindowWidget(this,
-                                                        runW->getSimulator());
+    MemoryWindowWidget* window = new MemoryWindowWidget(memoryDock,
+                                     runW->getSimulator());
     connect(window, SIGNAL(windowNameChanged(QString)),
             memoryDock, SLOT(setWindowTitle(QString)));
     connect(window, SIGNAL(newWindowRequested()),
@@ -202,17 +202,20 @@ void MainWindow::newMemoryWindow() {
     QAction* toggleAction = memoryDock->toggleViewAction();
     memoryMenu->addAction(toggleAction);
     memoryWindows.push_back(
-                QPair<MemoryWindowWidget*, QAction*>(window, toggleAction));
+                QPair<QDockWidget*, QAction*>(memoryDock, toggleAction));
 
     memoryDock->setWidget(window);
     addDockWidget(Qt::LeftDockWidgetArea, memoryDock);
 }
 
 void MainWindow::deleteMemoryWindow(MemoryWindowWidget* memoryWindow) {
-    for (auto& pair : memoryWindows) {
-        if (pair.first == memoryWindow) {
-            memoryMenu->removeAction(pair.second);
-            pair.first->close();
+    for (int i = 0; i < memoryWindows.size(); i++) {
+        auto pair = memoryWindows[i];
+        if (pair.first->widget() == memoryWindow) {
+            memoryMenu->removeAction(pair.second); // Remove action from menu
+            removeDockWidget(pair.first); // Remove dock from MainWindow
+            delete pair.first; // Delete MemorWindowWidget
+            memoryWindows.removeOne(pair); // Remove pair from vector
             break;
         }
     }

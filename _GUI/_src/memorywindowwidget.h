@@ -19,6 +19,7 @@
 #include <QLineEdit>
 #include <QStringList>
 #include <QTabWidget>
+#include <QDockWidget>
 
 class MemoryWindowWidget : public QWidget
 {

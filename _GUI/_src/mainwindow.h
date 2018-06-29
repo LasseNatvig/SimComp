@@ -10,7 +10,7 @@
 #include <QSettings>
 #include <QToolBar>
 #include <QStatusBar>
-#include <QVector>
+#include <QList>
 #include <QPair>
 
 QT_CHARTS_USE_NAMESPACE
@@ -69,7 +69,7 @@ private:
     void createPerformanceDock();
 
     // Memory Windows
-    QVector<QPair<MemoryWindowWidget*,QAction*>> memoryWindows;
+    QList<QPair<QDockWidget*,QAction*>> memoryWindows;
 
 public slots:
     void newMemoryWindow();
