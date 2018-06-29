@@ -188,6 +188,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\_Simulator\_src\Program.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\compSim.cpp" />
+    <ClCompile Include="dropdownwidget.cpp" />
     <ClCompile Include="idewidget.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\isa.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\loader.cpp" />
@@ -203,6 +204,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\_Simulator\_src\compSim.h" />
     <ClInclude Include="..\..\_Simulator\_src\config.h" />
+    <QtMoc Include="dropdownwidget.h">
+    </QtMoc>
     <ClInclude Include="globals.h" />
     <QtMoc Include="idewidget.h">
     </QtMoc>
