@@ -31,7 +31,8 @@ SOURCES += \
     memorywindowwidget.cpp \
     idewidget.cpp \
     performancechart.cpp \
-    memorymap.cpp
+    memorymap.cpp \
+    dropdownwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     memorywindowwidget.h \
     idewidget.h \
     performancechart.h \
-    memorymap.h
+    memorymap.h \
+    dropdownwidget.h
 
 RESOURCES += \
     images.qrc

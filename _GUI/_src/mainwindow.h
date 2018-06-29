@@ -73,6 +73,7 @@ private:
 
 public slots:
     void newMemoryWindow();
+    void deleteMemoryWindow(MemoryWindowWidget* window);
     void reset();
     void writeOutput(QString message);
     void updateInstructionCount(int instructionCount);

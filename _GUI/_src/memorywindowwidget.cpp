@@ -36,9 +36,19 @@ MemoryWindowWidget::MemoryWindowWidget(QWidget *parent,
 void MemoryWindowWidget::createMainFrame() {
     mainFrame = new QSplitter(this);
 
-    /* LEFT */
+    createLeftSide();
+    createRightSide();
+
+    // Add LEFT and RIGHT to main frame
+    mainFrame->addWidget(leftTabs);
+    mainFrame->addWidget(rightContainer);
+    mainFrame->setSizes(QList<int>({0,1}));
+}
+
+void MemoryWindowWidget::createLeftSide() {
     leftTabs = new QTabWidget(this);
-        // Table
+
+    // Memory display
     memoryDisplay = new QTableWidget(this);
     memoryDisplay->setColumnCount(globals::MEMORYWINDOW_COLCOUNT);
     updateDisplayHeaders();
@@ -47,16 +57,15 @@ void MemoryWindowWidget::createMainFrame() {
     memoryDisplay->resizeColumnsToContents();
     memoryDisplay->horizontalHeader()->setSectionResizeMode(
                 QHeaderView::Stretch);
-        // Memory map
+
+    // Memory map
     memoryMapContainer = new QWidget(this);
     memoryMap = new MemoryMap(this);
+
 
     memoryMapUpdateBtn = new QPushButton("Update", this);
     connect(memoryMapUpdateBtn, SIGNAL(clicked()),
             this, SLOT(updateMemoryMap()));
-    memoryMapClearBtn = new QPushButton("Clear", this);
-    connect(memoryMapClearBtn, SIGNAL(clicked()),
-            this, SLOT(clearMemoryMap()));
 
             // Config box
     QHBoxLayout* setPixelSizeLayout = new QHBoxLayout;
@@ -89,39 +98,31 @@ void MemoryWindowWidget::createMainFrame() {
     setHeightLayout->addWidget(setHeightLbl);
     setHeightLayout->addWidget(heightIn);
 
-    configContainer = new QWidget;
-    QVBoxLayout* memoryMapBoxLayout = new QVBoxLayout;
-    memoryMapBoxLayout->addLayout(setPixelSizeLayout);
-    memoryMapBoxLayout->addLayout(setWidthLayout);
-    memoryMapBoxLayout->addLayout(setHeightLayout);
-    memoryMapBoxLayout->addWidget(memoryMapUpdateBtn);
-    memoryMapBoxLayout->addWidget(memoryMapClearBtn);
-    memoryMapBoxLayout->setSpacing(1);
-    configContainer->setLayout(memoryMapBoxLayout);
-    configContainer->setMinimumSize(configContainer->sizeHint());
-	
-	toggleBtn = new QPushButton(
-		QIcon(QApplication::style()->standardIcon(
-			QStyle::SP_TitleBarShadeButton)), "", this);
-	connect(toggleBtn, SIGNAL(clicked()), this, SLOT(toggleMemoryMapMenu()));
-	QVBoxLayout* configLayout = new QVBoxLayout;
-    configLayout->addWidget(configContainer);
-	configLayout->addWidget(toggleBtn);
-	configBox = new QGroupBox(this);
-	configBox->setLayout(configLayout);
+    configBox = new QGroupBox(this);
+    QVBoxLayout* configLayout = new QVBoxLayout;
+    configLayout->addLayout(setPixelSizeLayout);
+    configLayout->addLayout(setWidthLayout);
+    configLayout->addLayout(setHeightLayout);
+    configLayout->addWidget(memoryMapUpdateBtn);
+    configLayout->setSpacing(1);
+    configBox->setLayout(configLayout);
+
+
+    dropUpMenu = new DropdownWidget(DropdownWidget::Up, this);
+    dropUpMenu->addWidget(configBox);
 
     QVBoxLayout* memoryMapContainerLayout = new QVBoxLayout;
     memoryMapContainerLayout->addWidget(memoryMap);
-    memoryMapContainerLayout->addWidget(configBox, 0, Qt::AlignBottom);
+    memoryMapContainerLayout->addWidget(dropUpMenu, 0, Qt::AlignBottom);
     memoryMapContainer->setLayout(memoryMapContainerLayout);
 
     leftTabs->addTab(memoryDisplay, "Table");
     leftTabs->addTab(memoryMapContainer, "Bitmap");
+}
 
-
-    /* RIGHT */
+void MemoryWindowWidget::createRightSide() {
     rightContainer = new QWidget(this);
-        // - TOP
+    // TOP
     topDescriptionLbl = new QLabel("<b>Choose address area to display</b>", this);
     rightSpacer = new QSpacerItem(1,1);
     fromAddrLbl = new QLabel("From address: ", this);
@@ -141,7 +142,7 @@ void MemoryWindowWidget::createMainFrame() {
     topRightLayout->addWidget(toAddrSpnbox);
     topRightBox->setLayout(topRightLayout);
 
-        // - MIDDLE
+    // MIDDLE
     midDescriptionLbl = new QLabel("<b>Choose memory type</b>", this);
     imBtn = new QRadioButton("Instruction Memory", this);
     dmBtn = new QRadioButton("Data Memory", this);
@@ -154,7 +155,7 @@ void MemoryWindowWidget::createMainFrame() {
     midRightLayout->addWidget(dmBtn);
     midRightBox->setLayout(midRightLayout);
 
-        // - BOTTOM
+    // BOTTOM
     nameInput = new QLineEdit(this);
     setWindowNameLbl = new QLabel("<b>Name: </b>", this);
     updateBtn = new QPushButton("Update", this);
@@ -173,16 +174,23 @@ void MemoryWindowWidget::createMainFrame() {
     connect(clearBtn, SIGNAL(clicked()), this, SLOT(clearDisplay()));
     connect(updateBtn, SIGNAL(clicked()), this, SLOT(updateConfig()));
 
+    newWindowLbl = new QLabel("<a href=\"#\">New Window</>");
+    connect(newWindowLbl, SIGNAL(linkActivated(QString)), this, SLOT(newWindow()));
+    deleteWindowLbl = new QLabel("<a href=\"#\">Delete Window</>", this);
+    connect(deleteWindowLbl, SIGNAL(linkActivated(QString)), this, SLOT(deleteWindow()));
+    QHBoxLayout* windowOptionsLayout = new QHBoxLayout;
+    windowOptionsLayout->addWidget(newWindowLbl, 0, Qt::AlignLeading);
+    windowOptionsLayout->addWidget(deleteWindowLbl, 0, Qt::AlignTrailing);
+    windowOptionsContainer = new QWidget(this);
+    windowOptionsContainer->setLayout(windowOptionsLayout);
+
     QVBoxLayout* rightLayout = new QVBoxLayout;
     rightLayout->addWidget(topRightBox, 0, Qt::AlignTop);
     rightLayout->addWidget(midRightBox, 0, Qt::AlignCenter);
     rightLayout->addWidget(btmRightBox, 0, Qt::AlignBottom);
+    rightLayout->addWidget(windowOptionsContainer, 0, Qt::AlignBottom);
+    rightLayout->setSpacing(1);
     rightContainer->setLayout(rightLayout);
-
-    // Add LEFT and RIGHT to main frame
-    mainFrame->addWidget(leftTabs);
-    mainFrame->addWidget(rightContainer);
-    mainFrame->setSizes(QList<int>({0,1}));
 }
 
 
@@ -252,20 +260,10 @@ void MemoryWindowWidget::updateMemoryMap() {
     memoryMap->update();
 }
 
-void MemoryWindowWidget::clearMemoryMap() {
-    memoryMap->clear();
-    memoryMap->update();
+void MemoryWindowWidget::deleteWindow() {
+    emit deleteRequested(this);
 }
 
-void MemoryWindowWidget::toggleMemoryMapMenu() {
-    if (configContainer->isVisible()) {
-        configContainer->hide();
-        toggleBtn->setIcon(QIcon(QApplication::style()->standardIcon(
-                                   QStyle::SP_TitleBarUnshadeButton)));
-    } else {
-        configContainer->show();
-        toggleBtn->setIcon(QIcon(QApplication::style()->standardIcon(
-                                   QStyle::SP_TitleBarShadeButton)));
-    }
-
+void MemoryWindowWidget::newWindow() {
+    emit newWindowRequested();
 }

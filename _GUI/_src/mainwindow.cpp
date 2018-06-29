@@ -187,11 +187,16 @@ void MainWindow::newMemoryWindow() {
                 QDockWidget::DockWidgetMovable |
                 QDockWidget::DockWidgetFloatable |
                 QDockWidget::DockWidgetClosable);
+    memoryDock->setAttribute(Qt::WA_DeleteOnClose);
 
     MemoryWindowWidget* window = new MemoryWindowWidget(this,
                                                         runW->getSimulator());
     connect(window, SIGNAL(windowNameChanged(QString)),
             memoryDock, SLOT(setWindowTitle(QString)));
+    connect(window, SIGNAL(newWindowRequested()),
+            this, SLOT(newMemoryWindow()));
+    connect(window, SIGNAL(deleteRequested(MemoryWindowWidget*)),
+            this, SLOT(deleteMemoryWindow(MemoryWindowWidget*)));
     connect(runW, SIGNAL(memoryChanged()), window, SLOT(updateDisplays()));
 
     QAction* toggleAction = memoryDock->toggleViewAction();
@@ -201,6 +206,16 @@ void MainWindow::newMemoryWindow() {
 
     memoryDock->setWidget(window);
     addDockWidget(Qt::LeftDockWidgetArea, memoryDock);
+}
+
+void MainWindow::deleteMemoryWindow(MemoryWindowWidget* memoryWindow) {
+    for (auto& pair : memoryWindows) {
+        if (pair.first == memoryWindow) {
+            memoryMenu->removeAction(pair.second);
+            pair.first->close();
+            break;
+        }
+    }
 }
 
 void MainWindow::writeOutput(QString message) {

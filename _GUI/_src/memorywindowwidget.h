@@ -4,6 +4,7 @@
 #include "../../_Simulator/_src/compSim.h"
 #include "globals.h"
 #include "memorymap.h"
+#include "dropdownwidget.h"
 #include <QWidget>
 #include <QLabel>
 #include <QSpinBox>
@@ -44,8 +45,8 @@ private:
         // Memory Map
     QWidget* memoryMapContainer;
     MemoryMap* memoryMap;
-	QGroupBox* configBox;
-    QWidget* configContainer;
+    DropdownWidget* dropUpMenu;
+    QGroupBox* configBox;
     QPushButton* toggleBtn;
     QLabel* setPixelSizeLbl;
     QLineEdit* pixelSizeIn;
@@ -57,7 +58,7 @@ private:
     QLineEdit* heightIn;
     QIntValidator* heightInVal;
     QPushButton* memoryMapUpdateBtn;
-    QPushButton* memoryMapClearBtn;
+    void createLeftSide();
 
     // RIGHT SIDE
     QWidget* rightContainer;
@@ -80,20 +81,26 @@ private:
     QLabel* setWindowNameLbl;
     QPushButton* updateBtn;
     QPushButton* clearBtn;
+    QWidget* windowOptionsContainer;
+    QLabel* deleteWindowLbl;
+    QLabel* newWindowLbl;
+    void createRightSide();
+
     void createMainFrame();
 signals:
     void windowNameChanged(QString name);
-
+    void deleteRequested(MemoryWindowWidget*);
+    void newWindowRequested();
 public slots:
 
 private slots:
     void clearDisplay();
-    void clearMemoryMap();
     void updateDisplayHeaders();
     void updateConfig();
     void updateDisplays();
-    void updateMemoryMap();
-    void toggleMemoryMapMenu();
+    void updateMemoryMap(); 
+    void deleteWindow();
+    void newWindow();
 };
 
 #endif // MEMORYWINDOWWIDGET_H
