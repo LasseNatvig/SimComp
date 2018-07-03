@@ -9,6 +9,13 @@ QMainWindow {
   color:#f1f1f1;
 }
 
+QToolTip {
+        background-color: #80CBC4;
+        color: black;
+    padding: 5px;
+    border-radius: 0;
+    opacity: 200;
+}
 
 QMenuBar {
 
@@ -200,8 +207,8 @@ QTreeView::item:selected!active {
 QTreeView::item:selected {
   background: #3f3f46;
 }
+
 QListView {
   background-color:#252526;
   border-style:none;
-
 }
