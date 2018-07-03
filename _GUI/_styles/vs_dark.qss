@@ -185,9 +185,9 @@ QToolBox::tab:selected {
   border:1px solid #007acc;
 }
 
-QWidget{
-  background:#2d2d30;
-  color:#f1f1f1;
+QObject {
+    background:#2d2d30;
+    color:#f1f1f1;
 }
 
 QTreeView {
@@ -211,4 +211,8 @@ QTreeView::item:selected {
 QListView {
   background-color:#252526;
   border-style:none;
+}
+
+QStatusBar {
+    color:#2d2d30;
 }
