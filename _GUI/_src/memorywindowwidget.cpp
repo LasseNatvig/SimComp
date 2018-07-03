@@ -1,5 +1,7 @@
 #include "memorywindowwidget.h"
-#include <iostream>
+#include "globals.h"
+#include "memorymap.h"
+#include "dropdownwidget.h"
 #include <vector>
 #include <string>
 #include <sstream>
@@ -10,6 +12,20 @@
 #include <QHeaderView>
 #include <QString>
 #include <QApplication>
+#include <QAction>
+#include <QLabel>
+#include <QSpinBox>
+#include <QGroupBox>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QTableWidget>
+#include <QIntValidator>
+#include <QSplitter>
+#include <QLineEdit>
+#include <QStringList>
+#include <QTabWidget>
+#include <QDockWidget>
+
 
 MemoryWindowWidget::MemoryWindowWidget(QWidget *parent,
                                        ComputerSimulation* simulator) :
@@ -34,7 +50,7 @@ MemoryWindowWidget::MemoryWindowWidget(QWidget *parent,
 
 /* CREATE */
 void MemoryWindowWidget::createMainFrame() {
-    mainFrame = new QSplitter(this);
+    mainFrame = new QSplitter;
 
     createLeftSide();
     createRightSide();
@@ -49,7 +65,7 @@ void MemoryWindowWidget::createLeftSide() {
     leftTabs = new QTabWidget(this);
 
     // Memory display
-    memoryDisplay = new QTableWidget(this);
+    memoryDisplay = new QTableWidget;
     memoryDisplay->setColumnCount(globals::MEMORYWINDOW_COLCOUNT);
     updateDisplayHeaders();
     memoryDisplay->setSelectionMode(QAbstractItemView::NoSelection);
@@ -60,12 +76,10 @@ void MemoryWindowWidget::createLeftSide() {
 
     // Memory map
     memoryMapContainer = new QWidget(this);
-    memoryMap = new MemoryMap(this);
-
-
-    memoryMapUpdateBtn = new QPushButton("Update", this);
-    connect(memoryMapUpdateBtn, SIGNAL(clicked()),
-            this, SLOT(updateMemoryMap()));
+    memoryMap = new MemoryMap;
+    memoryMapUpdateBtn = new QPushButton("Update");
+    connect(memoryMapUpdateBtn, &QPushButton::clicked,
+            this, &MemoryWindowWidget::updateMemoryMap);
 
             // Config box
     QHBoxLayout* setPixelSizeLayout = new QHBoxLayout;
@@ -89,8 +103,8 @@ void MemoryWindowWidget::createLeftSide() {
     setWidthLayout->addWidget(widthIn);
 
     QHBoxLayout* setHeightLayout = new QHBoxLayout;
-    setHeightLbl = new QLabel("<b>Height: </b>", this);
-    heightIn = new QLineEdit(this);
+    setHeightLbl = new QLabel("<b>Height: </b>");
+    heightIn = new QLineEdit;
     heightIn->setText(QString::number(
                           globals::MEMORYWINDOW_PIXMAP_HEIGHT));
     heightInVal = new QIntValidator(0, 500);
@@ -98,7 +112,7 @@ void MemoryWindowWidget::createLeftSide() {
     setHeightLayout->addWidget(setHeightLbl);
     setHeightLayout->addWidget(heightIn);
 
-    configBox = new QGroupBox(this);
+    configBox = new QGroupBox;
     QVBoxLayout* configLayout = new QVBoxLayout;
     configLayout->addLayout(setPixelSizeLayout);
     configLayout->addLayout(setWidthLayout);
@@ -107,8 +121,7 @@ void MemoryWindowWidget::createLeftSide() {
     configLayout->setSpacing(1);
     configBox->setLayout(configLayout);
 
-
-    dropUpMenu = new DropdownWidget(DropdownWidget::Up, this);
+    dropUpMenu = new DropdownWidget(DropdownWidget::Up);
     dropUpMenu->addWidget(configBox);
 
     QVBoxLayout* memoryMapContainerLayout = new QVBoxLayout;
@@ -123,13 +136,13 @@ void MemoryWindowWidget::createLeftSide() {
 void MemoryWindowWidget::createRightSide() {
     rightContainer = new QWidget(this);
     // TOP
-    topDescriptionLbl = new QLabel("<b>Choose address area to display</b>", this);
+    topDescriptionLbl = new QLabel("<b>Choose address area to display</b>");
     rightSpacer = new QSpacerItem(1,1);
-    fromAddrLbl = new QLabel("From address: ", this);
-    fromAddrSpnbox = new QSpinBox(this);
+    fromAddrLbl = new QLabel("From address: ");
+    fromAddrSpnbox = new QSpinBox;
     fromAddrSpnbox->setMaximum(10000);
-    toAddrLbl = new QLabel("To address: ",this);
-    toAddrSpnbox = new QSpinBox(this);
+    toAddrLbl = new QLabel("To address: ");
+    toAddrSpnbox = new QSpinBox;
     toAddrSpnbox->setMaximum(10000);
 
     topRightBox = new QGroupBox;
@@ -143,11 +156,10 @@ void MemoryWindowWidget::createRightSide() {
     topRightBox->setLayout(topRightLayout);
 
     // MIDDLE
-    midDescriptionLbl = new QLabel("<b>Choose memory type</b>", this);
-    imBtn = new QRadioButton("Instruction Memory", this);
-    dmBtn = new QRadioButton("Data Memory", this);
-
-    midRightBox = new QGroupBox(this);
+    midDescriptionLbl = new QLabel("<b>Choose memory type</b>");
+    imBtn = new QRadioButton("Instruction Memory");
+    dmBtn = new QRadioButton("Data Memory");
+    midRightBox = new QGroupBox;
     QVBoxLayout* midRightLayout = new QVBoxLayout;
     midRightLayout->addWidget(midDescriptionLbl);
     imBtn->setChecked(true);
@@ -156,28 +168,31 @@ void MemoryWindowWidget::createRightSide() {
     midRightBox->setLayout(midRightLayout);
 
     // BOTTOM
-    nameInput = new QLineEdit(this);
-    setWindowNameLbl = new QLabel("<b>Name: </b>", this);
-    updateBtn = new QPushButton("Update", this);
-    clearBtn = new QPushButton("Clear", this);
-
-    btmRightBox = new QGroupBox(this);
-    QVBoxLayout* btmRightLayout = new QVBoxLayout; // - BOTTOM
+    nameInput = new QLineEdit;
+    setWindowNameLbl = new QLabel("<b>Name: </b>");
+    updateBtn = new QPushButton("Update");
+    clearBtn = new QPushButton("Clear");
     QHBoxLayout* inputLayout = new QHBoxLayout;
     inputLayout->addWidget(setWindowNameLbl);
     inputLayout->addWidget(nameInput);
+    connect(clearBtn, &QPushButton::clicked, this,
+            &MemoryWindowWidget::clearDisplay);
+    connect(updateBtn, &QPushButton::clicked, this,
+            &MemoryWindowWidget::updateConfig);
+
+    btmRightBox = new QGroupBox;
+    QVBoxLayout* btmRightLayout = new QVBoxLayout;
     btmRightLayout->addLayout(inputLayout);
     btmRightLayout->addWidget(updateBtn);
     btmRightLayout->addWidget(clearBtn);
     btmRightBox->setLayout(btmRightLayout);
 
-    connect(clearBtn, SIGNAL(clicked()), this, SLOT(clearDisplay()));
-    connect(updateBtn, SIGNAL(clicked()), this, SLOT(updateConfig()));
-
     newWindowLbl = new QLabel("<a href=\"#\">New Window</>");
-    connect(newWindowLbl, SIGNAL(linkActivated(QString)), this, SLOT(newWindow()));
-    deleteWindowLbl = new QLabel("<a href=\"#\">Delete Window</>", this);
-    connect(deleteWindowLbl, SIGNAL(linkActivated(QString)), this, SLOT(deleteWindow()));
+    deleteWindowLbl = new QLabel("<a href=\"#\">Delete Window</>");
+    connect(newWindowLbl, &QLabel::linkActivated, this, [this] {
+        emit newWindowRequested(); });
+    connect(deleteWindowLbl, &QLabel::linkActivated, this, [this] {
+            emit deleteRequested(this); });
     QHBoxLayout* windowOptionsLayout = new QHBoxLayout;
     windowOptionsLayout->addWidget(newWindowLbl, 0, Qt::AlignLeading);
     windowOptionsLayout->addWidget(deleteWindowLbl, 0, Qt::AlignTrailing);
@@ -198,6 +213,7 @@ void MemoryWindowWidget::createRightSide() {
 /* UTILS */
 void MemoryWindowWidget::clearDisplay() {
     memoryDisplay->setRowCount(0);
+    memoryMap->clear();
 }
 
 void MemoryWindowWidget::updateDisplayHeaders() {
@@ -258,12 +274,4 @@ void MemoryWindowWidget::updateMemoryMap() {
     memoryMap->setWidth(widthIn->text().toInt());
     memoryMap->setHeight(heightIn->text().toInt());
     memoryMap->update();
-}
-
-void MemoryWindowWidget::deleteWindow() {
-    emit deleteRequested(this);
-}
-
-void MemoryWindowWidget::newWindow() {
-    emit newWindowRequested();
 }

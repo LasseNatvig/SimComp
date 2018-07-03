@@ -1,5 +1,5 @@
 #include "idewidget.h"
-#include <iostream>
+#include <vector>
 #include <QGridLayout>
 #include <QtWidgets>
 #include <QPlainTextDocumentLayout>
@@ -10,68 +10,69 @@
 // See http://doc.qt.io/qt-5/qtwidgets-widgets-codeeditor-example.html
 
 
-IdeWidget::IdeWidget(QWidget *parent) : QPlainTextEdit(parent)
-{
+IdeWidget::IdeWidget(QWidget *parent) : QPlainTextEdit(parent) {
     breakPointArea = new BreakPointArea(this);
     lineNumberArea = new LineNumberArea(this);
 
-    doc = new QTextDocument;
-    QFont font = doc->defaultFont();
+    QFont font = document()->defaultFont();
     font.setFamily("Courier New");
-    doc->setDefaultFont(font);
+    document()->setDefaultFont(font);
 
     lines = 1;
     breakPoints = new int[lines] {};
-    connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSideAreaWidth(int)));
-    connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateBreakPoints(int)));
-    connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
-    connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateBreakPointArea(QRect,int)));
+    connect(this, &QPlainTextEdit::blockCountChanged, this,
+            &IdeWidget::updateSideAreaWidth);
+    connect(this, &QPlainTextEdit::blockCountChanged, this,
+            &IdeWidget::updateBreakPoints);
+    connect(this, &QPlainTextEdit::updateRequest, this,
+            &IdeWidget::updateLineNumberArea);
+    connect(this, &QPlainTextEdit::updateRequest, this,
+            &IdeWidget::updateBreakPointArea);
     updateSideAreaWidth(0);
 }
 
 
 /* LINE NUMBER */
-int IdeWidget::lineNumberAreaWidth()
-{
+int IdeWidget::lineNumberAreaWidth() {
     int digits = 1;
     int max = qMax(1, blockCount());
     while (max >= 10) {
         max /= 10;
         ++digits;
     }
-
-    int space = 3 + fontMetrics().boundingRect(QLatin1Char('9')).width() * digits;
-
+    int space = 3 + fontMetrics().boundingRect(QLatin1Char('9')).width()
+            * digits;
     return space;
 }
 
-void IdeWidget::updateSideAreaWidth(int /* newBlockCount */)
-{
+void IdeWidget::updateSideAreaWidth(int /* newBlockCount */) {
     setViewportMargins(lineNumberAreaWidth()+breakPointAreaWidth(), 0, 0, 0);
 }
 
-void IdeWidget::updateLineNumberArea(const QRect &rect, int dy)
-{
+void IdeWidget::updateLineNumberArea(const QRect &rect, int dy) {
     if (dy)
         lineNumberArea->scroll(0, dy);
     else
-        lineNumberArea->update(0, rect.y(), lineNumberArea->width(), rect.height());
+        lineNumberArea->update(0, rect.y(),
+                               lineNumberArea->width(), rect.height());
 
     if (rect.contains(viewport()->rect()))
         updateSideAreaWidth(0);
 }
 
-void IdeWidget::resizeEvent(QResizeEvent *e)
-{
+void IdeWidget::resizeEvent(QResizeEvent *e) {
     QPlainTextEdit::resizeEvent(e);
 
     QRect cr = contentsRect();
-    lineNumberArea->setGeometry(QRect(cr.left()+breakPointAreaWidth(), cr.top(), lineNumberAreaWidth(), cr.height()));
-    breakPointArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+    lineNumberArea->setGeometry(
+                QRect(cr.left()+breakPointAreaWidth(),
+                      cr.top(), lineNumberAreaWidth(), cr.height()));
+    breakPointArea->setGeometry(
+                QRect(cr.left(), cr.top(),
+                      lineNumberAreaWidth(), cr.height()));
 }
 
-void IdeWidget::highlightCurrentLine()
-{
+void IdeWidget::highlightCurrentLine() {
     QList<QTextEdit::ExtraSelection> extraSelections;
 
     if (!isReadOnly()) {
@@ -89,8 +90,7 @@ void IdeWidget::highlightCurrentLine()
     setExtraSelections(extraSelections);
 }
 
-void IdeWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
-{
+void IdeWidget::lineNumberAreaPaintEvent(QPaintEvent *event) {
     QPainter painter(lineNumberArea);
     painter.fillRect(event->rect(), Qt::lightGray);
 
@@ -103,8 +103,8 @@ void IdeWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
         if (block.isVisible() && bottom >= event->rect().top()) {
             QString number = QString::number(blockNumber + 1);
             painter.setPen(Qt::black);
-            painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
-                             Qt::AlignRight, number);
+            painter.drawText(0, top, lineNumberArea->width(),
+                             fontMetrics().height(), Qt::AlignRight, number);
         }
 
         block = block.next();
@@ -124,7 +124,8 @@ void IdeWidget::updateBreakPointArea(const QRect &rect, int dy) {
     if (dy)
         breakPointArea->scroll(0, dy);
     else
-        breakPointArea->update(0, rect.y(), breakPointArea->width(), rect.height());
+        breakPointArea->update(0, rect.y(),
+                               breakPointArea->width(), rect.height());
     if (rect.contains(viewport()->rect()))
         updateSideAreaWidth(0);
 }
@@ -151,7 +152,8 @@ void IdeWidget::clearBreakPoints() {
 
 void IdeWidget::breakPointAreaPaintEvent(QPaintEvent *event) {
     QPainter painter(breakPointArea);
-    QRect bpaRect(event->rect().x(), event->rect().y(), breakPointAreaWidth(), event->rect().height());
+    QRect bpaRect(event->rect().x(), event->rect().y(),
+                  breakPointAreaWidth(), event->rect().height());
     painter.fillRect(bpaRect, Qt::darkGray);
 
     QTextBlock block = firstVisibleBlock();
@@ -201,18 +203,21 @@ std::vector<int> IdeWidget::getBreakPoints() {
 void IdeWidget::save() {
     if (filename.isEmpty() || filename == "untitled.sasm")
         saveAs();
-    std::ofstream file;
-    file.open(filename.toStdString(), std::ios::out | std::ios::binary);
-    doc = this->document();
-    file << (doc->toPlainText()).toStdString();
-    file.close();
+    QFile file(filename);
+    if (!file.open(QFile::WriteOnly | QFile::Text))
+        return;
+    QTextStream out(&file);
+    out << toPlainText();
+    document()->setModified(false);
 }
 
 void IdeWidget::saveAs() {
     const QString DEFAULT_DIR_KEY("\\");
     QSettings settings;
     filename = QFileDialog::getSaveFileName(
-                this, "Save", settings.value(DEFAULT_DIR_KEY).toString(), tr("Assembler program (*.sasm)"));
+                this, "Save",
+                settings.value(DEFAULT_DIR_KEY).toString(),
+                tr("Assembler program (*.sasm)"));
     if (filename.isEmpty())
         return;
     emit filenameChanged(filename);
@@ -220,45 +225,35 @@ void IdeWidget::saveAs() {
 }
 
 void IdeWidget::open(QString filename) {
+    if (document()->isModified())
+        saveWarning();
+    QFile file(filename);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+        return;
+    QTextStream in(&file);
+    setPlainText(in.readAll());
     this->filename = filename;
-    std::ifstream file;
-    file.open(filename.toStdString(), std::ios::in | std::ios::binary);
-    if (file.fail()) return;
-    emit filenameChanged(filename);
-
-    std::stringstream ss;
-    std::string line;
-    while (std::getline(file, line))
-        ss << line << std::endl;
-    file.close();
-
-    doc = new QTextDocument(QString::fromStdString(ss.str()));
-    updateBreakPoints(doc->blockCount());
-    QPlainTextDocumentLayout* plainDoc = new QPlainTextDocumentLayout(doc);
-    doc->setDocumentLayout(plainDoc);
-    setDocument(doc);
+    document()->setModified(false);
     updateSideAreaWidth(0);
+    emit filenameChanged(filename);
 }
 
 void IdeWidget::newFile() {
-    if (!doc->isEmpty()) {
+    if (document()->isModified()) {
         if (!saveWarning()) return;
     }
     filename = "untitled.sasm";
+    document()->setModified(false);
+    clear();
     emit filenameChanged(filename);
-    doc = new QTextDocument;
-    QFont font = doc->defaultFont();
-    font.setFamily("Courier New");
-    doc->setDefaultFont(font);
-    QPlainTextDocumentLayout* plainDoc = new QPlainTextDocumentLayout(doc);
-    doc->setDocumentLayout(plainDoc);
-    setDocument(doc);
 }
 
 bool IdeWidget::saveWarning() {
-    int ans = QMessageBox::warning(this, tr("SimComp"), tr("The document has changes, do you want to save them?"),
-                                   QMessageBox::Save | QMessageBox::Discard
-                                   | QMessageBox::Cancel, QMessageBox::Save);
+    int ans = QMessageBox::warning(
+                this, tr("SimComp"),
+                tr("The document has changes, do you want to save them?"),
+                QMessageBox::Save | QMessageBox::Discard
+                | QMessageBox::Cancel, QMessageBox::Save);
     switch (ans) {
         case QMessageBox::Cancel:
             return false;

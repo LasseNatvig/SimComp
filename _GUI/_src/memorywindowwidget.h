@@ -2,24 +2,25 @@
 #define MEMORYWINDOWWIDGET_H
 
 #include "../../_Simulator/_src/compSim.h"
-#include "globals.h"
-#include "memorymap.h"
-#include "dropdownwidget.h"
 #include <QWidget>
-#include <QLabel>
-#include <QSpinBox>
-#include <QGroupBox>
-#include <QPushButton>
-#include <QTableWidget>
-#include <QSpacerItem>
-#include <QRadioButton>
-#include <QString>
-#include <QAction>
-#include <QSplitter>
-#include <QLineEdit>
-#include <QStringList>
-#include <QTabWidget>
-#include <QDockWidget>
+
+class QString;
+class QLabel;
+class QSpinBox;
+class QGroupBox;
+class QPushButton;
+class QTableWidget;
+class QIntValidator;
+class QSpacerItem;
+class QRadioButton;
+class QAction;
+class QSplitter;
+class QLineEdit;
+class QStringList;
+class QTabWidget;
+class QDockWidget;
+class MemoryMap;
+class DropdownWidget;
 
 class MemoryWindowWidget : public QWidget
 {
@@ -89,19 +90,16 @@ private:
 
     void createMainFrame();
 signals:
-    void windowNameChanged(QString name);
-    void deleteRequested(MemoryWindowWidget*);
+    void windowNameChanged(QString /* Name */);
+    void deleteRequested(MemoryWindowWidget* /* This Window */);
     void newWindowRequested();
 public slots:
-
-private slots:
+    void updateDisplays();
     void clearDisplay();
+private slots:
     void updateDisplayHeaders();
     void updateConfig();
-    void updateDisplays();
     void updateMemoryMap(); 
-    void deleteWindow();
-    void newWindow();
 };
 
 #endif // MEMORYWINDOWWIDGET_H

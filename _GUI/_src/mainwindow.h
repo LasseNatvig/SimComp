@@ -1,19 +1,20 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "runwidget.h"
-#include "memorywindowwidget.h"
-#include "performancechart.h"
-#include "globals.h"
 #include <QMainWindow>
-#include <QIcon>
-#include <QSettings>
-#include <QToolBar>
-#include <QStatusBar>
+#include <QtCharts/QChartView>
 #include <QList>
+#include <QVector>
 #include <QPair>
 
-QT_CHARTS_USE_NAMESPACE
+class QStatusBar;
+class QGroupBox;
+class QPushButton;
+class QListWidget;
+class RunWidget;
+class MemoryWindowWidget;
+class PerformanceChart;
+class FileViewer;
 
 class MainWindow : public QMainWindow
 {
@@ -46,10 +47,14 @@ private:
     QAction* stepAction;
     QAction* nextAction;
     QMenu* viewMenu;
-    QAction* memoryAction;
     QAction* performanceAction;
     QAction* actionAction;
     QMenu* memoryMenu;
+    QAction* memoryAction;
+    QMenu* styleMenu;
+    QVector<QPair<QAction*, QString>> styles;
+    void createStyles();
+
     void createMenuBar();
     void createStatusBar();
 
@@ -65,8 +70,12 @@ private:
 
     // Performance Dock
     PerformanceChart* performanceChart;
-    QChartView* performanceChartView;
+    QtCharts::QChartView* performanceChartView;
     void createPerformanceDock();
+
+    // File Viewer
+    FileViewer* fileViewer;
+    void createFileViewer();
 
     // Memory Windows
     QList<QPair<QDockWidget*,QAction*>> memoryWindows;
@@ -76,7 +85,7 @@ public slots:
     void deleteMemoryWindow(MemoryWindowWidget* window);
     void reset();
     void writeOutput(QString message);
-    void updateInstructionCount(int instructionCount);
+    void uncheckStyles(QAction* checkedStyle);
 };
 
 #endif // MAINWINDOW_H

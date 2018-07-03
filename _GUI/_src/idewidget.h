@@ -1,28 +1,21 @@
 #ifndef IDEWIDGET_H
 #define IDEWIDGET_H
 
-#include <fstream>
-#include <sstream>
-#include <vector>
 #include <QPlainTextEdit>
-#include <QObject>
 
+template<class T, class Allocator = std::allocator<T>> class vector;
 class QPaintEvent;
 class QResizeEvent;
 class QSize;
 class QWidget;
-
 class LineNumberArea;
 class BreakPointArea;
-
 
 class IdeWidget : public QPlainTextEdit
 {
     Q_OBJECT
-
 public:
     IdeWidget(QWidget *parent = 0);
-
     void lineNumberAreaPaintEvent(QPaintEvent* event);
     void breakPointAreaPaintEvent(QPaintEvent* event);
     int lineNumberAreaWidth();

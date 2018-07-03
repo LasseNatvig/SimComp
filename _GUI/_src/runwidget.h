@@ -1,36 +1,24 @@
 #ifndef RUNWIDGET_H
 #define RUNWIDGET_H
 
-#include "../../_Simulator/_src/logger.h"
-#include "../../_Simulator/_src/compSim.h"
-#include "memorywindowwidget.h"
-#include "idewidget.h"
-#include "performancechart.h"
 #include "globals.h"
 #include <string>
 #include <ctime>
 #include <QWidget>
-#include <QString>
-#include <QLabel>
-#include <QComboBox>
-#include <QPushButton>
-#include <QTableWidget>
-#include <QGroupBox>
-#include <QListWidget>
-#include <QFileDialog>
-#include <QMenuBar>
-#include <QAction>
-#include <QTabWidget>
 #include <QThread>
-#include <QTimer>
-#include <QtCharts/QChartView>
-#include <QToolBar>
 
-QT_CHARTS_USE_NAMESPACE
-
-void showChange(QTableWidget* table, int rowIndex, int from, int to);
-
+class QTimer;
+class QTabWidget;
+class QAction;
+class QGroupBox;
+class QTableWidget;
+class QPushButton;
+class QLabel;
 class SimulatorThread;
+class ComputerSimulation;
+class IdeWidget;
+class MemoryWindowWidget;
+class PerformanceChart;
 
 class RunWidget : public QWidget
 {
@@ -38,6 +26,9 @@ class RunWidget : public QWidget
 public:
     explicit RunWidget(QWidget *parent = nullptr);
     ComputerSimulation* getSimulator();
+    static void showChange(QTableWidget* table, const QBrush &defaultBrush,
+                           int rowIndex, int from, int to);
+
 private:
     /* Core variables and functions */
     ComputerSimulation* simulator;
@@ -56,12 +47,10 @@ private:
     QTabWidget* tabs;
     QTableWidget* executionTable;
     QStringList tableHeader;
-    void addStep(word PC);
+    void addStep(uint16_t PC);
     void addNextPC();
     IdeWidget* ide;
     void createTabs();
-
-
 
     /* UTILS */
     double getMIPS(clock_t ticks);
@@ -75,7 +64,8 @@ public slots:
     void reset();
 
     /* EDITOR SLOTS */
-    void openFile();
+    void openFileDialog();
+    void open(QString filename);
     void newFile();
     void save();
     void saveAs();
@@ -89,6 +79,7 @@ private slots:
 
 signals:
     void performanceChanged(double MIPS);
+    void filenameChanged(QString filename);
     void output(QString message);
     void instructionCountChanged(int instructionCount);
     void memoryChanged();
@@ -97,14 +88,13 @@ signals:
 
 class SimulatorThread : public QThread {
     Q_OBJECT
-
 public:
     SimulatorThread(ComputerSimulation* simulator);
     ~SimulatorThread();
     void run() override;
-
 private:
     ComputerSimulation* simulator;
 };
+
 
 #endif // RUNWIDGET_H

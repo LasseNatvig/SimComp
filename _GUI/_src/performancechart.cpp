@@ -1,5 +1,5 @@
 #include "performancechart.h"
-#include <iostream>
+#include "globals.h"
 #include <QtCharts/QAbstractAxis>
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QValueAxis>
@@ -29,7 +29,7 @@ PerformanceChart::~PerformanceChart() {
 
 void PerformanceChart::newSeries() {
     axis = new QValueAxis;
-    series = new QLineSeries(this);
+    series = new QLineSeries;
 
     QPen pen(Qt::red);
     pen.setWidth(1);
@@ -65,12 +65,9 @@ void PerformanceChart::updatePerformance(double mips) {
 void PerformanceChart::reset() {
     x = 0;
     y = 0;
-
     delete axis;
     delete series;
-
     newSeries();
-
     yRange = globals::PLOT_YRANGE;
     axisY()->setRange(0, yRange);
 }

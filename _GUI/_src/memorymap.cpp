@@ -1,4 +1,3 @@
-#include <iostream>
 #include "memorymap.h"
 #include "globals.h"
 #include <QPainter>
@@ -61,4 +60,5 @@ void MemoryMap::paintEvent(QPaintEvent *event) {
 
 void MemoryMap::clear() {
     setVector(std::vector<std::string>());
+    update();
 }

@@ -3,11 +3,7 @@
 
 // SEE https://doc-snapshots.qt.io/qt5-5.10/qtcharts-dynamicspline-example.html
 
-#include "globals.h"
-#include "../../_Simulator/_src/compSim.h"
-#include <QWidget>
 #include <QChart>
-#include <QTimer>
 
 QT_CHARTS_BEGIN_NAMESPACE
 class QLineSeries;

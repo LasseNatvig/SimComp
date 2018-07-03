@@ -1,5 +1,7 @@
 #include "runwidget.h"
-
+#include "idewidget.h"
+#include "memorywindowwidget.h"
+#include "performancechart.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -11,6 +13,12 @@
 #include <QPixmap>
 #include <QSettings>
 #include <QFileDialog>
+#include <QGroupBox>
+#include <QTableWidget>
+#include <QPushButton>
+#include <QLabel>
+#include <QTimer>
+#include <QDebug>
 
 
 RunWidget::RunWidget(QWidget *parent) : QWidget(parent)
@@ -77,6 +85,7 @@ void RunWidget::runFinished() {
         emit output("Simulation stopped.");
     else {
         simulationFinished = true;
+        emit output("Simulation finshed.");
         emit memoryChanged();
     }
 }
@@ -125,7 +134,7 @@ void RunWidget::reset() {
     emit memoryChanged();
 }
 
-void RunWidget::openFile() {
+void RunWidget::openFileDialog() {
     // Starts a file dialog which lets the user choose a assembler program to run
     if (simThread->isRunning()) {
         return;
@@ -141,10 +150,15 @@ void RunWidget::openFile() {
         settings.setValue(DEFAULT_DIR_KEY,
                             currentDir.absoluteFilePath(selectedFile));
         filename = selectedFile;
-        ide->open(filename);
-        reset();
-        tabs->setCurrentIndex(1);
+        open(filename);
+
     }
+}
+
+void RunWidget::open(QString filename) {
+    reset();
+    tabs->setCurrentIndex(1);
+    ide->open(filename);
 }
 
 void RunWidget::newFile() {
@@ -169,6 +183,7 @@ void RunWidget::redo() {
 
 void RunWidget::updateFilename(QString filename) {
     this->filename = filename;
+    emit filenameChanged(filename);
 }
 
 
@@ -196,7 +211,10 @@ void RunWidget::addStep(word PC) {
     }
 
     // Set color of registers that changed
-    showChange(executionTable, executionTable->rowCount()-1, 2,
+    QTableWidgetItem* cell = executionTable->item(0, 0);
+    QPalette palette = executionTable->palette();
+    QBrush brush = palette.brush(QPalette::Foreground);
+    RunWidget::showChange(executionTable, brush, executionTable->rowCount()-1, 2,
                simulator->cpu->getNumberOfRegisters()+2);
     executionTable->scrollToBottom();
     executionTable->resizeColumnToContents(1);
@@ -249,7 +267,7 @@ void RunWidget::createTabs() {
     tableHeader << "PC" << "OpCode";
     for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++)
         tableHeader << QString("R") + QString::number(i);
-    tableHeader << "next PC";
+    tableHeader << "Next PC";
     executionTable->setColumnCount(11);
     executionTable->setSelectionMode(QAbstractItemView::NoSelection);
     executionTable->setHorizontalHeaderLabels(tableHeader);
@@ -287,7 +305,8 @@ ComputerSimulation* RunWidget::getSimulator() {
     return simulator;
 }
 
-void showChange(QTableWidget* table, int rowIndex, int from, int to) {
+void RunWidget::showChange(QTableWidget* table, const QBrush &defaultBrush,
+                           int rowIndex, int from, int to) {
     /* Changes color of cell that changed since previous row */
     if (table->rowCount() < 2) return;
     QTableWidgetItem* cell;
@@ -297,6 +316,6 @@ void showChange(QTableWidget* table, int rowIndex, int from, int to) {
                 !(cell->foreground().color() == QColor("red")))
             cell->setForeground(QBrush(QColor("red")));
         else
-            cell->setForeground(QBrush(QColor("black")));
+            cell->setForeground(defaultBrush);
     }
 }

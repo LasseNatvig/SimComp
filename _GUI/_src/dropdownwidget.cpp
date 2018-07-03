@@ -1,6 +1,9 @@
 #include "dropdownwidget.h"
 #include <QApplication>
 #include <QStyle>
+#include <QGroupBox>
+#include <QPushButton>
+#include <QBoxLayout>
 
 DropdownWidget::DropdownWidget(Direction direction, QWidget *parent) :
     DropdownWidget(direction, "", parent)
@@ -52,8 +55,8 @@ void DropdownWidget::create() {
             break;
     }
 
-    button = new QPushButton(showIcon, text, this);
-    connect(button, SIGNAL(clicked()), this, SLOT(toggle()));
+    button = new QPushButton(showIcon, text);
+    connect(button, &QPushButton::clicked, this, &DropdownWidget::toggle);
     layout->addWidget(button, 0, alignment);
     setLayout(layout);
 }

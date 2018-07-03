@@ -32,7 +32,8 @@ SOURCES += \
     idewidget.cpp \
     performancechart.cpp \
     memorymap.cpp \
-    dropdownwidget.cpp
+    dropdownwidget.cpp \
+    fileviewer.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,9 +43,11 @@ HEADERS += \
     idewidget.h \
     performancechart.h \
     memorymap.h \
-    dropdownwidget.h
+    dropdownwidget.h \
+    fileviewer.h
 
 RESOURCES += \
-    images.qrc
+    images.qrc \
+    styles.qrc
 
 include(../../_Simulator/_src/Simulator_core.pri)

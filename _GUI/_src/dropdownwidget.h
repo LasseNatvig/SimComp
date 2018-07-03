@@ -2,10 +2,12 @@
 #define DROPDOWNWIDGET_H
 
 #include <QWidget>
-#include <QGroupBox>
-#include <QPushButton>
-#include <QBoxLayout>
+#include <QIcon>
 #include <QVector>
+
+class QGroupBox;
+class QPushButton;
+class QBoxLayout;
 
 class DropdownWidget : public QWidget
 {
@@ -19,8 +21,10 @@ public:
     };
     explicit DropdownWidget(Direction direction, QWidget *parent = nullptr);
     explicit DropdownWidget(Direction direction, QString text, QWidget* parent = nullptr);
+
 signals:
     void toggleChanged(bool hidden);
+
 public slots:
     void toggle();
     bool hidden() const;
@@ -28,6 +32,7 @@ public slots:
     void addWidget(QWidget *widget, int stretch = 0,
                    Qt::Alignment aligment = Qt::Alignment());
     void setText(const QString text);
+
 private:
     QBoxLayout* layout;
     QPushButton* button;

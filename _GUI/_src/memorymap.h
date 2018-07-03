@@ -2,9 +2,10 @@
 #define MEMORYMAP_H
 
 #include <QWidget>
-#include <QPixmap>
 #include <vector>
 #include <string>
+
+class QPixMap;
 
 class MemoryMap : public QWidget
 {
@@ -12,8 +13,10 @@ class MemoryMap : public QWidget
 public:
     explicit MemoryMap(QWidget *parent = nullptr);
     void setVector(const std::vector<std::string> &hexMap);
+
 signals:
     void increaseSize();
+
 public slots:
     void setPixelSize(int pixelSize);
     void setSize(QSize size);
@@ -21,6 +24,7 @@ public slots:
     void setHeight(int height);
     void paintEvent(QPaintEvent *event) override;
     void clear();
+
 private:
     QPixmap* memoryPixmap;
     std::vector<std::string> hexMap;

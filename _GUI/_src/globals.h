@@ -1,11 +1,12 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#define STYLESHEET  0
 
 namespace globals {
     const unsigned int MAINWINDOW_MIN_WIDTH = 800;
     const unsigned int MAINWINDOW_MIN_HEIGHT = 500;
+
+    const unsigned int OUTPUTWINDOW_MAX_HEIGHT = 125;
 
     const unsigned int MEMORYWINDOW_MIN_WIDTH = 300;
     const unsigned int MEMORYWINDOW_MIN_HEIGHT = 240;
@@ -19,6 +20,9 @@ namespace globals {
 
     const unsigned int ACTIONSWINDOW_MIN_WIDTH = 350;
     const unsigned int ACTIONSWINDOW_MIN_HEIGHT = 200;
+
+    const unsigned int FILEVIEWER_MIN_WIDTH = 200;
+    const unsigned int FILEVIEWER_MIN_HEIGHT = 200;
 
     const unsigned int TIMER_UPDATE = 100;
 
