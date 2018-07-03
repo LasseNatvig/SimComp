@@ -185,7 +185,7 @@ QToolBox::tab:selected {
   border:1px solid #007acc;
 }
 
-QObject {
+QWidget {
     background:#2d2d30;
     color:#f1f1f1;
 }
