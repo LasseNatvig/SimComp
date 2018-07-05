@@ -178,7 +178,7 @@ void MainWindow::createMenuBar() {
     memoryAction->setShortcut(QKeySequence(tr("Ctrl+m")));
     memoryMenu->addSeparator();
     createStyles();
-    styles[3].first->trigger(); // Set start style
+    styles[2].first->trigger(); // Set start style
     viewMenu->addAction(performanceAction);
     viewMenu->addAction(outputAction);
     connect(memoryAction, &QAction::triggered,
@@ -211,8 +211,6 @@ void MainWindow::createStyles() {
     styles = {
         QPair<QAction*, QString> (styleMenu->addAction(tr("&Blank")),
                                    ":/images/../_styles/blank.qss"),
-        QPair<QAction*, QString> (styleMenu->addAction(tr("&Material Blue")),
-                                   ":/images/../_styles/material-blue.qss"),
         QPair<QAction*, QString> (styleMenu->addAction(tr("&QTDark")),
                                    ":/images/../_styles/QTDark.qss"),
         QPair<QAction*, QString> (styleMenu->addAction(tr("&MSVS Dark")),

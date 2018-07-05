@@ -3,7 +3,6 @@
 <qresource>
   <file>../_styles/blank.qss</file>
   <file>../_styles/QTDark.qss</file>
-  <file>../_styles/material-blue.qss</file>
   <file>../_styles/vs_dark.qss</file>
 </qresource>
 </RCC>

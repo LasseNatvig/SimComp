@@ -60,7 +60,6 @@ QTabBar::tab {
 
 QTabBar::tab:hover{
   background-color:#1c97ea;
-
 }
 
 QTabBar::tab:selected{
@@ -77,7 +76,7 @@ QDockWidget {
     color:#f1f1f1;
 }
 
-QDockWidget::active {
+QDockWidget:active {
   border: 1px solid #007acc;
 }
 
@@ -123,6 +122,7 @@ QScrollBar:handle {
   margin: inherited;
 
 }
+
 QPushButton {
   border-style:none;
   border-bottom:1px solid #007acc;
@@ -185,13 +185,9 @@ QToolBox::tab:selected {
   border:1px solid #007acc;
 }
 
-QWidget {
-    background:#2d2d30;
-    color:#f1f1f1;
-}
-
 QTreeView {
   background-color:#2d2d30;
+  color: #f1f1f1;
   border-style:none;
 }
 
@@ -200,7 +196,7 @@ QTreeView::item:selected
   background:#007acc;
 }
 
-QTreeView::item:selected!active {
+QTreeView::item:selected:active {
   background: #3f3f46;
 }
 
@@ -214,5 +210,26 @@ QListView {
 }
 
 QStatusBar {
-    color:#2d2d30;
+  background-color: #252526;
+  color:#f1f1f1;
+}
+
+QTableWidget {
+  background-color: #252526;
+  color: #f1f1f1;
+}
+
+QHeaderView::section {
+  background-color: #252526;
+  color: #f1f1f1;
+}
+
+QGraphicsView {
+  background-color: #252526;
+  color: #f1f1f1;
+}
+
+QPlainTextEdit {
+  background-color: #252526;
+  color: #f1f1f1;
 }
