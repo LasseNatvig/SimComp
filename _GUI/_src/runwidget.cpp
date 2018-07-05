@@ -1,79 +1,52 @@
 #include "runwidget.h"
-#include "idewidget.h"
-#include "memorywindowwidget.h"
-#include "performancechart.h"
-#include <iostream>
+#include "../../_Simulator/_src/compSim.h"
 #include <sstream>
 #include <iomanip>
 #include <vector>
 #include <QGridLayout>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QHeaderView>
-#include <QPixmap>
 #include <QSettings>
 #include <QFileDialog>
-#include <QGroupBox>
 #include <QTableWidget>
-#include <QPushButton>
-#include <QLabel>
 #include <QTimer>
 #include <QDebug>
 
 
-RunWidget::RunWidget(QWidget *parent) : QWidget(parent)
-{ 
+RunWidget::RunWidget(QWidget *parent) : QWidget(parent) {
     // Create instance of ComputerSimulation
-    simulator = new ComputerSimulation(simName, "/Users/olebjorn/Desktop/GUI_logg.txt");
+    simulator = new ComputerSimulation(simName,
+                                       "/Users/olebjorn/Desktop/GUI_logg.txt");
 
-    // Create thread with simulator and make instance of timer
+    // Create thread with simulator and create instance of timer
     simThread = new SimulatorThread(simulator);
     progressTimer = new QTimer;
 
+    // Make connections
     connect(simThread, SIGNAL(finished()), this, SLOT(runFinished()));
     connect(progressTimer, SIGNAL(timeout()), this, SLOT(updatePerformance()));
 
-    // Create widgets
-    createTabs();
+    // Create table
+    createTable();
 
+    // Create and populate layout
     QGridLayout* mainLayout = new QGridLayout;
-    mainLayout->addWidget(tabs, 0, 1);
+    mainLayout->addWidget(executionTable, 0, 1);
     setLayout(mainLayout);
 
-    // Set minimum size of this window
-    this->setMinimumSize(QSize(globals::MAINWINDOW_MIN_WIDTH, globals::MAINWINDOW_MIN_HEIGHT));
+    // Set minimum size of this widget
+    this->setMinimumSize(QSize(globals::MAINWINDOW_MIN_WIDTH,
+                               globals::MAINWINDOW_MIN_HEIGHT));
 }
 
 
 
-/* MODES */
-void RunWidget::step() {
-    /* Moves to next step */
-    if (!validStart())
-        return;
-    if (!simulator->isRunning()) load(); // Only load when simulator is not
-                                         // running
-    word currentPC = simulator->cpu->PC;
-    addStep(currentPC);
-    emit memoryChanged();
-    if (!simulator->step()) // Make simulator execute one step
-        simulationFinished = true;; // Simulation finshed
-
-    // Add next PC to table
-    addNextPC();
-
-    tabs->setCurrentIndex(0);
-    emit instructionCountChanged(
-                simulator->getInstructionsSimulated());
-}
-
+/* Simulator */
 void RunWidget::run() {
     if (!validStart())
         return;
     runStop = false;
-    load(); // Load program
-
-    progressTimer->start(globals::TIMER_UPDATE); // Start timer for updating progress
+    progressTimer->start(globals::TIMER_UPDATE); // Start timer for
+                                                 // updating progress
     runStart = clock();
     simThread->start();
 }
@@ -87,43 +60,61 @@ void RunWidget::runFinished() {
         simulationFinished = true;
         emit output("Simulation finshed.");
         emit memoryChanged();
+        emit updatePerformance();
     }
+}
+
+void RunWidget::step() {
+    /* Moves to next step */
+    if (!validStart())
+        return;
+
+    addStep(simulator->cpu->PC);
+    emit memoryChanged();
+    if (!simulator->step()) // Make simulator execute one step
+        simulationFinished = true; // Simulation finshed
+
+    // Add next PC to table
+    addNextPC();
+
+    emit instructionCountChanged(
+                simulator->getInstructionsSimulated());
 }
 
 void RunWidget::next() {
     if (!validStart())
         return;
 
-    if (!simulator->isRunning()) load();
-    std::vector<int> vev = ide->getBreakPoints();;
-    simulator->setBreakPoints(vev);
-
+    simulator->setBreakpoints(breakpoints);
     if (!simulator->next())
        simulationFinished = true;
     addStep(simulator->cpu->PC);
     addNextPC();
 
-    tabs->setCurrentIndex(0);
     emit instructionCountChanged(
                 simulator->getInstructionsSimulated());
     emit memoryChanged();
 }
 
-
-
-/* EDITOR UTILS */
-void RunWidget::load() {
+void RunWidget::load(QString filename) {
+    this->filename = filename;
     if (simThread->isRunning()) {
         emit output("Wait until simulator is done running..");
         return;
     }
+    QFile test(filename);
+    if (!test.open(QFile::ReadOnly | QFile::Text))
+        emit output("Could not open " + filename);
     reset();
-    simulator->load(filename.toStdString());
+    if (!test.size())
+        return;
+    else
+        simulator->load(filename.toStdString());
 }
 
 void RunWidget::reset() {
     simulationFinished = false;
-    lastInstructionCount = 0; // Reset mips calculation for performance window
+    lastInstructionCount = 0; // Reset mips calculation
     progressTimer->stop(); // Stop timer
     if (simThread->isRunning()) {
         runStop = true;
@@ -134,61 +125,47 @@ void RunWidget::reset() {
     emit memoryChanged();
 }
 
-void RunWidget::openFileDialog() {
-    // Starts a file dialog which lets the user choose a assembler program to run
-    if (simThread->isRunning()) {
-        return;
+void RunWidget::setBreakpoints(std::vector<int> breakpoints) {
+    this->breakpoints = breakpoints;
+}
+
+
+
+/* Create */
+void RunWidget::createTable() {
+    executionTable = new QTableWidget;
+    tableHeader << "PC" << "Instruction";
+    for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++)
+        tableHeader << QString("R") + QString::number(i);
+    tableHeader << "Next PC";
+    executionTable->setColumnCount(11);
+    executionTable->setSelectionMode(QAbstractItemView::NoSelection);
+    executionTable->setHorizontalHeaderLabels(tableHeader);
+    executionTable->verticalHeader()->setVisible(false);
+    executionTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    for (int i = 0; i < 11; i++) {
+        if (!(i == 1))
+            executionTable->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
     }
-    const QString DEFAULT_DIR_KEY("\\");
-    QSettings settings;
-
-    QString selectedFile = QFileDialog::getOpenFileName(
-                this, "Open", settings.value(DEFAULT_DIR_KEY).toString(), tr("Assembler program (*.sasm)"));
-
-    if (!selectedFile.isEmpty()) {
-        QDir currentDir;
-        settings.setValue(DEFAULT_DIR_KEY,
-                            currentDir.absoluteFilePath(selectedFile));
-        filename = selectedFile;
-        open(filename);
-
-    }
-}
-
-void RunWidget::open(QString filename) {
-    reset();
-    tabs->setCurrentIndex(1);
-    ide->open(filename);
-}
-
-void RunWidget::newFile() {
-    ide->newFile();
-}
-
-void RunWidget::save() {
-    ide->save();
-}
-
-void RunWidget::saveAs() {
-    ide->saveAs();
-}
-
-void RunWidget::undo() {
-    ide->undo();
-}
-
-void RunWidget::redo() {
-    ide->redo();
-}
-
-void RunWidget::updateFilename(QString filename) {
-    this->filename = filename;
-    emit filenameChanged(filename);
 }
 
 
 
-/* EXECUTION UTILS */
+/* Thread */
+SimulatorThread::SimulatorThread(ComputerSimulation* simulator) :
+    simulator(simulator) { }
+
+SimulatorThread::~SimulatorThread() {
+
+}
+
+void SimulatorThread::run() {
+    simulator->run();
+}
+
+
+
+/* Utils */
 void RunWidget::addStep(word PC) {
     // Add row for current step (TODO: -make better!)
     std::stringstream stepInfo;
@@ -196,26 +173,29 @@ void RunWidget::addStep(word PC) {
 
     stepInfo << PC;
     executionTable->setItem(executionTable->rowCount()-1, 0,
-                            new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+                            new QTableWidgetItem(
+                                QString::fromStdString(stepInfo.str())));
     stepInfo.str(std::string());
 
     stepInfo << simulator->memoryDump(PC, PC, INSTR)[0];
     executionTable->setItem(executionTable->rowCount()-1, 1,
-                            new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+                            new QTableWidgetItem(
+                                QString::fromStdString(stepInfo.str())));
     stepInfo.str(std::string());
+
     for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++) {
         stepInfo << simulator->cpu->getRegister(i);
         executionTable->setItem(executionTable->rowCount()-1, i + 2,
-                                new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+                                new QTableWidgetItem(
+                                    QString::fromStdString(stepInfo.str())));
         stepInfo.str(std::string());
     }
 
     // Set color of registers that changed
-    QTableWidgetItem* cell = executionTable->item(0, 0);
     QPalette palette = executionTable->palette();
     QBrush brush = palette.brush(QPalette::Foreground);
-    RunWidget::showChange(executionTable, brush, executionTable->rowCount()-1, 2,
-               simulator->cpu->getNumberOfRegisters()+2);
+    RunWidget::showChange(executionTable, brush, executionTable->rowCount()-1,
+                          2, simulator->cpu->getNumberOfRegisters()+2);
     executionTable->scrollToBottom();
     executionTable->resizeColumnToContents(1);
 }
@@ -228,7 +208,8 @@ void RunWidget::addNextPC() {
 
 void RunWidget::updatePerformance() {
     int instructionCount = simulator->getInstructionsSimulated();
-    double mips = (instructionCount - lastInstructionCount)/(globals::TIMER_UPDATE*1000);
+    double mips = (instructionCount - lastInstructionCount)/
+            (globals::TIMER_UPDATE*1000);
     lastInstructionCount = instructionCount;
     emit performanceChanged(mips);
     emit instructionCountChanged(
@@ -236,7 +217,7 @@ void RunWidget::updatePerformance() {
 }
 
 bool RunWidget::validStart() {
-    if (filename.isNull()) {
+    if (!simulator->validProgram()) {
         emit output("No program selected");
         return false;
     }
@@ -253,54 +234,11 @@ bool RunWidget::validStart() {
 }
 
 double RunWidget::getMIPS(clock_t ticks) {
-    double seconds = static_cast<double>(ticks) / CLOCKS_PER_SEC; // Calculate seconds
-    return (static_cast<double>(simulator->getInstructionsSimulated()) / 1000000.0) / seconds; // Calculate MIPS
+    double seconds = static_cast<double>(ticks) / CLOCKS_PER_SEC;
+    return (static_cast<double>(simulator->getInstructionsSimulated()) /
+            1000000.0) / seconds;
 }
 
-
-
-/* CREATE */
-void RunWidget::createTabs() {
-    tabs = new QTabWidget(this);
-
-    executionTable = new QTableWidget;
-    tableHeader << "PC" << "OpCode";
-    for (int i = 0; i < simulator->cpu->getNumberOfRegisters(); i++)
-        tableHeader << QString("R") + QString::number(i);
-    tableHeader << "Next PC";
-    executionTable->setColumnCount(11);
-    executionTable->setSelectionMode(QAbstractItemView::NoSelection);
-    executionTable->setHorizontalHeaderLabels(tableHeader);
-    executionTable->verticalHeader()->setVisible(false);
-    executionTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    for (int i = 0; i < 11; i++) {
-        if (!(i == 1))
-            executionTable->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
-    }
-    tabs->addTab(executionTable, "Execution");
-
-    ide = new IdeWidget(this);
-    tabs->addTab(ide, "Editor");
-    connect(ide, SIGNAL(filenameChanged(QString)), this, SLOT(updateFilename(QString)));
-}
-
-
-
-/* THREAD */
-SimulatorThread::SimulatorThread(ComputerSimulation* simulator) :
-    simulator(simulator) { }
-
-SimulatorThread::~SimulatorThread() {
-
-}
-
-void SimulatorThread::run() {
-    simulator->run();
-}
-
-
-
-/* UTILS */
 ComputerSimulation* RunWidget::getSimulator() {
     return simulator;
 }

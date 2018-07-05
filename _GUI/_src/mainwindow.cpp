@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "globals.h"
 #include "runwidget.h"
-#include "memorywindowwidget.h"
+#include "idewidget.h"
+#include "memorywindow.h"
 #include "performancechart.h"
 #include "fileviewer.h"
 #include <QStyle>
@@ -10,6 +11,7 @@
 #include <QHBoxLayout>
 #include <QStatusBar>
 #include <QDockWidget>
+#include <QTabWidget>
 #include <QListWidget>
 #include <QGroupBox>
 #include <QPushButton>
@@ -21,17 +23,11 @@ using namespace QtCharts;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    runW = new RunWidget(this);
-    runW->setAttribute(Qt::WA_DeleteOnClose);
-    connect(runW, &RunWidget::instructionCountChanged,
-            [this] (int instructionCount) {
-        this->statusBar()->showMessage("Instruction count: " +
-                                       QString::number(instructionCount));
-    });
-    setCentralWidget(runW);
+    createTabs();
+    setCentralWidget(tabs);
 
     createPerformanceDock();
-    createActionDock();
+    createOutputDock();
     createStatusBar();
     createMenuBar();
     createFileViewer();
@@ -49,22 +45,39 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::createTabs() {
+    tabs = new QTabWidget(this);
+    runW = new RunWidget;
+    ideW = new IdeWidget;
+    connect(runW, &RunWidget::instructionCountChanged,
+            [this] (int instructionCount) {
+        this->statusBar()->showMessage("Instruction count: " +
+                                       QString::number(instructionCount));
+    });
+    connect(ideW, &IdeWidget::fileChanged, runW, &RunWidget::load);
+    connect(ideW, &IdeWidget::breakpointsChanged, runW, [this] {
+        this->runW->setBreakpoints(this->ideW->getBreakpoints());
+    });
 
-void MainWindow::createActionDock() {
-    QDockWidget* actionDock = new QDockWidget("Output", this);
-    actionDock->setAllowedAreas(Qt::TopDockWidgetArea |
+    tabs->addTab(runW, "Execution");
+    tabs->addTab(ideW, "Editor");
+}
+
+void MainWindow::createOutputDock() {
+    QDockWidget* outputDock = new QDockWidget("Output", this);
+    outputDock->setAllowedAreas(Qt::TopDockWidgetArea |
                                 Qt::BottomDockWidgetArea);
-    actionDock->setFeatures(
+    outputDock->setFeatures(
                 QDockWidget::DockWidgetMovable |
                 QDockWidget::DockWidgetFloatable |
                 QDockWidget::DockWidgetClosable);
-    actionDock->setMaximumHeight(globals::OUTPUTWINDOW_MAX_HEIGHT);
+    outputDock->setMaximumHeight(globals::OUTPUTWINDOW_MAX_HEIGHT);
 
-    actionToolBox = new QGroupBox(this);
-    runBtn = new QPushButton(tr("&Run"), actionToolBox);
-    stepBtn = new QPushButton(tr("&Step"), actionToolBox);
-    nextBtn = new QPushButton(tr("&Next"), actionToolBox);
-    resetBtn = new QPushButton(tr("&Reset"), actionToolBox);
+    outputBox = new QGroupBox;
+    runBtn = new QPushButton(tr("&Run"));
+    stepBtn = new QPushButton(tr("&Step"));
+    nextBtn = new QPushButton(tr("&Next"));
+    resetBtn = new QPushButton(tr("&Reset"));
     QVBoxLayout* buttonLayout = new QVBoxLayout;
     buttonLayout->addWidget(runBtn);
     buttonLayout->addWidget(stepBtn);
@@ -75,18 +88,19 @@ void MainWindow::createActionDock() {
     connect(nextBtn, &QPushButton::clicked, runW, &RunWidget::next);
     connect(resetBtn, &QPushButton::clicked, this, &MainWindow::reset);
 
-    outputLst = new QListWidget(actionToolBox);
+    outputLst = new QListWidget(outputBox);
+    outputLst->setSelectionMode(QAbstractItemView::NoSelection);
     connect(runW, &RunWidget::output, this, &MainWindow::writeOutput);
 
-    QGridLayout* actionToolBoxLayout = new QGridLayout;
-    actionToolBoxLayout->addLayout(buttonLayout, 0, 0, 0, 1);
-    actionToolBoxLayout->addWidget(outputLst, 0, 1, 0, 5);
-    actionToolBoxLayout->addWidget(resetBtn, 0, 6, 0 , 1);
-    actionToolBox->setLayout(actionToolBoxLayout);
+    QGridLayout* outputBoxLayout = new QGridLayout;
+    outputBoxLayout->addLayout(buttonLayout, 0, 0, 0, 1);
+    outputBoxLayout->addWidget(outputLst, 0, 1, 0, 5);
+    outputBoxLayout->addWidget(resetBtn, 0, 6, 0 , 1);
+    outputBox->setLayout(outputBoxLayout);
 
-    actionDock->setWidget(actionToolBox);
-    actionAction = actionDock->toggleViewAction();
-    addDockWidget(Qt::BottomDockWidgetArea, actionDock);
+    outputDock->setWidget(outputBox);
+    outputAction = outputDock->toggleViewAction();
+    addDockWidget(Qt::BottomDockWidgetArea, outputDock);
 }
 
 void MainWindow::createPerformanceDock() {
@@ -128,18 +142,18 @@ void MainWindow::createMenuBar() {
     openAction->setShortcut(QKeySequence::Open);
     saveAction->setShortcut(QKeySequence::Save);
     saveAsAction->setShortcut(QKeySequence::SaveAs);
-    connect(newAction, &QAction::triggered, runW, &RunWidget::newFile);
-    connect(openAction, &QAction::triggered, runW, &RunWidget::openFileDialog);
-    connect(saveAction, &QAction::triggered, runW, &RunWidget::save);
-    connect(saveAsAction, &QAction::triggered, runW, &RunWidget::saveAs);
+    connect(newAction, &QAction::triggered, ideW, &IdeWidget::newFile);
+    connect(openAction, &QAction::triggered, ideW, &IdeWidget::openFileDialog);
+    connect(saveAction, &QAction::triggered, ideW, &IdeWidget::save);
+    connect(saveAsAction, &QAction::triggered, ideW, &IdeWidget::saveAs);
 
     editMenu = menuBar->addMenu(tr("&Edit"));
     undoAction = editMenu->addAction(tr("&Undo"));
     redoAction = editMenu->addAction(tr("&Redo"));
     undoAction->setShortcut(QKeySequence::Undo);
     redoAction->setShortcut(QKeySequence::Redo);
-    connect(undoAction, &QAction::triggered, runW, &RunWidget::undo);
-    connect(redoAction, &QAction::triggered, runW, &RunWidget::redo);
+    connect(undoAction, &QAction::triggered, ideW, &IdeWidget::undo);
+    connect(redoAction, &QAction::triggered, ideW, &IdeWidget::redo);
 
     buildMenu = menuBar->addMenu(tr("&Build"));
     runAction = buildMenu->addAction(tr("&Run"));
@@ -158,7 +172,7 @@ void MainWindow::createMenuBar() {
 
     viewMenu = menuBar->addMenu(tr("&View"));
     performanceAction->setShortcut(QKeySequence(tr("Ctrl+p")));
-    actionAction->setShortcut(QKeySequence(tr("Ctrl+a")));
+    outputAction->setShortcut(QKeySequence(tr("Ctrl+a")));
     memoryMenu = viewMenu->addMenu(tr("&Memory Window"));
     memoryAction = memoryMenu->addAction(tr("&New Memory Window"));
     memoryAction->setShortcut(QKeySequence(tr("Ctrl+m")));
@@ -166,7 +180,7 @@ void MainWindow::createMenuBar() {
     createStyles();
     styles[3].first->trigger(); // Set start style
     viewMenu->addAction(performanceAction);
-    viewMenu->addAction(actionAction);
+    viewMenu->addAction(outputAction);
     connect(memoryAction, &QAction::triggered,
             this, &MainWindow::newMemoryWindow);
 
@@ -181,13 +195,13 @@ void MainWindow::createFileViewer() {
     QDockWidget* dock = new QDockWidget("File Viewer");
     QStringList nameFilters("*.sasm");
     fileViewer = new FileViewer(nameFilters);
-    connect(runW, &RunWidget::filenameChanged,
+    connect(ideW, &IdeWidget::fileChanged,
             [this] (QString filename) {
         QFileInfo temp(filename);
         this->fileViewer->setRootPath(temp.absolutePath());
         this->fileViewer->setFilename(temp.fileName());
     });
-    connect(fileViewer, &FileViewer::changeFile, runW, &RunWidget::open);
+    connect(fileViewer, &FileViewer::changeFile, ideW, &IdeWidget::open);
     dock->setWidget(fileViewer);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 }
@@ -223,7 +237,7 @@ void MainWindow::createStyles() {
 
 
 
-/* SLOTS */
+/* Slots */
 void MainWindow::newMemoryWindow() {
     QDockWidget* memoryDock = new QDockWidget("Memory Window #" +
                                               QString::number(
@@ -235,16 +249,16 @@ void MainWindow::newMemoryWindow() {
                 QDockWidget::DockWidgetFloatable |
                 QDockWidget::DockWidgetClosable);
 
-    MemoryWindowWidget* window = new MemoryWindowWidget(memoryDock,
+    MemoryWindow* window = new MemoryWindow(memoryDock,
                                      runW->getSimulator());
-    connect(window, &MemoryWindowWidget::windowNameChanged,
+    connect(window, &MemoryWindow::windowNameChanged,
             memoryDock, &QDockWidget::setWindowTitle);
-    connect(window, &MemoryWindowWidget::newWindowRequested,
+    connect(window, &MemoryWindow::newWindowRequested,
             this, &MainWindow::newMemoryWindow);
-    connect(window, &MemoryWindowWidget::deleteRequested,
+    connect(window, &MemoryWindow::deleteRequested,
             this, &MainWindow::deleteMemoryWindow);
     connect(runW, &RunWidget::memoryChanged,
-            window, &MemoryWindowWidget::updateDisplays);
+            window, &MemoryWindow::updateDisplays);
 
     QAction* toggleAction = memoryDock->toggleViewAction();
     memoryMenu->addAction(toggleAction);
@@ -255,7 +269,7 @@ void MainWindow::newMemoryWindow() {
     addDockWidget(Qt::LeftDockWidgetArea, memoryDock);
 }
 
-void MainWindow::deleteMemoryWindow(MemoryWindowWidget* memoryWindow) {
+void MainWindow::deleteMemoryWindow(MemoryWindow* memoryWindow) {
     for (auto& pair : memoryWindows) {
         if (pair.first->widget() == memoryWindow) {
             memoryMenu->removeAction(pair.second); // Remove action from menu
@@ -275,13 +289,13 @@ void MainWindow::writeOutput(QString message) {
 
 void MainWindow::reset() {
     performanceChart->reset();
-    runW->reset();
+    runW->load(ideW->getFilename());
     statusBar()->showMessage("Not running.");
 }
 
 
 
-/* UTILS */
+/* Utils */
 void MainWindow::uncheckStyles(QAction* checkedStyle) {
     for (auto& pair : styles)
         if (pair.first != checkedStyle)

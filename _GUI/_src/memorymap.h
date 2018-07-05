@@ -5,28 +5,26 @@
 #include <vector>
 #include <string>
 
-class QPixMap;
-
-class MemoryMap : public QWidget
-{
+class MemoryMap : public QWidget {
     Q_OBJECT
 public:
     explicit MemoryMap(QWidget *parent = nullptr);
-    void setVector(const std::vector<std::string> &hexMap);
 
 signals:
     void increaseSize();
 
 public slots:
+    void setVector(const std::vector<std::string> &hexMap);
     void setPixelSize(int pixelSize);
     void setSize(QSize size);
     void setWidth(int width);
-    void setHeight(int height);
-    void paintEvent(QPaintEvent *event) override;
+    void setHeight(int height);   
     void clear();
 
+protected:
+    void paintEvent(QPaintEvent *event) override;
+
 private:
-    QPixmap* memoryPixmap;
     std::vector<std::string> hexMap;
     int pixelSize;
     int width;

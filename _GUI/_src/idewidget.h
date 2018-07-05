@@ -9,30 +9,34 @@ class QResizeEvent;
 class QSize;
 class QWidget;
 class LineNumberArea;
-class BreakPointArea;
+class BreakpointArea;
 
-class IdeWidget : public QPlainTextEdit
-{
+class IdeWidget : public QPlainTextEdit {
     Q_OBJECT
+
 public:
     IdeWidget(QWidget *parent = 0);
+    ~IdeWidget();
     void lineNumberAreaPaintEvent(QPaintEvent* event);
-    void breakPointAreaPaintEvent(QPaintEvent* event);
+    void breakpointAreaPaintEvent(QPaintEvent* event);
     int lineNumberAreaWidth();
-    int breakPointAreaWidth();
-    void setBreakPoint(QPoint breakPoint);
-    std::vector<int> getBreakPoints();
+    int breakpointAreaWidth();
+    void setBreakpoint(QPoint breakpoint);
+    std::vector<int> getBreakpoints();
 
 public slots:
     void save();
     void saveAs();
     void open(QString filename);
+    void openFileDialog();
     void newFile();
-    void updateBreakPoints(int lines);
-    void clearBreakPoints();
+    void updateBreakpoints(int lines);
+    void clearBreakpoints();
+    QString getFilename() { return filename; }
 
 signals:
-    void filenameChanged(QString label);
+    void fileChanged(QString /* File name */);
+    void breakpointsChanged();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -41,22 +45,21 @@ private slots:
     void updateSideAreaWidth(int newBlockCount);
     void highlightCurrentLine();
     void updateLineNumberArea(const QRect &, int);
-    void updateBreakPointArea(const QRect &, int dy);
+    void updateBreakpointArea(const QRect &, int dy);
     bool saveWarning();
 
 private:
     QWidget* lineNumberArea;
-    QWidget* breakPointArea;
-    int* breakPoints;
+    QWidget* breakpointArea;
+    int* breakpoints;
     int lines;
-    QPoint breakPoint;
+    QPoint breakpoint;
     QTextDocument* doc;
     QString filename;
 };
 
 
-class LineNumberArea : public QWidget
-{
+class LineNumberArea : public QWidget {
 public:
     LineNumberArea(IdeWidget *editor) : QWidget(editor) {
         ideWidget = editor;
@@ -76,24 +79,25 @@ private:
 };
 
 
-class BreakPointArea : public QWidget
-{
+class BreakpointArea : public QWidget {
 public:
-    BreakPointArea(IdeWidget* editor) : QWidget(editor) {
+    BreakpointArea(IdeWidget* editor) : QWidget(editor) {
         ideWidget = editor;
     }
     QSize sizeHint() const override {
-        return QSize(ideWidget->breakPointAreaWidth(), 0);
+        return QSize(ideWidget->breakpointAreaWidth(), 0);
     }
+
 protected:
     void paintEvent(QPaintEvent* event) override {
-        ideWidget->breakPointAreaPaintEvent(event);
+        ideWidget->breakpointAreaPaintEvent(event);
     }
     void mousePressEvent(QMouseEvent* event) override {
         if (event->button() == Qt::LeftButton)
-            ideWidget->setBreakPoint(event->pos());
+            ideWidget->setBreakpoint(event->pos());
         update();
     }
+
 private:
     IdeWidget* ideWidget;
 };

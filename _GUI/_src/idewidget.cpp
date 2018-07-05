@@ -1,4 +1,5 @@
 #include "idewidget.h"
+#include "globals.h"
 #include <vector>
 #include <QGridLayout>
 #include <QtWidgets>
@@ -6,33 +7,39 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QMessageBox>
+#include <QDebug>
 
 // See http://doc.qt.io/qt-5/qtwidgets-widgets-codeeditor-example.html
 
 
-IdeWidget::IdeWidget(QWidget *parent) : QPlainTextEdit(parent) {
-    breakPointArea = new BreakPointArea(this);
+IdeWidget::IdeWidget(QWidget *parent) : QPlainTextEdit(parent), lines(1) {
+    breakpointArea = new BreakpointArea(this);
     lineNumberArea = new LineNumberArea(this);
 
     QFont font = document()->defaultFont();
     font.setFamily("Courier New");
     document()->setDefaultFont(font);
 
-    lines = 1;
-    breakPoints = new int[lines] {};
+    breakpoints = new int[lines] {};
     connect(this, &QPlainTextEdit::blockCountChanged, this,
             &IdeWidget::updateSideAreaWidth);
     connect(this, &QPlainTextEdit::blockCountChanged, this,
-            &IdeWidget::updateBreakPoints);
+            &IdeWidget::updateBreakpoints);
     connect(this, &QPlainTextEdit::updateRequest, this,
             &IdeWidget::updateLineNumberArea);
     connect(this, &QPlainTextEdit::updateRequest, this,
-            &IdeWidget::updateBreakPointArea);
+            &IdeWidget::updateBreakpointArea);
     updateSideAreaWidth(0);
 }
 
+IdeWidget::~IdeWidget() {
+    delete breakpoints;
+    breakpoints = nullptr;
+}
 
-/* LINE NUMBER */
+
+
+/* Line number */
 int IdeWidget::lineNumberAreaWidth() {
     int digits = 1;
     int max = qMax(1, blockCount());
@@ -46,7 +53,7 @@ int IdeWidget::lineNumberAreaWidth() {
 }
 
 void IdeWidget::updateSideAreaWidth(int /* newBlockCount */) {
-    setViewportMargins(lineNumberAreaWidth()+breakPointAreaWidth(), 0, 0, 0);
+    setViewportMargins(lineNumberAreaWidth()+breakpointAreaWidth(), 0, 0, 0);
 }
 
 void IdeWidget::updateLineNumberArea(const QRect &rect, int dy) {
@@ -65,9 +72,9 @@ void IdeWidget::resizeEvent(QResizeEvent *e) {
 
     QRect cr = contentsRect();
     lineNumberArea->setGeometry(
-                QRect(cr.left()+breakPointAreaWidth(),
+                QRect(cr.left()+breakpointAreaWidth(),
                       cr.top(), lineNumberAreaWidth(), cr.height()));
-    breakPointArea->setGeometry(
+    breakpointArea->setGeometry(
                 QRect(cr.left(), cr.top(),
                       lineNumberAreaWidth(), cr.height()));
 }
@@ -77,7 +84,6 @@ void IdeWidget::highlightCurrentLine() {
 
     if (!isReadOnly()) {
         QTextEdit::ExtraSelection selection;
-
         QColor lineColor = QColor(Qt::blue).lighter(160);
 
         selection.format.setBackground(lineColor);
@@ -86,7 +92,6 @@ void IdeWidget::highlightCurrentLine() {
         selection.cursor.clearSelection();
         extraSelections.append(selection);
     }
-
     setExtraSelections(extraSelections);
 }
 
@@ -115,45 +120,45 @@ void IdeWidget::lineNumberAreaPaintEvent(QPaintEvent *event) {
 }
 
 
-/* BREAK POINTS*/
-int IdeWidget::breakPointAreaWidth() {
+/* Breakpoints */
+int IdeWidget::breakpointAreaWidth() {
     return 10;
 }
 
-void IdeWidget::updateBreakPointArea(const QRect &rect, int dy) {
+void IdeWidget::updateBreakpointArea(const QRect &rect, int dy) {
     if (dy)
-        breakPointArea->scroll(0, dy);
+        breakpointArea->scroll(0, dy);
     else
-        breakPointArea->update(0, rect.y(),
-                               breakPointArea->width(), rect.height());
+        breakpointArea->update(0, rect.y(),
+                               breakpointArea->width(), rect.height());
     if (rect.contains(viewport()->rect()))
         updateSideAreaWidth(0);
 }
 
-void IdeWidget::updateBreakPoints(int newLines) {
+void IdeWidget::updateBreakpoints(int newLines) {
     int* temp = new int[newLines];
     for (int i = 0; i < newLines; i++) {
         if (i >= lines)
             temp[i] = 0;
         else
-            temp[i] = breakPoints[i];
+            temp[i] = breakpoints[i];
     }
-    delete [] breakPoints;
+    delete [] breakpoints;
     lines = newLines;
-    breakPoints = temp;
+    breakpoints = temp;
 }
 
-void IdeWidget::clearBreakPoints() {
+void IdeWidget::clearBreakpoints() {
     for (int i = 0; i < lines; i++) {
-        breakPoints[i] = 0;
+        breakpoints[i] = 0;
     }
     update();
 }
 
-void IdeWidget::breakPointAreaPaintEvent(QPaintEvent *event) {
-    QPainter painter(breakPointArea);
+void IdeWidget::breakpointAreaPaintEvent(QPaintEvent *event) {
+    QPainter painter(breakpointArea);
     QRect bpaRect(event->rect().x(), event->rect().y(),
-                  breakPointAreaWidth(), event->rect().height());
+                  breakpointAreaWidth(), event->rect().height());
     painter.fillRect(bpaRect, Qt::darkGray);
 
     QTextBlock block = firstVisibleBlock();
@@ -161,8 +166,8 @@ void IdeWidget::breakPointAreaPaintEvent(QPaintEvent *event) {
     int bottom = top + (int) blockBoundingRect(block).height();
     int blockNumber = block.blockNumber();
     while (block.isValid() && top <= event->rect().bottom()) {
-        QRect r(0, top, breakPointAreaWidth(), fontMetrics().height());
-        if (breakPoints[blockNumber])
+        QRect r(0, top, breakpointAreaWidth(), fontMetrics().height());
+        if (breakpoints[blockNumber])
             painter.fillRect(r,Qt::red);
         ++blockNumber;
         block = block.next();
@@ -171,44 +176,47 @@ void IdeWidget::breakPointAreaPaintEvent(QPaintEvent *event) {
     }
 }
 
-void IdeWidget::setBreakPoint(QPoint breakPoint) {
+void IdeWidget::setBreakpoint(QPoint breakpoint) {
     QTextBlock block = firstVisibleBlock();
     int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
     int bottom = top + (int) blockBoundingRect(block).height();
     int blockNumber = block.blockNumber();
     while (block.isValid()) {
-        if (breakPoint.y() >= top && breakPoint.y() <= bottom){
-            if (breakPoints[blockNumber])
-                breakPoints[blockNumber] = 0;
+        if (breakpoint.y() >= top && breakpoint.y() <= bottom){
+            if (breakpoints[blockNumber])
+                breakpoints[blockNumber] = 0;
             else
-                breakPoints[blockNumber] = 1;
+                breakpoints[blockNumber] = 1;
         }
         ++blockNumber;
         block = block.next();
         top = bottom;
         bottom = top + (int) blockBoundingRect(block).height();
     }
+    emit breakpointsChanged();
 }
 
-std::vector<int> IdeWidget::getBreakPoints() {
+std::vector<int> IdeWidget::getBreakpoints() {
     std::vector<int> ret;
     for (int i = 0; i < lines; i++)
-        if (breakPoints[i])
+        if (breakpoints[i])
             ret.push_back(i+1);
     return ret;
 }
 
 
-/* CORE */
+/* Core */
 void IdeWidget::save() {
-    if (filename.isEmpty() || filename == "untitled.sasm")
+    if (filename.isEmpty())
         saveAs();
     QFile file(filename);
     if (!file.open(QFile::WriteOnly | QFile::Text))
         return;
     QTextStream out(&file);
     out << toPlainText();
+    file.close();
     document()->setModified(false);
+    emit fileChanged(filename);
 }
 
 void IdeWidget::saveAs() {
@@ -220,7 +228,6 @@ void IdeWidget::saveAs() {
                 tr("Assembler program (*.sasm)"));
     if (filename.isEmpty())
         return;
-    emit filenameChanged(filename);
     save();
 }
 
@@ -235,17 +242,33 @@ void IdeWidget::open(QString filename) {
     this->filename = filename;
     document()->setModified(false);
     updateSideAreaWidth(0);
-    emit filenameChanged(filename);
+    emit fileChanged(filename);
+}
+
+void IdeWidget::openFileDialog() {
+    const QString DEFAULT_DIR_KEY("\\");
+    QSettings settings;
+
+    QString selectedFile = QFileDialog::getOpenFileName(
+                this, "Open", settings.value(DEFAULT_DIR_KEY).toString(),
+                tr("Assembler program (*.sasm)"));
+
+    if (!selectedFile.isEmpty()) {
+        QDir currentDir;
+        settings.setValue(DEFAULT_DIR_KEY,
+                            currentDir.absoluteFilePath(selectedFile));
+        filename = selectedFile;
+        open(filename);
+    }
 }
 
 void IdeWidget::newFile() {
     if (document()->isModified()) {
         if (!saveWarning()) return;
     }
-    filename = "untitled.sasm";
     document()->setModified(false);
     clear();
-    emit filenameChanged(filename);
+    saveAs();
 }
 
 bool IdeWidget::saveWarning() {

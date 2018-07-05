@@ -53,12 +53,12 @@ OBJECTS_DIR   = ./
 SOURCES       = ../_src/main.cpp \
 		../_src/mainwindow.cpp \
 		../_src/runwidget.cpp \
-		../_src/memorywindowwidget.cpp \
 		../_src/idewidget.cpp \
 		../_src/performancechart.cpp \
 		../_src/memorymap.cpp \
 		../_src/dropdownwidget.cpp \
 		../_src/fileviewer.cpp \
+		../_src/memorywindow.cpp \
 		../../_Simulator/_src/compSim.cpp \
 		../../_Simulator/_src/isa.cpp \
 		../../_Simulator/_src/loader.cpp \
@@ -68,20 +68,20 @@ SOURCES       = ../_src/main.cpp \
 		qrc_styles.cpp \
 		moc_mainwindow.cpp \
 		moc_runwidget.cpp \
-		moc_memorywindowwidget.cpp \
 		moc_idewidget.cpp \
 		moc_memorymap.cpp \
 		moc_dropdownwidget.cpp \
-		moc_fileviewer.cpp
+		moc_fileviewer.cpp \
+		moc_memorywindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		runwidget.o \
-		memorywindowwidget.o \
 		idewidget.o \
 		performancechart.o \
 		memorymap.o \
 		dropdownwidget.o \
 		fileviewer.o \
+		memorywindow.o \
 		compSim.o \
 		isa.o \
 		loader.o \
@@ -92,11 +92,11 @@ OBJECTS       = main.o \
 		qrc_styles.o \
 		moc_mainwindow.o \
 		moc_runwidget.o \
-		moc_memorywindowwidget.o \
 		moc_idewidget.o \
 		moc_memorymap.o \
 		moc_dropdownwidget.o \
-		moc_fileviewer.o
+		moc_fileviewer.o \
+		moc_memorywindow.o
 DIST          = /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/spec_pre.prf \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/qdevice.pri \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/device_config.prf \
@@ -287,12 +287,12 @@ DIST          = /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/sp
 		../_src/SimComp_GUI.pro ../_src/mainwindow.h \
 		../_src/globals.h \
 		../_src/runwidget.h \
-		../_src/memorywindowwidget.h \
 		../_src/idewidget.h \
 		../_src/performancechart.h \
 		../_src/memorymap.h \
 		../_src/dropdownwidget.h \
 		../_src/fileviewer.h \
+		../_src/memorywindow.h \
 		../../_Simulator/_src/compSim.h \
 		../../_Simulator/_src/config.h \
 		../../_Simulator/_src/isa.h \
@@ -302,12 +302,12 @@ DIST          = /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/sp
 		../../_Simulator/_src/program.h ../_src/main.cpp \
 		../_src/mainwindow.cpp \
 		../_src/runwidget.cpp \
-		../_src/memorywindowwidget.cpp \
 		../_src/idewidget.cpp \
 		../_src/performancechart.cpp \
 		../_src/memorymap.cpp \
 		../_src/dropdownwidget.cpp \
 		../_src/fileviewer.cpp \
+		../_src/memorywindow.cpp \
 		../../_Simulator/_src/compSim.cpp \
 		../../_Simulator/_src/isa.cpp \
 		../../_Simulator/_src/loader.cpp \
@@ -751,8 +751,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../_src/images.qrc ../_src/styles.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../_src/mainwindow.h ../_src/globals.h ../_src/runwidget.h ../_src/memorywindowwidget.h ../_src/idewidget.h ../_src/performancechart.h ../_src/memorymap.h ../_src/dropdownwidget.h ../_src/fileviewer.h ../../_Simulator/_src/compSim.h ../../_Simulator/_src/config.h ../../_Simulator/_src/isa.h ../../_Simulator/_src/loader.h ../../_Simulator/_src/logger.h ../../_Simulator/_src/memory.h ../../_Simulator/_src/program.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../_src/main.cpp ../_src/mainwindow.cpp ../_src/runwidget.cpp ../_src/memorywindowwidget.cpp ../_src/idewidget.cpp ../_src/performancechart.cpp ../_src/memorymap.cpp ../_src/dropdownwidget.cpp ../_src/fileviewer.cpp ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/isa.cpp ../../_Simulator/_src/loader.cpp ../../_Simulator/_src/logger.cpp ../../_Simulator/_src/memory.cpp ../../_Simulator/_src/Program.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../_src/mainwindow.h ../_src/globals.h ../_src/runwidget.h ../_src/idewidget.h ../_src/performancechart.h ../_src/memorymap.h ../_src/dropdownwidget.h ../_src/fileviewer.h ../_src/memorywindow.h ../../_Simulator/_src/compSim.h ../../_Simulator/_src/config.h ../../_Simulator/_src/isa.h ../../_Simulator/_src/loader.h ../../_Simulator/_src/logger.h ../../_Simulator/_src/memory.h ../../_Simulator/_src/program.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../_src/main.cpp ../_src/mainwindow.cpp ../_src/runwidget.cpp ../_src/idewidget.cpp ../_src/performancechart.cpp ../_src/memorymap.cpp ../_src/dropdownwidget.cpp ../_src/fileviewer.cpp ../_src/memorywindow.cpp ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/isa.cpp ../../_Simulator/_src/loader.cpp ../../_Simulator/_src/logger.cpp ../../_Simulator/_src/memory.cpp ../../_Simulator/_src/Program.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -801,9 +801,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/data/dummy.cpp
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.10 -Wall -W -dM -E -o moc_predefs.h /Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_runwidget.cpp moc_memorywindowwidget.cpp moc_idewidget.cpp moc_memorymap.cpp moc_dropdownwidget.cpp moc_fileviewer.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_runwidget.cpp moc_idewidget.cpp moc_memorymap.cpp moc_dropdownwidget.cpp moc_fileviewer.cpp moc_memorywindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_runwidget.cpp moc_memorywindowwidget.cpp moc_idewidget.cpp moc_memorymap.cpp moc_dropdownwidget.cpp moc_fileviewer.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_runwidget.cpp moc_idewidget.cpp moc_memorymap.cpp moc_dropdownwidget.cpp moc_fileviewer.cpp moc_memorywindow.cpp
 moc_mainwindow.cpp: /Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/QList \
@@ -826,19 +826,6 @@ moc_runwidget.cpp: ../_src/globals.h \
 		moc_predefs.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc
 	/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/macx-clang -I'/Users/olebjorn/Desktop/SimComp - TDT4102/Git Repo/SimComp/_GUI/_src' -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCharts.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib ../_src/runwidget.h -o moc_runwidget.cpp
-
-moc_memorywindowwidget.cpp: ../../_Simulator/_src/compSim.h \
-		../../_Simulator/_src/logger.h \
-		../../_Simulator/_src/memory.h \
-		../../_Simulator/_src/isa.h \
-		../../_Simulator/_src/program.h \
-		../../_Simulator/_src/loader.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
-		../_src/memorywindowwidget.h \
-		moc_predefs.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc
-	/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/macx-clang -I'/Users/olebjorn/Desktop/SimComp - TDT4102/Git Repo/SimComp/_GUI/_src' -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCharts.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib ../_src/memorywindowwidget.h -o moc_memorywindowwidget.cpp
 
 moc_idewidget.cpp: /Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QPlainTextEdit \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qplaintextedit.h \
@@ -871,6 +858,19 @@ moc_fileviewer.cpp: /Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.f
 		moc_predefs.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc
 	/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/macx-clang -I'/Users/olebjorn/Desktop/SimComp - TDT4102/Git Repo/SimComp/_GUI/_src' -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCharts.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib ../_src/fileviewer.h -o moc_fileviewer.cpp
+
+moc_memorywindow.cpp: ../../_Simulator/_src/compSim.h \
+		../../_Simulator/_src/logger.h \
+		../../_Simulator/_src/memory.h \
+		../../_Simulator/_src/isa.h \
+		../../_Simulator/_src/program.h \
+		../../_Simulator/_src/loader.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../_src/memorywindow.h \
+		moc_predefs.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc
+	/Users/olebjorn/Developer/Qt/5.10.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/mkspecs/macx-clang -I'/Users/olebjorn/Desktop/SimComp - TDT4102/Git Repo/SimComp/_GUI/_src' -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCharts.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers -I/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib ../_src/memorywindow.h -o moc_memorywindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -918,7 +918,7 @@ mainwindow.o: ../_src/mainwindow.cpp ../_src/mainwindow.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QThread \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qthread.h \
-		../_src/memorywindowwidget.h \
+		../_src/memorywindow.h \
 		../../_Simulator/_src/compSim.h \
 		../../_Simulator/_src/logger.h \
 		../../_Simulator/_src/memory.h \
@@ -961,7 +961,7 @@ runwidget.o: ../_src/runwidget.cpp ../_src/runwidget.h \
 		../_src/idewidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QPlainTextEdit \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qplaintextedit.h \
-		../_src/memorywindowwidget.h \
+		../_src/memorywindow.h \
 		../../_Simulator/_src/compSim.h \
 		../../_Simulator/_src/logger.h \
 		../../_Simulator/_src/memory.h \
@@ -997,61 +997,6 @@ runwidget.o: ../_src/runwidget.cpp ../_src/runwidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QDebug \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o runwidget.o ../_src/runwidget.cpp
-
-memorywindowwidget.o: ../_src/memorywindowwidget.cpp ../_src/memorywindowwidget.h \
-		../../_Simulator/_src/compSim.h \
-		../../_Simulator/_src/logger.h \
-		../../_Simulator/_src/memory.h \
-		../../_Simulator/_src/isa.h \
-		../../_Simulator/_src/program.h \
-		../../_Simulator/_src/loader.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
-		../_src/globals.h \
-		../_src/memorymap.h \
-		../_src/dropdownwidget.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/QIcon \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/qicon.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QVector \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qvector.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QGridLayout \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qgridlayout.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QHeaderView \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qheaderview.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QString \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QApplication \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QAction \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qaction.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLabel \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QSpinBox \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qspinbox.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QGroupBox \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qgroupbox.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QRadioButton \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qradiobutton.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QTableWidget \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qtablewidget.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/QIntValidator \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/qvalidator.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QSplitter \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qsplitter.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QStringList \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QTabWidget \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qtabwidget.h \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QDockWidget \
-		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qdockwidget.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memorywindowwidget.o ../_src/memorywindowwidget.cpp
 
 idewidget.o: ../_src/idewidget.cpp ../_src/idewidget.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QPlainTextEdit \
@@ -1247,6 +1192,61 @@ fileviewer.o: ../_src/fileviewer.cpp ../_src/fileviewer.h \
 		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o fileviewer.o ../_src/fileviewer.cpp
 
+memorywindow.o: ../_src/memorywindow.cpp ../_src/memorywindow.h \
+		../../_Simulator/_src/compSim.h \
+		../../_Simulator/_src/logger.h \
+		../../_Simulator/_src/memory.h \
+		../../_Simulator/_src/isa.h \
+		../../_Simulator/_src/program.h \
+		../../_Simulator/_src/loader.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../_src/globals.h \
+		../_src/memorymap.h \
+		../_src/dropdownwidget.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/QIcon \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/qicon.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QVector \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qvector.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QGridLayout \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qgridlayout.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QHeaderView \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qheaderview.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QString \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QApplication \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QAction \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qaction.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLabel \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QSpinBox \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qspinbox.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QGroupBox \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qgroupbox.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QRadioButton \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qradiobutton.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QTableWidget \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qtablewidget.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/QIntValidator \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtGui.framework/Headers/qvalidator.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QSplitter \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qsplitter.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QTabWidget \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qtabwidget.h \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/QDockWidget \
+		/Users/olebjorn/Developer/Qt/5.10.0/clang_64/lib/QtWidgets.framework/Headers/qdockwidget.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o memorywindow.o ../_src/memorywindow.cpp
+
 compSim.o: ../../_Simulator/_src/compSim.cpp ../../_Simulator/_src/compSim.h \
 		../../_Simulator/_src/logger.h \
 		../../_Simulator/_src/memory.h \
@@ -1294,9 +1294,6 @@ moc_mainwindow.o: moc_mainwindow.cpp
 moc_runwidget.o: moc_runwidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_runwidget.o moc_runwidget.cpp
 
-moc_memorywindowwidget.o: moc_memorywindowwidget.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_memorywindowwidget.o moc_memorywindowwidget.cpp
-
 moc_idewidget.o: moc_idewidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_idewidget.o moc_idewidget.cpp
 
@@ -1308,6 +1305,9 @@ moc_dropdownwidget.o: moc_dropdownwidget.cpp
 
 moc_fileviewer.o: moc_fileviewer.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_fileviewer.o moc_fileviewer.cpp
+
+moc_memorywindow.o: moc_memorywindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_memorywindow.o moc_memorywindow.cpp
 
 ####### Install
 

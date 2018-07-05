@@ -28,23 +28,23 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         runwidget.cpp \
-    memorywindowwidget.cpp \
     idewidget.cpp \
     performancechart.cpp \
     memorymap.cpp \
     dropdownwidget.cpp \
-    fileviewer.cpp
+    fileviewer.cpp \
+    memorywindow.cpp
 
 HEADERS += \
         mainwindow.h \
         globals.h \
         runwidget.h \
-    memorywindowwidget.h \
     idewidget.h \
     performancechart.h \
     memorymap.h \
     dropdownwidget.h \
-    fileviewer.h
+    fileviewer.h \
+    memorywindow.h
 
 RESOURCES += \
     images.qrc \

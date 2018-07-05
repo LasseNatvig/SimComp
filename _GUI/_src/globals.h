@@ -1,7 +1,6 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-
 namespace globals {
     const unsigned int MAINWINDOW_MIN_WIDTH = 800;
     const unsigned int MAINWINDOW_MIN_HEIGHT = 500;

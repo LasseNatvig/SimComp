@@ -7,11 +7,8 @@
 #include <QtCore/QDebug>
 
 PerformanceChart::PerformanceChart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
-    QChart(QChart::ChartTypeCartesian, parent, wFlags),
-    x(0),
-    y(0),
-    yRange(globals::PLOT_YRANGE)
-{
+    QChart(QChart::ChartTypeCartesian, parent, wFlags), x(0), y(0),
+    yRange(globals::PLOT_YRANGE) {
     newSeries();
 
     // Chart configuration
@@ -20,7 +17,7 @@ PerformanceChart::PerformanceChart(QGraphicsItem *parent, Qt::WindowFlags wFlags
     setMaximumSize(QSize(globals::PERFORMANCEWINDOW_MIN_WIDTH,
                          globals::PERFORMANCEWINDOW_MIN_HEIGHT));
     legend()->hide();
- }
+}
 
 PerformanceChart::~PerformanceChart() {
     delete series;
@@ -48,7 +45,8 @@ void PerformanceChart::newSeries() {
 }
 
 void PerformanceChart::updatePerformance(double mips) {
-    double dx = static_cast<double>(globals::TIMER_UPDATE)/static_cast<double>(1000);
+    double dx = static_cast<double>(globals::TIMER_UPDATE)/
+            static_cast<double>(1000);
     x += dx;
     y = mips;
     double tick_dx = plotArea().width() / axis->tickCount()*dx;

@@ -7,8 +7,7 @@
 MemoryMap::MemoryMap(QWidget *parent) : QWidget(parent),
     width(globals::MEMORYWINDOW_PIXMAP_WIDTH),
     height(globals::MEMORYWINDOW_PIXMAP_HEIGHT),
-    pixelSize(globals::MEMORYWINDOW_PIXMAP_PIXSIZE)
-{
+    pixelSize(globals::MEMORYWINDOW_PIXMAP_PIXSIZE) {
     setFixedSize(QSize(width, height));
 }
 

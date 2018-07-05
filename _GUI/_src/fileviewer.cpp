@@ -5,11 +5,9 @@
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QDebug>
 
-FileViewer::FileViewer(QStringList nameFilters,QWidget *parent) : QWidget(parent),
-    filename(""),
-    nameFilters(nameFilters) {
+FileViewer::FileViewer(QStringList nameFilters, QWidget *parent) :
+    QWidget(parent), nameFilters(nameFilters), filename("") {
     createModel();
     createView();
     filenameLbl = new QLabel("<b>File: </b>");

@@ -7,18 +7,18 @@ class QTreeView;
 class QFileSystemModel;
 class QLabel;
 
-class FileViewer : public QWidget
-{
+class FileViewer : public QWidget {
     Q_OBJECT
 public:
-    explicit FileViewer(QStringList nameFilters ,QWidget *parent = nullptr);
+    explicit FileViewer(QStringList nameFilters, QWidget *parent = nullptr);
 
 signals:
-    void changeFile(QString filename);
+    void changeFile(QString /* File name */);
 
 public slots:
     void setRootPath(QString path);
     void setFilename(QString filename);
+
 private:
     QFileSystemModel* model;
     QTreeView* view;

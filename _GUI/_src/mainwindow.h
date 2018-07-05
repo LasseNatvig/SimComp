@@ -7,19 +7,19 @@
 #include <QVector>
 #include <QPair>
 
+class QTabWidget;
 class QStatusBar;
 class QGroupBox;
 class QPushButton;
 class QListWidget;
 class RunWidget;
-class MemoryWindowWidget;
+class IdeWidget;
+class MemoryWindow;
 class PerformanceChart;
 class FileViewer;
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
-
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -28,8 +28,11 @@ private:
     // Icon
     QIcon* appIcon;
 
-    // Central widget
+    // Tabs (Central widget)
+    QTabWidget* tabs;
     RunWidget* runW;
+    IdeWidget* ideW;
+    void createTabs();
 
     // Menu bar
     QMenuBar* menuBar;
@@ -48,7 +51,7 @@ private:
     QAction* nextAction;
     QMenu* viewMenu;
     QAction* performanceAction;
-    QAction* actionAction;
+    QAction* outputAction;
     QMenu* memoryMenu;
     QAction* memoryAction;
     QMenu* styleMenu;
@@ -58,15 +61,15 @@ private:
     void createMenuBar();
     void createStatusBar();
 
-    // Action dock
-    QGroupBox* actionToolBox;
+    // Output dock
+    QGroupBox* outputBox;
     QPushButton* runBtn;
     QPushButton* stepBtn;
     QPushButton* nextBtn;
     QPushButton* resetBtn;
     QListWidget* outputLst;
     QAction* closePerformanceAction;
-    void createActionDock();
+    void createOutputDock();
 
     // Performance Dock
     PerformanceChart* performanceChart;
@@ -82,7 +85,7 @@ private:
 
 public slots:
     void newMemoryWindow();
-    void deleteMemoryWindow(MemoryWindowWidget* window);
+    void deleteMemoryWindow(MemoryWindow* window);
     void reset();
     void writeOutput(QString message);
     void uncheckStyles(QAction* checkedStyle);

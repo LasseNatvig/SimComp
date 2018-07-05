@@ -3,22 +3,16 @@
 
 #include "globals.h"
 #include <string>
+#include <vector>
 #include <ctime>
 #include <QWidget>
 #include <QThread>
 
 class QTimer;
 class QTabWidget;
-class QAction;
-class QGroupBox;
 class QTableWidget;
-class QPushButton;
-class QLabel;
 class SimulatorThread;
 class ComputerSimulation;
-class IdeWidget;
-class MemoryWindowWidget;
-class PerformanceChart;
 
 class RunWidget : public QWidget
 {
@@ -30,58 +24,42 @@ public:
                            int rowIndex, int from, int to);
 
 private:
-    /* Core variables and functions */
     ComputerSimulation* simulator;
-    QString filename;
     std::string simName = "AdHoc16_V03";
     QTimer* progressTimer;
     SimulatorThread* simThread;
-
+    QString filename;
+    std::vector<int> breakpoints;
     bool runStop;
     int lastInstructionCount = 0;
     bool simulationFinished = false;
     clock_t runStart;
-    void load();
 
-    /* TAB WIDGET */
-    QTabWidget* tabs;
     QTableWidget* executionTable;
     QStringList tableHeader;
     void addStep(uint16_t PC);
     void addNextPC();
-    IdeWidget* ide;
-    void createTabs();
+    void createTable();
 
-    /* UTILS */
     double getMIPS(clock_t ticks);
     bool validStart();
 
 public slots:
-    /* SIMULATOR SLOTS */
     void step();
     void run();
     void next();
     void reset();
-
-    /* EDITOR SLOTS */
-    void openFileDialog();
-    void open(QString filename);
-    void newFile();
-    void save();
-    void saveAs();
-    void undo();
-    void redo();
+    void load(QString filename);
+    void setBreakpoints(std::vector<int> breakpoints);
 
 private slots:
-    void updateFilename(QString filename);
     void runFinished();
     void updatePerformance();
 
 signals:
-    void performanceChanged(double MIPS);
-    void filenameChanged(QString filename);
-    void output(QString message);
-    void instructionCountChanged(int instructionCount);
+    void performanceChanged(double /* MIPS */);
+    void output(QString /* Message */);
+    void instructionCountChanged(int /* Instruction count */);
     void memoryChanged();
 };
 
@@ -95,6 +73,5 @@ public:
 private:
     ComputerSimulation* simulator;
 };
-
 
 #endif // RUNWIDGET_H

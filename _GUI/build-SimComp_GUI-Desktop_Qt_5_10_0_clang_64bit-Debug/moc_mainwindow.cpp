@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[12];
-    char stringdata0[136];
+    char stringdata0[130];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,18 +35,18 @@ QT_MOC_LITERAL(0, 0, 10), // "MainWindow"
 QT_MOC_LITERAL(1, 11, 15), // "newMemoryWindow"
 QT_MOC_LITERAL(2, 27, 0), // ""
 QT_MOC_LITERAL(3, 28, 18), // "deleteMemoryWindow"
-QT_MOC_LITERAL(4, 47, 19), // "MemoryWindowWidget*"
-QT_MOC_LITERAL(5, 67, 6), // "window"
-QT_MOC_LITERAL(6, 74, 5), // "reset"
-QT_MOC_LITERAL(7, 80, 11), // "writeOutput"
-QT_MOC_LITERAL(8, 92, 7), // "message"
-QT_MOC_LITERAL(9, 100, 13), // "uncheckStyles"
-QT_MOC_LITERAL(10, 114, 8), // "QAction*"
-QT_MOC_LITERAL(11, 123, 12) // "checkedStyle"
+QT_MOC_LITERAL(4, 47, 13), // "MemoryWindow*"
+QT_MOC_LITERAL(5, 61, 6), // "window"
+QT_MOC_LITERAL(6, 68, 5), // "reset"
+QT_MOC_LITERAL(7, 74, 11), // "writeOutput"
+QT_MOC_LITERAL(8, 86, 7), // "message"
+QT_MOC_LITERAL(9, 94, 13), // "uncheckStyles"
+QT_MOC_LITERAL(10, 108, 8), // "QAction*"
+QT_MOC_LITERAL(11, 117, 12) // "checkedStyle"
 
     },
     "MainWindow\0newMemoryWindow\0\0"
-    "deleteMemoryWindow\0MemoryWindowWidget*\0"
+    "deleteMemoryWindow\0MemoryWindow*\0"
     "window\0reset\0writeOutput\0message\0"
     "uncheckStyles\0QAction*\0checkedStyle"
 };
@@ -89,7 +89,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->newMemoryWindow(); break;
-        case 1: _t->deleteMemoryWindow((*reinterpret_cast< MemoryWindowWidget*(*)>(_a[1]))); break;
+        case 1: _t->deleteMemoryWindow((*reinterpret_cast< MemoryWindow*(*)>(_a[1]))); break;
         case 2: _t->reset(); break;
         case 3: _t->writeOutput((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 4: _t->uncheckStyles((*reinterpret_cast< QAction*(*)>(_a[1]))); break;

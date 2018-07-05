@@ -18,15 +18,14 @@ class QSplitter;
 class QLineEdit;
 class QStringList;
 class QTabWidget;
-class QDockWidget;
 class MemoryMap;
 class DropdownWidget;
 
-class MemoryWindowWidget : public QWidget
-{
+class MemoryWindow : public QWidget {
     Q_OBJECT
 public:
-    explicit MemoryWindowWidget(QWidget *parent, ComputerSimulation* simulator);
+    explicit MemoryWindow(QWidget *parent, ComputerSimulation* simulator);
+
 private:
     ComputerSimulation* simulator;
     memType memtyp = INSTR;
@@ -35,7 +34,7 @@ private:
     int toAddr = 0;
     int columnCount = 1;
 
-    /* MAIN FRAME */
+    /* Main Frame */
     QSplitter* mainFrame;
 
     // LEFT SIDE
@@ -89,13 +88,16 @@ private:
     void createRightSide();
 
     void createMainFrame();
+
 signals:
     void windowNameChanged(QString /* Name */);
-    void deleteRequested(MemoryWindowWidget* /* This Window */);
+    void deleteRequested(MemoryWindow* /* This Window */);
     void newWindowRequested();
+
 public slots:
     void updateDisplays();
     void clearDisplay();
+
 private slots:
     void updateDisplayHeaders();
     void updateConfig();

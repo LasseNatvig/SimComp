@@ -1,21 +1,16 @@
 #include "dropdownwidget.h"
 #include <QApplication>
 #include <QStyle>
-#include <QGroupBox>
 #include <QPushButton>
 #include <QBoxLayout>
 
 DropdownWidget::DropdownWidget(Direction direction, QWidget *parent) :
-    DropdownWidget(direction, "", parent)
-{ }
+    DropdownWidget(direction, "", parent) { }
 
 DropdownWidget::DropdownWidget(Direction direction, QString text, QWidget *parent) :
-    QWidget(parent),
-    text(text),
-    direction(direction),
-    _hidden(true)
-{
+    QWidget(parent), text(text), direction(direction), _hidden(true) {
     create();
+    setLayout(layout);
 }
 
 void DropdownWidget::create() {
@@ -58,7 +53,6 @@ void DropdownWidget::create() {
     button = new QPushButton(showIcon, text);
     connect(button, &QPushButton::clicked, this, &DropdownWidget::toggle);
     layout->addWidget(button, 0, alignment);
-    setLayout(layout);
 }
 
 void DropdownWidget::toggle() {
@@ -82,7 +76,7 @@ bool DropdownWidget::hidden() const {
     return _hidden;
 }
 
-void DropdownWidget::setText(const QString text) {
+void DropdownWidget::setText(const QString &text) {
     this->text = text;
     button->setText(text);
 }
