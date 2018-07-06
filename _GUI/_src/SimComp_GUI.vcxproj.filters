@@ -73,7 +73,7 @@
     <ClCompile Include="memorymap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="memorywindowwidget.cpp">
+    <ClCompile Include="memorywindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="performancechart.cpp">
@@ -120,7 +120,7 @@
     <QtMoc Include="memorymap.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="memorywindowwidget.h">
+    <QtMoc Include="memorywindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="performancechart.h">
@@ -172,9 +172,6 @@
     <QtRcc Include="images.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <None Include="..\_styles\material-blue.qss">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\_img\next.png">
       <Filter>Resource Files</Filter>
     </None>

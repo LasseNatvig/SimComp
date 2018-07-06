@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E114CF47-DED8-3B94-98CF-7D10CC94FAD2}</ProjectGuid>
+    <ProjectGuid>{A1A84E88-4ED8-3C6B-A92C-AACB74E2D5C8}</ProjectGuid>
     <RootNamespace>SimComp_GUI</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
@@ -196,7 +196,7 @@
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\memory.cpp" />
     <ClCompile Include="memorymap.cpp" />
-    <ClCompile Include="memorywindowwidget.cpp" />
+    <ClCompile Include="memorywindow.cpp" />
     <ClCompile Include="performancechart.cpp" />
     <ClCompile Include="runwidget.cpp" />
   </ItemGroup>
@@ -218,7 +218,7 @@
     <ClInclude Include="..\..\_Simulator\_src\memory.h" />
     <QtMoc Include="memorymap.h">
     </QtMoc>
-    <QtMoc Include="memorywindowwidget.h">
+    <QtMoc Include="memorywindow.h">
     </QtMoc>
     <ClInclude Include="performancechart.h" />
     <ClInclude Include="..\..\_Simulator\_src\program.h" />
@@ -251,7 +251,6 @@
       <InitFuncName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">images</InitFuncName>
       <InitFuncName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">images</InitFuncName>
     </QtRcc>
-    <None Include="..\_styles\material-blue.qss" />
     <None Include="..\_img\next.png" />
     <None Include="..\_img\run.png" />
     <None Include="..\_img\step.png" />

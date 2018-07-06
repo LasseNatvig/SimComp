@@ -232,9 +232,15 @@ QGraphicsView {
 QPlainTextEdit {
   background-color: #252526;
   color: #f1f1f1;
+  font: "Times new roman";
 }
 
 QListWidget {
+  background-color: #252526;
+  color: #f1f1f1;
+}
+
+QMessageBox {
   background-color: #252526;
   color: #f1f1f1;
 }
