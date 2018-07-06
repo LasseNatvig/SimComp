@@ -8,12 +8,17 @@
 
 FileViewer::FileViewer(QStringList nameFilters, QWidget *parent) :
     QWidget(parent), nameFilters(nameFilters), filename("") {
+    // Create model and view
     createModel();
     createView();
+
+    // Create label and populate layout
     filenameLbl = new QLabel("<b>File: </b>");
     QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(filenameLbl);
     layout->addWidget(view);
+
+    // Configure widget
     setLayout(layout);
     setMinimumSize(QSize(globals::FILEVIEWER_MIN_WIDTH,
                          globals::FILEVIEWER_MIN_HEIGHT));

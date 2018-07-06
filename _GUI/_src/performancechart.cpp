@@ -9,6 +9,7 @@
 PerformanceChart::PerformanceChart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
     QChart(QChart::ChartTypeCartesian, parent, wFlags), x(0), y(0),
     yRange(globals::PLOT_YRANGE) {
+    // Create new series
     newSeries();
 
     // Chart configuration
@@ -50,7 +51,7 @@ void PerformanceChart::updatePerformance(double mips) {
     x += dx;
     y = mips;
     double tick_dx = plotArea().width() / axis->tickCount()*dx;
-    if (x > globals::PLOT_XRANGE)
+    if (x > globals::PLOT_XRANGE) // Start scrolling when plot is out of range
         scroll(tick_dx,0);
 
     series->append(x, y);

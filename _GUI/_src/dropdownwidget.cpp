@@ -9,6 +9,7 @@ DropdownWidget::DropdownWidget(Direction direction, QWidget *parent) :
 
 DropdownWidget::DropdownWidget(Direction direction, QString text, QWidget *parent) :
     QWidget(parent), text(text), direction(direction), _hidden(true) {
+    // Create widget and set layout
     create();
     setLayout(layout);
 }

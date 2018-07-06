@@ -31,6 +31,7 @@ MemoryWindow::MemoryWindow(QWidget *parent,
     simulator(simulator),
     lastInstructionCount(simulator->getInstructionsSimulated()) {
 
+    // Create window
     createMainFrame();
 
     // Add main frame to main layout
@@ -61,14 +62,14 @@ void MemoryWindow::createMainFrame() {
 void MemoryWindow::createLeftSide() {
     leftTabs = new QTabWidget(this);
 
-    // Memory display
-    memoryDisplay = new QTableWidget;
-    memoryDisplay->setColumnCount(globals::MEMORYWINDOW_COLCOUNT);
-    updateDisplayHeaders();
-    memoryDisplay->setSelectionMode(QAbstractItemView::NoSelection);
-    memoryDisplay->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    memoryDisplay->resizeColumnsToContents();
-    memoryDisplay->horizontalHeader()->setSectionResizeMode(
+    // Memory Table
+    memoryTable = new QTableWidget;
+    memoryTable->setColumnCount(globals::MEMORYWINDOW_COLCOUNT);
+    clearTableHeaders();
+    memoryTable->setSelectionMode(QAbstractItemView::NoSelection);
+    memoryTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    memoryTable->resizeColumnsToContents();
+    memoryTable->horizontalHeader()->setSectionResizeMode(
                 QHeaderView::Stretch);
 
     // Memory map
@@ -126,7 +127,7 @@ void MemoryWindow::createLeftSide() {
     memoryMapContainerLayout->addWidget(dropUpMenu, 0, Qt::AlignBottom);
     memoryMapContainer->setLayout(memoryMapContainerLayout);
 
-    leftTabs->addTab(memoryDisplay, "Table");
+    leftTabs->addTab(memoryTable, "Table");
     leftTabs->addTab(memoryMapContainer, "Bitmap");
 }
 
@@ -173,7 +174,7 @@ void MemoryWindow::createRightSide() {
     inputLayout->addWidget(setWindowNameLbl);
     inputLayout->addWidget(nameInput);
     connect(clearBtn, &QPushButton::clicked, this,
-            &MemoryWindow::clearDisplay);
+            &MemoryWindow::clearDisplays);
     connect(updateBtn, &QPushButton::clicked, this,
             &MemoryWindow::updateConfig);
 
@@ -208,28 +209,28 @@ void MemoryWindow::createRightSide() {
 
 
 /* Utils */
-void MemoryWindow::clearDisplay() {
-    memoryDisplay->setRowCount(0);
+void MemoryWindow::clearDisplays() {
+    memoryTable->setRowCount(0);
     memoryMap->clear();
 }
 
-void MemoryWindow::updateDisplayHeaders() {
+void MemoryWindow::clearTableHeaders() {
     std::stringstream ss;
-    topDisplayHeader.clear();
-    sideDisplayHeader.clear();
+    verticalTableHeader.clear();
+    horizontalTableHeader.clear();
 
-    for (int i = fromAddr; i < fromAddr + memoryDisplay->columnCount(); i++) {
+    for (int i = fromAddr; i < fromAddr + memoryTable->columnCount(); i++) {
         ss << std::hex << i;
-        topDisplayHeader << QString::fromStdString(ss.str());
+        verticalTableHeader << QString::fromStdString(ss.str());
         ss.str(std::string());
     }
-    for (int i = 1; i < memoryDisplay->rowCount()+1; i++) {
+    for (int i = 1; i < memoryTable->rowCount()+1; i++) {
         ss << std::hex << i;
-        sideDisplayHeader << QString::fromStdString(ss.str());
+        horizontalTableHeader << QString::fromStdString(ss.str());
         ss.str(std::string());
     }
-    memoryDisplay->setHorizontalHeaderLabels(topDisplayHeader);
-    memoryDisplay->setVerticalHeaderLabels(sideDisplayHeader);
+    memoryTable->setHorizontalHeaderLabels(verticalTableHeader);
+    memoryTable->setVerticalHeaderLabels(horizontalTableHeader);
 }
 
 void MemoryWindow::updateConfig() {
@@ -240,7 +241,7 @@ void MemoryWindow::updateConfig() {
         memtyp = INSTR;
         columnCount = 1;
     }
-    memoryDisplay->setColumnCount(columnCount);
+    memoryTable->setColumnCount(columnCount);
     fromAddr = fromAddrSpnbox->value();
     toAddr = toAddrSpnbox->value();
     if (fromAddr > toAddr) {
@@ -252,19 +253,19 @@ void MemoryWindow::updateConfig() {
 }
 
 void MemoryWindow::updateDisplays() {
-    clearDisplay();
+    clearDisplays();
     std::vector<std::string> dump;
     dump = simulator->memoryDump(fromAddr, toAddr, memtyp);
     for (int i = 0; i < dump.size(); i++) {
         if (i % columnCount == 0)
-            memoryDisplay->insertRow(memoryDisplay->rowCount());
-        memoryDisplay->setItem(memoryDisplay->rowCount()-1, i % columnCount,
+            memoryTable->insertRow(memoryTable->rowCount());
+        memoryTable->setItem(memoryTable->rowCount()-1, i % columnCount,
                                new QTableWidgetItem(
                                    QString::fromStdString(dump[i])));
     }
     if (memtyp == DATA)
         memoryMap->setVector(dump);
-    updateDisplayHeaders();
+    clearTableHeaders();
 }
 
 void MemoryWindow::updateMemoryMap() {

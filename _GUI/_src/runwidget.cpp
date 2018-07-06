@@ -38,7 +38,10 @@ RunWidget::RunWidget(QWidget *parent) : QWidget(parent) {
                                globals::MAINWINDOW_MIN_HEIGHT));
 }
 
-
+RunWidget::~RunWidget() {
+    delete progressTimer;
+    progressTimer = nullptr;
+}
 
 /* Simulator */
 void RunWidget::run() {
@@ -58,19 +61,19 @@ void RunWidget::runFinished() {
         emit output("Simulation stopped.");
     else {
         simulationFinished = true;
-        emit output("Simulation finshed.");
+        double mips = getMIPS(clock()-runStart);
+        emit output("Simulation finshed. MIPS: " + QString::number(mips));
         emit memoryChanged();
         emit updatePerformance();
     }
 }
 
 void RunWidget::step() {
-    /* Moves to next step */
     if (!validStart())
         return;
 
-    addStep(simulator->cpu->PC);
-    emit memoryChanged();
+    addStep(simulator->cpu->PC); // Show step and memory from the
+    emit memoryChanged();        // instruction before the one that is excuted
     if (!simulator->step()) // Make simulator execute one step
         simulationFinished = true; // Simulation finshed
 
@@ -86,8 +89,8 @@ void RunWidget::next() {
         return;
 
     simulator->setBreakpoints(breakpoints);
-    if (!simulator->next())
-       simulationFinished = true;
+    if (!simulator->next()) // Run until, but not including,
+       simulationFinished = true; // the next instruction with breakpoint
     addStep(simulator->cpu->PC);
     addNextPC();
 
@@ -143,10 +146,11 @@ void RunWidget::createTable() {
     executionTable->setHorizontalHeaderLabels(tableHeader);
     executionTable->verticalHeader()->setVisible(false);
     executionTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 11; i++)
         if (!(i == 1))
-            executionTable->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
-    }
+            executionTable->horizontalHeader()->
+                    setSectionResizeMode(i, QHeaderView::Stretch);
+
 }
 
 
@@ -203,7 +207,9 @@ void RunWidget::addStep(word PC) {
 void RunWidget::addNextPC() {
     std::stringstream stepInfo;
     stepInfo << simulator->cpu->PC;
-    executionTable->setItem(executionTable->rowCount()-1, 10, new QTableWidgetItem(QString::fromStdString(stepInfo.str())));
+    executionTable->setItem(executionTable->rowCount()-1, 10,
+                            new QTableWidgetItem(
+                                QString::fromStdString(stepInfo.str())));
 }
 
 void RunWidget::updatePerformance() {
@@ -218,7 +224,7 @@ void RunWidget::updatePerformance() {
 
 bool RunWidget::validStart() {
     if (!simulator->validProgram()) {
-        emit output("No program selected");
+        emit output("No program selected.");
         return false;
     }
     if (simulationFinished) {
@@ -227,7 +233,7 @@ bool RunWidget::validStart() {
         return false;
     }
     if (simThread->isRunning()) {
-        emit output("Wait until simulation is done running...");
+        emit output("Wait until simulation is done...");
         return false;
     }
     return true;
@@ -245,7 +251,7 @@ ComputerSimulation* RunWidget::getSimulator() {
 
 void RunWidget::showChange(QTableWidget* table, const QBrush &defaultBrush,
                            int rowIndex, int from, int to) {
-    /* Changes color of cell that changed since previous row */
+    // Changes color of cell that changed since previous row
     if (table->rowCount() < 2) return;
     QTableWidgetItem* cell;
     for (int i = from; i < to; i++) {

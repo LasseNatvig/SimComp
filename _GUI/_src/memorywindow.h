@@ -39,10 +39,10 @@ private:
 
     // LEFT SIDE
     QTabWidget* leftTabs;
-        // Memory Display
-    QTableWidget* memoryDisplay;
-    QStringList topDisplayHeader;
-    QStringList sideDisplayHeader;
+        // Memory Table
+    QTableWidget* memoryTable;
+    QStringList verticalTableHeader;
+    QStringList horizontalTableHeader;
         // Memory Map
     QWidget* memoryMapContainer;
     MemoryMap* memoryMap;
@@ -96,10 +96,10 @@ signals:
 
 public slots:
     void updateDisplays();
-    void clearDisplay();
+    void clearDisplays();
 
 private slots:
-    void updateDisplayHeaders();
+    void clearTableHeaders();
     void updateConfig();
     void updateMemoryMap(); 
 };

@@ -13,14 +13,19 @@
 
 
 IdeWidget::IdeWidget(QWidget *parent) : QPlainTextEdit(parent), lines(1) {
+    // Create side area
     breakpointArea = new BreakpointArea(this);
     lineNumberArea = new LineNumberArea(this);
 
+    // Set font
     QFont font = document()->defaultFont();
     font.setFamily("Courier New");
     document()->setDefaultFont(font);
 
+    // Allocate array for breakpoints
     breakpoints = new int[lines] {};
+
+    // Make connections
     connect(this, &QPlainTextEdit::blockCountChanged, this,
             &IdeWidget::updateSideAreaWidth);
     connect(this, &QPlainTextEdit::blockCountChanged, this,
@@ -41,6 +46,7 @@ IdeWidget::~IdeWidget() {
 
 /* Line number */
 int IdeWidget::lineNumberAreaWidth() {
+    // Calculate line number width
     int digits = 1;
     int max = qMax(1, blockCount());
     while (max >= 10) {

@@ -21,8 +21,9 @@
 using namespace QtCharts;
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
-{
+    QMainWindow(parent) {
+
+    // Create widgets
     createTabs();
     setCentralWidget(tabs);
 
@@ -36,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
     appIcon = new QIcon(":/images/../_img/SimComp_icon.png");
     this->setWindowIcon(*appIcon);
     this->setWindowTitle("Simulating Computers");
+    tabs->setCurrentIndex(1);
 
+    // Set dock tabs to document mode
     setDocumentMode(true);
 }
 
@@ -178,7 +181,7 @@ void MainWindow::createMenuBar() {
     memoryAction->setShortcut(QKeySequence(tr("Ctrl+m")));
     memoryMenu->addSeparator();
     createStyles();
-    styles[2].first->trigger(); // Set start style
+    styles[2].first->trigger(); // Set default style
     viewMenu->addAction(performanceAction);
     viewMenu->addAction(outputAction);
     connect(memoryAction, &QAction::triggered,
@@ -195,12 +198,15 @@ void MainWindow::createFileViewer() {
     QDockWidget* dock = new QDockWidget("File Viewer");
     QStringList nameFilters("*.sasm");
     fileViewer = new FileViewer(nameFilters);
+
+    // Update file viewer when ide changes file
     connect(ideW, &IdeWidget::fileChanged,
             [this] (QString filename) {
         QFileInfo temp(filename);
         this->fileViewer->setRootPath(temp.absolutePath());
         this->fileViewer->setFilename(temp.fileName());
     });
+    // Enable opening from file viewer
     connect(fileViewer, &FileViewer::changeFile, ideW, &IdeWidget::open);
     dock->setWidget(fileViewer);
     addDockWidget(Qt::LeftDockWidgetArea, dock);

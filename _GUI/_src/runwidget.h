@@ -14,11 +14,11 @@ class QTableWidget;
 class SimulatorThread;
 class ComputerSimulation;
 
-class RunWidget : public QWidget
-{
+class RunWidget : public QWidget {
     Q_OBJECT
 public:
     explicit RunWidget(QWidget *parent = nullptr);
+    ~RunWidget();
     ComputerSimulation* getSimulator();
     static void showChange(QTableWidget* table, const QBrush &defaultBrush,
                            int rowIndex, int from, int to);

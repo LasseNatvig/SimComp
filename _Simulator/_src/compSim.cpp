@@ -106,8 +106,6 @@ vector<string> ComputerSimulation::memoryDump(word fromAddr, word toAddr, memTyp
     writeToLogg("memoryDump(): Invalid fromAddr < 0\n");
     return vec;
   }
-  cout << "From addr:" << fromAddr << " To addr: " << toAddr << endl;
-  cout << "IM.words.size() = " << IM.words.size() << endl;
   for (word i = fromAddr; i <= toAddr; i++) {
     if (memoryType == DATA) {
       if (!DM.words.size()) return vec;
