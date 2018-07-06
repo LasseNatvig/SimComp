@@ -50,12 +50,7 @@ RESOURCES += \
     images.qrc \
     styles.qrc
 
-macx {
-    ICON = SimComp_icon.icns
-}
-
-windows {
-    RC_ICONS = SimComp_icon.ico
-}
+win32:RC_ICONS = SimComp_icon.ico
+macx:ICON = SimComp_icon.icns
 
 include(../../_Simulator/_src/Simulator_core.pri)
