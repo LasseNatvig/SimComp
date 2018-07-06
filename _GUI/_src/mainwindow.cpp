@@ -34,8 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     createFileViewer();
 
     // Cosmetic operations
-    appIcon = new QIcon(":/images/../_img/SimComp_icon.png");
-    this->setWindowIcon(*appIcon);
     this->setWindowTitle("Simulating Computers");
     tabs->setCurrentIndex(1);
 

@@ -9,7 +9,7 @@ QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = SimComp_GUI
+TARGET = SimComp
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -49,5 +49,13 @@ HEADERS += \
 RESOURCES += \
     images.qrc \
     styles.qrc
+
+macx {
+    ICON = SimComp_icon.icns
+}
+
+windows {
+    RC_ICONS = SimComp_icon.ico
+}
 
 include(../../_Simulator/_src/Simulator_core.pri)

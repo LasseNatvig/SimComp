@@ -25,9 +25,6 @@ public:
     ~MainWindow();
 
 private:
-    // Icon
-    QIcon* appIcon;
-
     // Tabs (Central widget)
     QTabWidget* tabs;
     RunWidget* runW;
