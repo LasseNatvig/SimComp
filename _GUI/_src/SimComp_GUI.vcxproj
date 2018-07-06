@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E114CF47-DED8-3B94-98CF-7D10CC94FAD2}</ProjectGuid>
+    <ProjectGuid>{A1A84E88-4ED8-3C6B-A92C-AACB74E2D5C8}</ProjectGuid>
     <RootNamespace>SimComp_GUI</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
@@ -117,12 +117,11 @@
       <IncludePath>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;$(QTDIR)\mkspecs/win32-msvc;.;$(QTDIR)\include;$(QTDIR)\include/QtCharts;$(QTDIR)\include/QtWidgets;$(QTDIR)\include/QtGui;$(QTDIR)\include/QtANGLE;$(QTDIR)\include/QtCore;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\ATLMFC\include;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\ucrt;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\shared;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\um;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\winrt;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\cppwinrt</IncludePath>
     </QtMoc>
     <QtRcc>
-      <InitFuncName>images</InitFuncName>
       <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
       <QTDIR>$(QTDIR)</QTDIR>
-      <Compression>default</Compression>
       <InputFile>%(FullPath)</InputFile>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+      <Compression>default</Compression>
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -168,10 +167,9 @@
     <QtRcc>
       <QTDIR>$(QTDIR)</QTDIR>
       <Compression>default</Compression>
-      <InitFuncName>images</InitFuncName>
       <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
-      <InputFile>%(FullPath)</InputFile>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+      <InputFile>%(FullPath)</InputFile>
     </QtRcc>
     <QtMoc>
       <QTDIR>$(QTDIR)</QTDIR>
@@ -188,6 +186,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\_Simulator\_src\Program.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\compSim.cpp" />
+    <ClCompile Include="dropdownwidget.cpp" />
+    <ClCompile Include="fileviewer.cpp" />
     <ClCompile Include="idewidget.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\isa.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\loader.cpp" />
@@ -195,13 +195,18 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="..\..\_Simulator\_src\memory.cpp" />
-    <ClCompile Include="memorywindowwidget.cpp" />
+    <ClCompile Include="memorymap.cpp" />
+    <ClCompile Include="memorywindow.cpp" />
     <ClCompile Include="performancechart.cpp" />
     <ClCompile Include="runwidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\_Simulator\_src\compSim.h" />
     <ClInclude Include="..\..\_Simulator\_src\config.h" />
+    <QtMoc Include="dropdownwidget.h">
+    </QtMoc>
+    <QtMoc Include="fileviewer.h">
+    </QtMoc>
     <ClInclude Include="globals.h" />
     <QtMoc Include="idewidget.h">
     </QtMoc>
@@ -211,7 +216,9 @@
     <QtMoc Include="mainwindow.h">
     </QtMoc>
     <ClInclude Include="..\..\_Simulator\_src\memory.h" />
-    <QtMoc Include="memorywindowwidget.h">
+    <QtMoc Include="memorymap.h">
+    </QtMoc>
+    <QtMoc Include="memorywindow.h">
     </QtMoc>
     <ClInclude Include="performancechart.h" />
     <ClInclude Include="..\..\_Simulator\_src\program.h" />
@@ -237,9 +244,21 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\_styles\QTDark.qss" />
     <None Include="..\_img\SimComp_icon.png" />
+    <None Include="..\_styles\blank.qss" />
     <QtRcc Include="images.qrc">
+      <InitFuncName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">images</InitFuncName>
+      <InitFuncName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">images</InitFuncName>
     </QtRcc>
+    <None Include="..\_img\next.png" />
+    <None Include="..\_img\run.png" />
+    <None Include="..\_img\step.png" />
+    <QtRcc Include="styles.qrc">
+      <InitFuncName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">styles</InitFuncName>
+      <InitFuncName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">styles</InitFuncName>
+    </QtRcc>
+    <None Include="..\_styles\vs_dark.qss" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

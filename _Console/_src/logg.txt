@@ -1,38 +1,5 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Sat Jun 23 12:46:29 2018
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
-...successfully opened
+ComputerSimulation AdHoc16_V03 started at time Wed Jun 27 17:40:40 2018
 Assembler file:
 ../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
 ...successfully opened

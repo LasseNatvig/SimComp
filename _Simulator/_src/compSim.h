@@ -36,7 +36,7 @@ public:
 	/* Get functions */
 	word getPC() { return cpu->PC; }
 	long long getInstructionsSimulated() const { return instructionsSimulated; }
-	bool isRunning() const { return (!(currentMode == NOTRUNNING)); }
+	bool isRunning() const { return (currentMode != NOTRUNNING); }
 	bool singleStep() const { return (currentMode == SINGLESTEP); }
 	bool validProgram() const { return sasmProg.valid; } // Checks if program is succesfully loaded
 	word getInstr(word PC) { return IM.read(PC); }
@@ -44,7 +44,7 @@ public:
 	std::string getName() const { return name; }
 
 	/* Set functions */
-	void setBreakPoints(const std::vector<int> &lineBreakPoints); // Set breakPoints at lines given in lineBreakPoints
+	void setBreakpoints(const std::vector<int> &lineBreakPoints); // Set breakPoints at lines given in lineBreakPoints
 	void setPC(word PC) { cpu->PC = PC; }
 
 	/* Core variables */
@@ -62,7 +62,7 @@ private:
 	Loader* sasmLoader; // Loader responsible for parsing and loading sasm-file to program
 	Program sasmProg; // SimComp ASM (sasm) program
 	Mode currentMode = NOTRUNNING; // Current simulation mode
-	std::vector<int> breakPoints; // Holds breakPoints one element per opcode,
+	std::vector<int> breakpoints; // Holds breakPoints one element per opcode,
 	long long instructionsSimulated = 0; // Instructions simulated count
 	void setMode(Mode mode) { currentMode = mode; }
 	bool nextInstruction();

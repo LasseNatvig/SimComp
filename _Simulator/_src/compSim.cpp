@@ -37,7 +37,7 @@ ComputerSimulation::~ComputerSimulation() {
 void ComputerSimulation::load(string name) {
     reset();
     sasmLoader->load(name, sasmProg, *cpu, DM, IM);
-    breakPoints.resize(IM.words.size(),0);
+    breakpoints.resize(IM.words.size(),0);
 }
 
 void ComputerSimulation::reset() {
@@ -48,7 +48,8 @@ void ComputerSimulation::reset() {
     cpu->PC = 0;
     instructionsSimulated = 0;
     currentMode = NOTRUNNING;
-    breakPoints.clear();
+    sasmProg.valid = false;
+    breakpoints.clear();
     IM.reset();
     DM.reset();
     resetStatistics();
@@ -82,16 +83,16 @@ bool ComputerSimulation::next() {
   setMode(RUNNING);
    do {
     ret = nextInstruction();
-  } while (isRunning() && !(breakPoints[cpu->PC]));
+  } while (isRunning() && !(breakpoints[cpu->PC]));
   return ret;
 }
 
-void ComputerSimulation::setBreakPoints(const vector<int> &lineBreakPoints) {
-    breakPoints.clear();
-    breakPoints.resize(IM.words.size(),0);
-    for (auto& lineBreakPoint : lineBreakPoints) {
-        if (sasmLoader->pcValue[lineBreakPoint-1] > -1)
-            breakPoints[sasmLoader->pcValue[lineBreakPoint-1]] = 1;
+void ComputerSimulation::setBreakpoints(const vector<int> &lineBreakpoints) {
+    breakpoints.clear();
+    breakpoints.resize(IM.words.size(),0);
+    for (auto& lineBreakpoint : lineBreakpoints) {
+        if (sasmLoader->pcValue[lineBreakpoint-1] > -1)
+            breakpoints[sasmLoader->pcValue[lineBreakpoint-1]] = 1;
     }
 }
 

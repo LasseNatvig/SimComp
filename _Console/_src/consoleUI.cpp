@@ -31,6 +31,11 @@ void ConsoleUi::start() {
         break;
     }
     t = readTime() - start;
+    if (!sim->singleStep())
+      reportMIPS(t, sim->getInstructionsSimulated());
+    if (simMode == 'd')
+      dumpStats();
+
     sim->load(directory+filename);
     simMode = selectSimulationMode(*sim);
   }

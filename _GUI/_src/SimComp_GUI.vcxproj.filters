@@ -43,6 +43,12 @@
     <ClCompile Include="..\..\_Simulator\_src\compSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dropdownwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fileviewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="idewidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -64,7 +70,10 @@
     <ClCompile Include="..\..\_Simulator\_src\memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="memorywindowwidget.cpp">
+    <ClCompile Include="memorymap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="memorywindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="performancechart.cpp">
@@ -81,6 +90,12 @@
     <ClInclude Include="..\..\_Simulator\_src\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <QtMoc Include="dropdownwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="fileviewer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <ClInclude Include="globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,7 +117,10 @@
     <ClInclude Include="..\..\_Simulator\_src\memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <QtMoc Include="memorywindowwidget.h">
+    <QtMoc Include="memorymap.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="memorywindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <ClInclude Include="performancechart.h">
@@ -122,6 +140,12 @@
     
     
     
+    
+    
+    
+    
+    
+    
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
@@ -132,13 +156,36 @@
     
     
     
+    
+    
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\_styles\QTDark.qss">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="..\_img\SimComp_icon.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\_styles\blank.qss">
       <Filter>Resource Files</Filter>
     </None>
     <QtRcc Include="images.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+    <None Include="..\_img\next.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\_img\run.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\_img\step.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="styles.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="..\_styles\vs_dark.qss">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

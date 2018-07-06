@@ -2,5 +2,8 @@
 <RCC version="1.0">
 <qresource>
   <file>../_img/SimComp_icon.png</file>
+  <file>../_img/run.png</file>
+  <file>../_img/step.png</file>
+  <file>../_img/next.png</file>
 </qresource>
 </RCC>

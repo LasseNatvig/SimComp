@@ -9,7 +9,7 @@ QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = SimComp_GUI
+TARGET = SimComp
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -28,19 +28,29 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         runwidget.cpp \
-    memorywindowwidget.cpp \
     idewidget.cpp \
-    performancechart.cpp
+    performancechart.cpp \
+    memorymap.cpp \
+    dropdownwidget.cpp \
+    fileviewer.cpp \
+    memorywindow.cpp
 
 HEADERS += \
         mainwindow.h \
         globals.h \
         runwidget.h \
-    memorywindowwidget.h \
     idewidget.h \
-    performancechart.h
+    performancechart.h \
+    memorymap.h \
+    dropdownwidget.h \
+    fileviewer.h \
+    memorywindow.h
 
 RESOURCES += \
-    images.qrc
+    images.qrc \
+    styles.qrc
+
+win32:RC_ICONS = SimComp_icon.ico
+macx:ICON = SimComp_icon.icns
 
 include(../../_Simulator/_src/Simulator_core.pri)
