@@ -1,8 +1,18 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Wed Jun 27 17:40:40 2018
+ComputerSimulation AdHoc16_V03 started at time Mon Aug 13 16:40:36 2018
 Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
+../../_Simulator/_sasm/../../_Simulator/_sasm/test1.sasm
 ...successfully opened
+Constant named size given as 20
+Label _start was placed in Instruction Memory at address: 0
+Label _next was placed in Instruction Memory at address: 5
+Label _next2 was placed in Instruction Memory at address: 16
+Label _next3 was placed in Instruction Memory at address: 25
 Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test0.sasm
+../../_Simulator/_sasm/../../_Simulator/_sasm/test1.sasm
 ...successfully opened
+Constant named size given as 20
+Label _start was placed in Instruction Memory at address: 0
+Label _next was placed in Instruction Memory at address: 5
+Label _next2 was placed in Instruction Memory at address: 16
+Label _next3 was placed in Instruction Memory at address: 25
