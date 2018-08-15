@@ -8,7 +8,6 @@ int main(int argc, char *argv[]) {
 	if (argc >= 2) // argv[0] is program name
 		sasmPath = argv[1];
 	else {
-		// sasmPath = "./"; // Read from current directory
 		sasmPath = "../../_Simulator/_sasm/"; // TODO-LN Is where I found sasmfiles
 	}
 	ConsoleUi ui(sasmPath);

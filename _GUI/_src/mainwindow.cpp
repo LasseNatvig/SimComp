@@ -30,8 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     createPerformanceDock();
     createOutputDock();
     createStatusBar();
-    createMenuBar();
     createFileViewer();
+    createMenuBar();
 
     // Cosmetic operations
     this->setWindowTitle("Simulating Computers");
@@ -56,7 +56,7 @@ void MainWindow::createTabs() {
                                        QString::number(instructionCount));
     });
     connect(ideW, &IdeWidget::fileChanged, runW, &RunWidget::load);
-    connect(ideW, &IdeWidget::breakpointsChanged, runW, [this] {
+    connect(ideW, &IdeWidget::breakpointsChanged, [this] {
         this->runW->setBreakpoints(this->ideW->getBreakpoints());
     });
 
@@ -174,6 +174,7 @@ void MainWindow::createMenuBar() {
     viewMenu = menuBar->addMenu(tr("&View"));
     performanceAction->setShortcut(QKeySequence(tr("Ctrl+p")));
     outputAction->setShortcut(QKeySequence(tr("Ctrl+a")));
+    fileViewerAction->setShortcut(QKeySequence(tr("Ctrl+f")));
     memoryMenu = viewMenu->addMenu(tr("&Memory Window"));
     memoryAction = memoryMenu->addAction(tr("&New Memory Window"));
     memoryAction->setShortcut(QKeySequence(tr("Ctrl+m")));
@@ -182,6 +183,7 @@ void MainWindow::createMenuBar() {
     styles[2].first->trigger(); // Set default style
     viewMenu->addAction(performanceAction);
     viewMenu->addAction(outputAction);
+    viewMenu->addAction(fileViewerAction);
     connect(memoryAction, &QAction::triggered,
             this, &MainWindow::newMemoryWindow);
 
@@ -207,6 +209,7 @@ void MainWindow::createFileViewer() {
     // Enable opening from file viewer
     connect(fileViewer, &FileViewer::changeFile, ideW, &IdeWidget::open);
     dock->setWidget(fileViewer);
+    fileViewerAction = dock->toggleViewAction();
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 }
 

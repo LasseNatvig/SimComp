@@ -13,7 +13,7 @@ public:
     explicit FileViewer(QStringList nameFilters, QWidget *parent = nullptr);
 
 signals:
-    void changeFile(QString /* File name */);
+    void changeFile(QString /* filename */);
 
 public slots:
     void setRootPath(QString path);
