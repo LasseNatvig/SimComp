@@ -25,6 +25,8 @@ vector<string> getSASMfiles(string folder) {
 		} while (::FindNextFile(hFind, &fd));
 		::FindClose(hFind);
 	}
+	if (names.size() == 0)
+		throw std::exception("No Simcomp assembler files found in given directory");
 	return names;
 }
 
