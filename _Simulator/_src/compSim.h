@@ -26,15 +26,15 @@ public:
 	/* Core functionality */
 	void load(std::string name); // Loads(and parses) sasm-file named "name" to sasmProg
 	void reset(); // Reset varibles (sets simulator parameters to default values)
-	void run(); 	// Normal execution of program if currentMode == RUNNING or NOTRUNNING
+	void run(); 	// Normal execution of program from PC
 	bool step(); // Executes one step, returns true if instruction != HLT
 	bool next(); // Execute to next breakpoint, returns true if instruction != HLT
 	void writeToLogg(std::string message) { logg.write(message); } // Write to logg
 	void resetStatistics(); // Reset statistics
-	std::vector<std::string> memoryDump(word fromAddr, word toAddr, memType memory);
+	std::vector<std::string> memoryDump(word fromAddr, word toAddr, memType memoryType);
 
 	/* Get functions */
-	word getPC() { return cpu->PC; }
+	word getPC() const { return cpu->PC; }
 	long long getInstructionsSimulated() const { return instructionsSimulated; }
 	bool isRunning() const { return (currentMode != NOTRUNNING); }
 	bool singleStep() const { return (currentMode == SINGLESTEP); }
@@ -46,7 +46,7 @@ public:
 	/* Set functions */
 	void setBreakpoints(const std::vector<int> &lineBreakPoints); // Set breakPoints at lines given in lineBreakPoints
 	void setPC(word PC) { cpu->PC = PC; }
-
+	
 	/* Core variables */
 	long long* instStats = nullptr;  // Used to count occurences of instructions (Size given by Isa member constant)
 	std::map<word, short> instStatsTable; // Statistics table

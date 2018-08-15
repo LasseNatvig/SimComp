@@ -75,6 +75,7 @@ private:
 
     // File Viewer
     FileViewer* fileViewer;
+    QAction* fileViewerAction;
     void createFileViewer();
 
     // Memory Windows

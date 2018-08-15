@@ -22,8 +22,8 @@ RunWidget::RunWidget(QWidget *parent) : QWidget(parent) {
     progressTimer = new QTimer;
 
     // Make connections
-    connect(simThread, SIGNAL(finished()), this, SLOT(runFinished()));
-    connect(progressTimer, SIGNAL(timeout()), this, SLOT(updatePerformance()));
+    connect(simThread, &SimulatorThread::finished, this, &RunWidget::runFinished);
+    connect(progressTimer, &QTimer::timeout, this, &RunWidget::updatePerformance);
 
     // Create table
     createTable();
