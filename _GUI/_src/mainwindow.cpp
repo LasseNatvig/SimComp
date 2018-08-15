@@ -77,7 +77,7 @@ void MainWindow::createOutputDock() {
     outputBox = new QGroupBox;
     runBtn = new QPushButton(tr("&Run"));
     stepBtn = new QPushButton(tr("&Step"));
-    nextBtn = new QPushButton(tr("&Next"));
+    nextBtn = new QPushButton(tr("&Continue"));
     resetBtn = new QPushButton(tr("&Reset"));
     QVBoxLayout* buttonLayout = new QVBoxLayout;
     buttonLayout->addWidget(runBtn);
