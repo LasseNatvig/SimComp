@@ -1,0 +1,66 @@
+\section{Simulator API Documentation}
+The \texttt{ComputerSimulation} class defined in \texttt{\_Simulator/\_src/compSim.h} is the access point to the API. Therefore, all functions described below are member functions of the \texttt{ComputerSimulation} class.
+\\ \\
+\docBox {\texttt{typedef uint16\_t word}
+\\ \small{Definition of word size.}
+\\ \\
+\texttt{ComputerSimulation(std::string name, std::string loggerFilename)}\\
+\small{ Constructs an instance of the class with the given name (not important) and starts logging to the loggerFilename. \textbf{Note} that the simulator will overwrite existing files with the same filename as loggerFilename.}
+\\ \\
+\texttt{ComputerSimulation(std::string name)}
+\\ \small{Same as above but will log to the standard \texttt{logg.txt} filename. }
+\\ \\
+\texttt{void load(std::string filename)}
+\\ \small{Loads and parses sasm-file named \texttt{filename} to the simulator.}
+\\ \\
+\texttt{void reset()}
+\\ \small{Sets the program counter and instruction count to zero, clears breakpoints, wipes instruction- and data memory and resets statistics.}
+\\ \\
+\texttt{void run()} 
+\\ \small{Starts simulation from the program counter value to the last instruction (or next HLT instruction).}
+\\ \\
+\texttt{bool step()} 
+\\ \small{Executes one step (instruction). Returns \texttt{true} if instruction is not HLT.}
+\\ \\
+\texttt{bool next()} 
+\\ \small{Starts simulation. Stops at next breakpoint or HLT instruction. Returns \texttt{true} if last instruction is not HLT.} 
+\\ \\
+\texttt{void writeToLog(std::string message)}
+\\ \small{Write \texttt{message} to log.}
+\\ \\
+\texttt{void resetStatistics()}
+\\ \small{Reset simulator statistics.}
+\\ \\
+\texttt{std::vector<std::string> memoryDump(word fromAddr, word toAddr, memType memoryType)} 
+\\ \small{If \texttt{memoryType == DATA} the returned vector is populated with hexadecimal values from data memory (one word per vector item). If \texttt{memoryType == INSTR} the returned vector is populated with disassembled instructions. The fromAddr and toAddr variables denotes the start and end address of the memory area that is dumped.}  
+\\ \\
+\texttt{word getPC() const}
+\\ \small{Returns the program counter value.}
+\\ \\
+\texttt{long long getInstructionsSimulated() const}
+\\ \small{Returns the number of instructions that has been simulated.}
+\\ \\
+\texttt{bool isRunning() const}
+\\ \small{Returns \texttt{true} if the simulator is in RUN-mode.}
+\\ \\
+\texttt{bool singleStep() const}
+\\ \small{Returns \texttt{true} if the simulator is in SINGLESTEP-mode.}
+\\ \\
+\texttt{bool validProgram() const}
+\\ \small{Returns \texttt{true} if a valid program is loaded to the simulator.}
+\\ \\
+\texttt{word getInstr(word PC)}
+\\ \small{Returns the instruction at the address pointed at by PC (program counter).}
+\\ \\
+\texttt{Mode getMode() const}
+\\ \small{Returns the mode that the simulator is currently in.}
+\\ \\
+\texttt{std::string getName() const}
+\\ \small{Returns simulator name as \texttt{std::string}.}
+\\ \\
+\texttt{void setBreakpoints(const std::vector<int> &breakpoints)}
+\\ \small{Sets breakpoints at the line numbers(in the program file) given by the \texttt{breakpoints} vector.}
+\\ \\
+\texttt{void setPC(word PC)}
+\\ \small{Sets program counter to \texttt{PC}.}
+}

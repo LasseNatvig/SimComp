@@ -1,0 +1,36 @@
+\section{Download (Cloning)}
+\label{nedlasting}
+If you already have the project stored locally on you're machine, you can safely skip to (\ref{oppdatere}).
+\subsection{Mac OS or Linux}
+\begin{enumerate}
+    \item Open a \textit{Terminal} window.
+    \item Configuration of \textit{Git} (Skip if already configured):
+        \begin{enumerate}
+            \item Setting your username in \textit{Git} [\ref{username}]:
+            \shellcmd{git config --global user.name "Mona Lisa"}
+            \\The username is used by \textit{Git} to identify your commits. It doesn't have to be the same as on your \textit{Github}-account.
+            \item Setting your commit email address in \textit{Git} [\ref{email}]:
+            \shellcmd{git config --global user.email "email@example.com"}
+            \\The email address should be the same as the one associated with your \textit{Github}-account.
+        \end{enumerate}
+    \item Enter the command:
+    \\
+    $$\shellcmd{git clone https://github.com/LasseNatvig/SimComp.git <PATH/NEWFOLDER>}$$
+    \\
+    PATH should be replaced with the path to where you want to store the project. NEWFOLDER should be replaced by the folder name in which to store the project.
+    \item If the download was successful you should be able to change to that directory and list the content. Test by entering the following commands:\\
+    $$\shellcmd{cd <PATH/NEWFOLDER>}$$
+    $$\shellcmd{ls}$$\\
+    The content should look something like this:\\
+    $$\texttt{LICENSE  README.md   \_Console   \_GUI   \_Simulator   \_Wiki}$$\\
+    
+\end{enumerate}
+
+\subsection{Windows}
+\begin{enumerate}
+    \item Open \textit{Visual Studio 2017}.
+    \item Click on the \textit{View} button in the menu bar, then choose \textit{Team Explorer}.
+    \item In the \textit{Team Explorer} window click \textit{Clone} under  \textit{Local Git Repositories}.
+    \item In the top field, paste: \url{https://github.com/LasseNatvig/SimComp.git}. Then click on \textit{Clone}. The project will be saved in the folder given by the input field underneath.
+\end{enumerate}
+If the cloning was successful, you should have a folder named \textit{SimComp} under \textit{Local Git Repositories}.
