@@ -1,0 +1,50 @@
+\section{Update (Sync/Pull)} \label{oppdatere}
+
+The version control system \textit{Git} uses branches, each branch contains a version of the project. The branch named \textit{Master} is often suppose to be a working version without bugs, it is most likely the branch you want to update. 
+\subsection{Mac OS or Linux}
+\begin{enumerate}
+    \item Open a \textit{Terminal} window
+    \item Change to the project directory:
+    \shellcmd{cd <PROJECTPATH>}
+    \item Update branches:
+    \shellcmd{git fetch}
+    \item  Make sure that you're on the right branch (Skip if you already know):
+    \begin{enumerate}
+        \item List branches:
+        \shellcmd{git branch} \\
+        The * symbol indicates the branch that you're on.  
+        \item Change branch if necessary:
+        \shellcmd{git checkout <BRANCH>}
+    \end{enumerate}
+    \item Update branch from remote (\textit{Github}):
+    \shellcmd{git pull}
+    \item Make sure that everything is up-to-date:
+    \shellcmd{git status}\\
+    This should display the message: \\
+    "\texttt{On branch <BRANCH>\\
+    Your branch is up-to-date with 'origin/<BRANCH>'.\\
+    nothing to commit, working tree clean}"
+    
+\end{enumerate}
+
+\subsection{Windows}
+\begin{enumerate}
+    \item Open \textit{Visual Sudio 2017}.
+    \item Navigate to \textit{File} \(\rightarrow\) \textit{Folder} \(\rightarrow\) \textit{Open} in the menu bar.
+    \item Choose the \textit{SimComp} folder.
+    \item Navigate to \textit{View} \(\rightarrow\) \textit{Team Explorer} in the menu bar.
+    \item In the \textit{Team Explorer}-window, click on \textit{SimComp} under \textit{Local Git Repositories}.
+    \item Make sure that you're on the right branch (Skip if you already know):
+        \begin{enumerate}
+            \item Click on \textit{Branches} under \textit{project}.
+            \item Under \textit{Active Git Repositories}, make sure that the name of the branch you wish to update is the one enclosed in parenthesis next to "SimComp".
+            \item If you wish to change branch you'll have to double click that branch. \textbf{Note} that branches that does not exist locally is found under \textit{remotes/origin}.
+            \item Navigate one page back by clicking the back button in the top left corner. 
+        \end{enumerate}
+    \item Click on \textit{Sync} under \textit{project}.
+    \item Sync by clicking \textit{Sync}.
+    \item A successful update(sync) is indicated by the message: \textit{Successfully synchronized incoming and outgoing commits.}
+\end{enumerate}
+
+By now the project should be up to date and ready to be built.\\
+\textbf{Note} that if you're on a different branch than \textit{Master}, the code might not compile.

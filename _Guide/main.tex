@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage[obeyspaces]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\usepackage{float}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[tableposition=top]{caption}
+\usepackage[T1]{fontenc}
+\usepackage{kantlipsum}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[breakable, theorems, skins]{tcolorbox}
+\tcbset{enhanced}
+
+\newcommand{\shellcmd}[1]{\\\indent\indent\texttt{\footnotesize\$ #1}\\}
+
+\DeclareRobustCommand{\docBox}[2][gray!20]{%
+\begin{tcolorbox}[   %% Adjust the following parameters at will.
+        breakable,
+        left=0pt,
+        right=0pt,
+        top=0pt,
+        bottom=0pt,
+        colback=#1,
+        colframe=#1,
+        width=\dimexpr\textwidth\relax, 
+        enlarge left by=0mm,
+        boxsep=5pt,
+        arc=0pt,outer arc=0pt,
+        ]
+        #2
+\end{tcolorbox}
+}
+
+\title{SimComp - Guide}
+\author{Ole Bjørn Eithun Pedersen}
+\date{June 2018}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+\input{introduction.tex}
+\input{download.tex}
+\input{update.tex}
+\newpage
+\input{build.tex}
+\input{simulatorapi.tex}
+\input{sourcecode.tex}
+\input{contributing.tex}
+
+\begin{thebibliography}{9}
+\bibitem{setusername}\label{username}
+  Setting your username in Git, \url{https://help.github.com/articles/setting-your-username-in-git/}, \date{23.06.2018}
+\bibitem{setemail}\label{email}
+    Setting your commit email address in Git, \url{https://help.github.com/articles/setting-your-commit-email-address-in-git/}, \date{23.06.2018}
+\bibitem{qmainwindow}\label{qmainwindow}
+    QMainWindow Class | Qt 4.8
+    \url{http://doc.qt.io/archives/qt-4.8/qmainwindow.html}
+    \date{05.07.2018}
+\end{thebibliography}
+
+\end{document}
+%\begin{figure}[htbp]
+ %   \centering
+  %  \includegraphics[scale=0.3]{img/fig1.PNG}
+   % \label{fig:clone}
+%\end{figure}
