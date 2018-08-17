@@ -31,6 +31,7 @@ To build the GUI application you'll need to clone both the `_GUI/` and `_Simulat
   - `_GUI/` Everything related to the GUI application.
       - `_img/` Images.
       - `_src/` Source code.
+  - `_Guide/` Everything related to the "SimComp - Guide".
   - `_Wiki/` Everything related to the wiki.
       - `_img/` Images.
 
