@@ -1,9 +1,2 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Mon Aug 13 20:41:17 2018
-Assembler file:
-../../_Simulator/_sasm/../../_Simulator/_sasm/test3_correctness_asm3b.sasm
-...successfully opened
-Constant named innerL given as 1000
-Constant named outerL given as 10000
-Label _outer was placed in Instruction Memory at address: 3
-Label _inner was placed in Instruction Memory at address: 6
+ComputerSimulation AdHoc16_V03 started at time Sun Aug 19 00:21:16 2018
