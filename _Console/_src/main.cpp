@@ -10,9 +10,10 @@ int main(int argc, char *argv[])
 			sasmPath = argv[1];
 		}
 		else {
-			sasmPath = "../../../_Simulator/_sasm/";  // DEBUG add ../ in front to FIX *****************************************
+			sasmPath = "../../../../_Simulator/_sasm/"; // NOTE works when double-clicking on .exe file in x64/Release or Debug directory 
+			// sasmPath = "../../_Simulator/_sasm/"; // NOTE works when running from debugger in MS-VS or running release -mode ...
+													 // --- to avoid having two configs an absolute path as command argument in MS-V-project (Local for Lasse)
 		}
-		std::cout << "DEBUG: opens consoleUi with path: " << sasmPath << std::endl;
 		ConsoleUi ui(sasmPath);
 		ui.start();
 		return 0;

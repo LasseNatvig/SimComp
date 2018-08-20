@@ -13,8 +13,10 @@ ConsoleUi::~ConsoleUi() {
 }
 
 void ConsoleUi::start() {
+	// logFile->write("look after sasm files in directory: " + directory);  // TODO MAYBE --- cannot reach logFile since it is private in computerSimulation object
   filename = selectProgram(directory);
-  sim->load(directory+filename);
+  // sim->load(directory + filename);  // was this a bug ?
+  sim->load(filename);
   char simMode = selectSimulationMode(*sim);
   clock_t t;
   clock_t start;
@@ -31,13 +33,15 @@ void ConsoleUi::start() {
         break;
     }
     t = readTime() - start;
-    if (!sim->singleStep())
-      reportMIPS(t, sim->getInstructionsSimulated());
+	if (!sim->singleStep()) {
+		std::cout << "*** Simulation ended" << std::endl;
+		reportMIPS(t, sim->getInstructionsSimulated());
+	}
     if (simMode == 'd')
       dumpStats();
-
-    sim->load(directory+filename);
-    simMode = selectSimulationMode(*sim);
+	// sim->load(directory + filename); TODO - same bug as above?
+	sim->load(filename);
+	simMode = selectSimulationMode(*sim);
   }
 }
 

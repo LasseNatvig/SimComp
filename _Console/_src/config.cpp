@@ -1,3 +1,5 @@
+#pragma once
+#include <iostream>  // added for brute force debug
 #include "config.h"
 
 // Include the correct filesystem library
@@ -14,7 +16,7 @@ vector<string> getSASMfiles(string folder) {
 	// code found here:
 	// https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c?rq=1
 	vector<string> names;
-	string search_path = folder + "/*.sasm";
+	string search_path = folder + "*.sasm";
 	WIN32_FIND_DATA fd;
 	HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
 	if (hFind != INVALID_HANDLE_VALUE) {
