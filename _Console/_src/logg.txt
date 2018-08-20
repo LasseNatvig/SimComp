@@ -1,2 +1,2 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Sun Aug 19 00:21:16 2018
+ComputerSimulation AdHoc16_V03 started at time Mon Aug 20 11:30:07 2018

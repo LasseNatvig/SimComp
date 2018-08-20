@@ -202,10 +202,8 @@ bool Loader::isLabel(string& s) const {
 void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& IM) {
     ifstream asmFile;
     asmFile.open(fileName);
-    if (asmFile.fail()) {
-        reportError("Error opening file: " + fileName);
-        exit(-1);
-    }
+    if (asmFile.fail())
+		throw std::exception("Loader could not open file:");
     else
         logFile->write("Assembler file:\n" + fileName + "\n...successfully opened\n");
     pcValue.clear();

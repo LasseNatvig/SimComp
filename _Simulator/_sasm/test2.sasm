@@ -1,0 +1,56 @@
+; test2.sasm
+size	const int 100    ; size is defined to be an integer constant with value 10		 
+; size2	const byte 7      ; for testing error message line no ...  
+A       alloc int size    ; A is address of variable of size integers
+B       alloc int size    ; B is another array of same size
+C       alloc int size    ; C is the third
+; C2    alloc byte size   ; for testing, type not implemented
+C3      alloc int 8       ; for testing size is number
+; C4    alloc int size2   ; for testing size not known
+
+        LDI     R1 0      ; offsett
+        SET     R2 A      ; R2 is loaded with address of A
+        SET 	R7 #size  ; R7 set to number constant (#) size
+_next   ADD     R3 R2 R1  ; R3 holds next address in A to set to 0, 1,2,3 etc.
+        ST      R3 R1     ; set element in A to next index, i.e. 0, 1, 2, 3 etc., 
+                          ;     for putting values in A
+        ADI     R1 R1 1   ; increment offset in A
+        SUB     R4 R7 R1  ; R4 = R7 - R1, zero when all elements in A are set
+        BRZ     R4 4      ; 4 since SET takes 2 words
+        SET     R5 _next
+        JMP     R5
+;		--------------------
+; loader can handle blank lines
+
+        LDI 	R1 0      ; now set B array likewise
+        SET 	R2 B
+_next2	ADD 	R3 R2 R1  ; R3 holds next address in B to set to 0,1,2,3 etc.
+        ST      R3 R1     ; as above for B  
+        ADI     R1 R1 1   ; increment offset in B
+        SUB     R4 R7 R1  ; R4 = R7 - R1, zero when all elements in B are set
+        BRZ     R4 4      ; 4 since SET takes 2 words
+        SET     R5 _next2
+        JMP     R5
+;		*********************
+        LDI 	R1 0      ; now calculate C array C[i] = A[i]*8 + (B[i]+1)
+_next3	SET 	R2 A	  
+        ADD 	R3 R2 R1  ; R3 holds next address in A to read
+        LD      R6 R3     ; A element in R6
+        SHL     R6 R6     ; note op stored in B operand
+        SHL     R6 R6     ; TODO check in Mano that RD can be = RB
+        SHL     R6 R6     ; R6 now stores A[i]*8
+        SET     R2 B
+        ADD     R3 R2 R1  ; R3 holds next address in B to read
+        LD      R7 R3     ; OBS, overwrites R7
+        ADI     R7 R7 1   ; R7 stores B[i] + 1;
+        ADD     R6 R6 R7  ; R6 stores result to store
+        SET     R2 C
+        ADD     R3 R2 R1  ; R3 holds next address in C to write
+        ST      R3 R6
+        ADI     R1 R1 1	  ; increment offset in A, B and C
+        SET     R7 #size
+        SUB     R4 R7 R1  ; R4 = R7 - R1, zero when all elements in C are set
+        BRZ     R4 4      ; 4 since SET takes 2 words
+        SET     R5 _next3
+        JMP     R5
+        HLT 	 

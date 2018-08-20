@@ -10,8 +10,9 @@ int main(int argc, char *argv[])
 			sasmPath = argv[1];
 		}
 		else {
-			sasmPath = "../../_Simulator/_sasm/"; 
+			sasmPath = "../../../_Simulator/_sasm/";  // DEBUG add ../ in front to FIX *****************************************
 		}
+		std::cout << "DEBUG: opens consoleUi with path: " << sasmPath << std::endl;
 		ConsoleUi ui(sasmPath);
 		ui.start();
 		return 0;
