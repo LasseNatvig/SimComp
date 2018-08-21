@@ -132,6 +132,7 @@ bool ComputerSimulation::nextInstruction() {
   short opCode = cpu->getOpCode(instr);
   if (opCode == HLT) {
       instructionsSimulated++;
+	  instStats[instStatsTable[opCode]]++;
       setMode(NOTRUNNING);
       return false;
   }
