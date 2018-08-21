@@ -62,7 +62,7 @@ void RunWidget::runFinished() {
     else {
         simulationFinished = true;
         double mips = getMIPS(clock()-runStart);
-        emit output("Simulation finshed. MIPS: " + QString::number(mips));
+        emit output("Simulation finished. MIPS: " + QString::number(mips));
         emit memoryChanged();
         emit updatePerformance();
     }

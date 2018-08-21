@@ -214,15 +214,15 @@ void MainWindow::createFileViewer() {
 }
 
 void MainWindow::createStyles() {
-    styleMenu = viewMenu->addMenu(tr("&Change style"));
+    styleMenu = viewMenu->addMenu(tr("&Change style")); 
     styles = {
-        QPair<QAction*, QString> (styleMenu->addAction(tr("&Blank")),
-                                   ":/images/../_styles/blank.qss"),
         QPair<QAction*, QString> (styleMenu->addAction(tr("&QTDark")),
                                    ":/images/../_styles/QTDark.qss"),
         QPair<QAction*, QString> (styleMenu->addAction(tr("&MSVS Dark")),
-                                    ":/images/../_styles/vs_dark.qss")
-    };
+                                    ":/images/../_styles/vs_dark.qss"),
+		QPair<QAction*, QString>(styleMenu->addAction(tr("&Blank")),
+									":/images/../_styles/blank.qss")
+	};
     for (auto& pair : styles) {
         pair.first->setCheckable(true);
         connect(pair.first, &QAction::triggered, [pair, this] {
