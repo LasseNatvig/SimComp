@@ -85,8 +85,8 @@ word Memory::getNextFreeLocation() {
 
 void Memory::write(word addr, word w) {
     if (addr > words.size()) {
-        reportError("write error: illegal address " + to_string(addr)); // HANLE ERROR TODO print in hex
-        exit(-1);
+        reportError("write error: illegal address " + to_string(addr)); // HANDLE ERROR TODO print in hex
+        exit(-1); // TODO change to exception
     }
     else {
         words[addr] = w;

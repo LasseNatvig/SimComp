@@ -1,14 +1,2 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time Mon Aug 20 22:57:39 2018
-tries to open file at filename: C:\code\simcomp\_Simulator\_sasm\test2.sasm
-Assembler file: C:\code\simcomp\_Simulator\_sasm\test2.sasm...successfully opened
-Constant named size given as 100
-Label _next was placed in Instruction Memory at address: 5
-Label _next2 was placed in Instruction Memory at address: 16
-Label _next3 was placed in Instruction Memory at address: 25
-tries to open file at filename: C:\code\simcomp\_Simulator\_sasm\test2.sasm
-Assembler file: C:\code\simcomp\_Simulator\_sasm\test2.sasm...successfully opened
-Constant named size given as 100
-Label _next was placed in Instruction Memory at address: 5
-Label _next2 was placed in Instruction Memory at address: 16
-Label _next3 was placed in Instruction Memory at address: 25
+ComputerSimulation AdHoc16_V03 started at time 
