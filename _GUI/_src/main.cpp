@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include <QApplication>
-
-
+// testing edit
 int main(int argc, char *argv[])
 {
     // Start application
