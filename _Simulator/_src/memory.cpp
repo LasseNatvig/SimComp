@@ -60,8 +60,9 @@ vector<string> Memory::getStats(Isa& cpu) const {
     } else if (type == INSTR) {
         for (unsigned int i = 0; i < words.size(); i++) {
             ss << dec << i << " | " << hex << i << ": ";
+
             if (cpu.disAssembly(words[i]).substr(0,2) == "SET") { // it is a SET instruction
-                ss << " " << setw(5) << hex << words[i];
+                ss << " " << setw(5) << hex << words[i] << "\t" << cpu.disAssembly(words[i]);
                 vec.push_back(ss.str());
                 ss.str(string());
                 i++;
@@ -69,7 +70,7 @@ vector<string> Memory::getStats(Isa& cpu) const {
                 vec.push_back(ss.str());
                 ss.str(string());
             } else {
-                ss << " " << setw(5) << hex << words[i];
+                ss << " " << setw(5) << hex << words[i]  << "\t" << cpu.disAssembly(words[i]);
                 vec.push_back(ss.str());
                 ss.str(string());
             }

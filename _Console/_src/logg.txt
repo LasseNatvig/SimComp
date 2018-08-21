@@ -1,2 +1,8 @@
 Logfile logg.txt opened.
-ComputerSimulation AdHoc16_V03 started at time 
+ComputerSimulation AdHoc16_V03 started at time Tue Aug 21 22:51:30 2018
+tries to open file at filename: C:\code\simcomp\_Simulator\_sasm\test0.sasm
+Assembler file: C:\code\simcomp\_Simulator\_sasm\test0.sasm...successfully opened
+tries to open file at filename: C:\code\simcomp\_Simulator\_sasm\test0.sasm
+Assembler file: C:\code\simcomp\_Simulator\_sasm\test0.sasm...successfully opened
+tries to open file at filename: C:\code\simcomp\_Simulator\_sasm\test0.sasm
+Assembler file: C:\code\simcomp\_Simulator\_sasm\test0.sasm...successfully opened
