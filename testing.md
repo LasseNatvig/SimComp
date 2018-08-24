@@ -12,3 +12,13 @@ all found [here](https://github.com/LasseNatvig/SimComp/tree/master/\_Simulator/
 For each of these, there is an .inp file that should be sent (piped in UNIX-terminology) to the simulator executable (.exe file under windows). There are also three corresponding .out files describing precisely the output that should be produced by running the simulator on the corresponding .inp file. Note that the very simple mechanism used to select the .sasm-file for loading and simulation is dependent on the number of .sasm files in the sasm-directory! 
 
 Our own simplistic test setup is run from a jupyter notebook that calls two python-files `correctness_test.py` and `performance_test.py`. The notebook is the file `SimCompTesting.ipynb` and runs with python 2.
+
+DESCRIBE also myDiff.exe why and what  
+
+#### This is my way of using it (windows):
+- navigate to local file folder code -> simcomp -> \_Simulator -> \_tests
+- right-click and open a cmd-window there (open enhanced console), type jupyter notebook in that console
+- click on the `SimCompTesting.ipynb` file
+- execute the tests as normal use of a jupyter notebook ... 
+- 
+
