@@ -1,8 +1,13 @@
 
 # Simulating Computers
 
-Simulating Computers (SimComp) is a project created as an introduction to the fundamental concepts in the areas of computer architecture and organization, instruction sets, assembler programming,
-run time systems and simulation. This repository is intended to accommodate the learning material found [here](#). Most of the documentation is found in the learning material. Currently there exists two user interfaces for the simulator, guidelines for building these is found underneath. Release versions is found under [releases](https://github.com/LasseNatvig/SimComp/releases). For guidance on how to use these, see the [wiki](https://github.com/LasseNatvig/SimComp/wiki).
+This is currently *work in progress*. 
+
+Simulating Computers (SimComp) is an educational project aiming at teaching computer fundamentals through a series of simple computer simulators. The idea is to introduce concepts within computer architecture, assembler programming, and system software in an easy way building on simulators that demonstrate the concepts. It is a long-term project that eventually may end up as a text book. Each chapter builds on the previous ones, and is followed by a simulator written in C++. The first chapter describes a very simple 16 bit processor with 11 instructions, and its accompanying simulator executes at approximately 50 MIPS (Million Instructions Per Second) simulated performance on a standard laptop PC. A PDF of the chapter will be made available here during September 2018.  
+
+This repository is intended to accommodate the project and the learning material that will follow. We plan to introduce parts of it as extra optional curriculum for the students in course TDT4102 at NTNU in Spring 2019. 
+
+Currently there exists two user interfaces for the simulator, guidelines for building these is found underneath. Release versions is found under [releases](https://github.com/LasseNatvig/SimComp/releases). For guidance on how to use these, see the [wiki](https://github.com/LasseNatvig/SimComp/wiki).
 
 ## Build
 ### Console
@@ -101,7 +106,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 See also the list of [contributors](https://github.com/LasseNatvig/SimComp/contributors) who participated in this project.
 
+<!--
+## Acknowledgements
 
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
+* Hat tip to anyone whose code was used  // OleB: What is Hat tip ?
+-->
