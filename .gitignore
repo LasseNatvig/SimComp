@@ -430,3 +430,10 @@ ASALocalRun/
 
 /_Console/_src/*/Release/logg.txt
 
+/_Simulator/_tests/ep1/results_3.txt
+/_Simulator/_tests/ep1/results_1.txt
+/_Simulator/_tests/ep1/results_0.txt
+/_Simulator/_tests/ep1/results.txt
+/_Simulator/_tests/ep1/diff.txt
+/_Simulator/_tests/.ipynb_checkpoints/SimCompTesting-checkpoint.ipynb
+/_Simulator/_tests/ep1/results_measured.txt
