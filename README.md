@@ -106,7 +106,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 See also the list of [contributors](https://github.com/LasseNatvig/SimComp/contributors) who participated in this project.
 
+<!--
+## Acknowledgements
 
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
+* Hat tip to anyone whose code was used  // OleB: What is Hat tip ?
+-->
