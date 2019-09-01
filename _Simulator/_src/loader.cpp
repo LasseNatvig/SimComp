@@ -202,7 +202,9 @@ bool Loader::isLabel(string& s) const {
 void Loader::load(string fileName, Program& prog, Isa& cpu, Memory& DM, Memory& IM) {
     ifstream asmFile;
 	logFile->write("tries to open file at filename: " + fileName + "\n"); 
-    asmFile.open(fileName);
+	//throw std::runtime_error("tries to open file at filename: " + fileName + "\n");
+
+    asmFile.open(fileName); // TODO change to new programming style per spring 2019
     if (asmFile.fail())
 		throw std::exception("Loader could not open file:");
     else
