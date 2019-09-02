@@ -1,16 +1,10 @@
 #include "mainwindow.h"
 #include <QApplication>
-// testing edit
-int main(int argc, char *argv[])
-{
-    // Start application
-    QApplication a(argc, argv);
+int main(int argc, char *argv[]) {
+	QApplication a{ argc, argv }; // Start application
     a.setApplicationName("SimComp");
     a.setOrganizationName("NTNU - IDI");
-
-    // Create MainWindow and display it
-    MainWindow w;
-    w.show();
-
+    MainWindow w; // Create MainWindow w
+    w.show(); // display w
     return a.exec();
 }

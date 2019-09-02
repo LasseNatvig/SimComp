@@ -437,3 +437,4 @@ ASALocalRun/
 /_Simulator/_tests/ep1/diff.txt
 /_Simulator/_tests/.ipynb_checkpoints/SimCompTesting-checkpoint.ipynb
 /_Simulator/_tests/ep1/results_measured.txt
+/_GUI/_src/Output-Build.txt

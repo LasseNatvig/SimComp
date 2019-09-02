@@ -41,10 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setDocumentMode(true);
 }
 
-MainWindow::~MainWindow()
-{
-}
-
+MainWindow::~MainWindow() { }
 
 void MainWindow::createTabs() {
     tabs = new QTabWidget(this);
@@ -240,8 +237,6 @@ void MainWindow::createStyles() {
     }
 }
 
-
-
 /* Slots */
 void MainWindow::newMemoryWindow() {
     QDockWidget* memoryDock = new QDockWidget("Memory Window #" +
@@ -297,8 +292,6 @@ void MainWindow::reset() {
     runW->load(ideW->getFilename());
     statusBar()->showMessage("Not running.");
 }
-
-
 
 /* Utils */
 void MainWindow::uncheckStyles(QAction* checkedStyle) {
