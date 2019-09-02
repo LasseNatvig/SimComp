@@ -19,15 +19,13 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 catch (std::exception& e) {
-	std::cerr << "Simcomp exception: " << e.what() << std::endl;
-	std::cerr << ".... type any character and return to quit SimComp\n";
+	std::cerr << "Simcomp exception: " << e.what() << std::endl << continueMsg;
 	char c;
 	std::cin >> c;
 	return 1;
 }
 catch (...) {
-	std::cerr << "Simcomp exception ";
-	std::cerr << ".... type any character and return to quit SimComp\n";
+	std::cerr << "Simcomp exception " << continueMsg;
 	char c;
 	std::cin >> c;
 	return 2;

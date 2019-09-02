@@ -2,6 +2,8 @@
 #include "../../_Simulator/_src/compSim.h"
 #include "../../_Simulator/_src/logger.h"
 
+const std::string continueMsg{ "....type any character and return to quit SimComp\n" };
+
 class ConsoleUi {
 public:
   ConsoleUi(std::string directory);
