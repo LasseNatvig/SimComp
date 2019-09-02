@@ -24,7 +24,7 @@ class Isa {
 private:
 	const int maxNoInstructions = 20;
 	const short noOfRegisters = 8;
-	word R[8]; // Value of registers is unknown when computer boots, use LDI 0 to set a register to zero
+	word R[8]; //  Value of registers is set to zero in the constructor (Changed 1 sept 2019 by LN)
 	LogFile* logFile;
 
 public:

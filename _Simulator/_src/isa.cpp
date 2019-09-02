@@ -22,6 +22,7 @@ Isa::Isa(LogFile* logFile) : logFile(logFile) {
                 { "ST",  ST },
                 { "SUB", SUB }
              };
+	for (unsigned int i = 0; i < noOfRegisters; i++) R[i] = 0;
 }
 
 string Isa::getRegisterFile() const {

@@ -13,6 +13,7 @@ ConsoleUi::~ConsoleUi() {
 }
 
 void ConsoleUi::start() {
+	std::cout << "Welcome to SimComp 1.0 console version\n";
 	// logFile->write("look after sasm files in directory: " + directory);  // TODO MAYBE --- cannot reach logFile since it is private in computerSimulation object
   filename = selectProgram(directory);
   // sim->load(directory + filename);  // was this a bug ?
