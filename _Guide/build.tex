@@ -1,11 +1,13 @@
 \section{Build} \label{bygge}
-The project has two user interfaces, one by console and one by graphics. Each of the two has its own directory with its own build configuration. Even though the code for the simulator is in a different directory, both user interfaces depend on it. The two user interfaces, on the other hand, is independent of each other. Therefore, the two UIs should also be built independent of each other. More information on the project structure is available on \href{https://github.com/LasseNatvig/SimComp}{Github}.
+The project has two user interfaces, one by console and one by graphics. Each of the two has its own directory with its own build configuration. Even though the code for the simulator is in a different directory, both user interfaces depend on it. The two user interfaces, on the other hand, is independent of each other. Therefore, the two UIs should also be built independently of each other. More information on the project structure is available on \href{https://github.com/LasseNatvig/SimComp}{Github}.
 \\
 \\
 Follow the instructions in section (\ref{konsoll}) and (\ref{GUI}) to build the console- and GUI application respectively.
 
 \subsection{Console} \label{konsoll}
 The console application only depends on the C++11 standard library. Therefore it can be built as any other C++ project. However, the project provides some convenient files for doing so. If you're using Mac OS or Linux, we will show you how to build the project using \href{https://cmake.org}{\textit{CMake}} and \textit{Make}. On Windows, you can build the project using the provided \texttt{\textunderscore Console/\textunderscore src/SimComp\textunderscore Console.vcxproj} \textit{MSVS} project file.
+% NOTE: Lasse: ... fant ingen filer i første omgang, men etterhvert, hvordan? ---- prøvde build på main.cpp, fungerte ikke ... sasm-filer må kopieres inn der exe filen ligger
+%
 \subsubsection{Mac OS or Linux}
 \begin{enumerate}
     \item Open a \textit{Terminal} window
@@ -34,9 +36,12 @@ There are several ways to build this project. If you're using Windows, we will s
 \begin{enumerate}
     \item Open \textit{Visual Studio 2017}.
     \item Navigate to \textit{File} \(\rightarrow\) \textit{Open} \(\rightarrow\) \textit{Project/Solution}
-    \item Choose \path{SimComp/_GUI/_src/SimComp_GUI.vcxproj}. \textbf{Note} that there may appear a dialog window with information about \textit{Git}. It says that the changes in the console-project not will be tracked by \textit{Git}. Just press ok.
+    \item Choose \path{SimComp/_GUI/_src/SimComp_GUI.vcxproj}.
+    % NOTE: ... add or close solution ? --- Lasse did close ?
+    \textbf{Note} that there may appear a dialog window with information about \textit{Git}. It says that the changes in the console-project not will be tracked by \textit{Git}. Just press ok.
     \item Configuration of \textit{Qt Visual Studio Tools} (Skip if it is already configured):
         \begin{enumerate}
+        % NOTE: Lasse did not need to do this, had Qt already installed? Try again on a new "empty" computer
             \item Navigate to \textit{Qt VS Tools} \(\rightarrow\) \textit{Qt Options} in the menu bar. 
             \item Click \textit{Add} in the popup window. 
             \item In the window \textit{Add new Qt version} you'll have to choose the \textit{Qt}-version that you'd like to use. Paste the path or click [...] to choose the folder \path{msvc2017_64} under \path{Qt/<VERSION>/}.

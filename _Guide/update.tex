@@ -1,6 +1,7 @@
 \section{Update (Sync/Pull)} \label{oppdatere}
 
-The version control system \textit{Git} uses branches, each branch contains a version of the project. The branch named \textit{Master} is often suppose to be a working version without bugs, it is most likely the branch you want to update. 
+The version control system \textit{Git} uses branches, each branch contains a version of the project. The branch named \textit{Master} is often supposed to be a working version without bugs, it is most likely the branch you want to update. 
+% TODO Lasse mulig noe manglet her pga. cmake, fikk ikke frem filene i solution explorer?
 \subsection{Mac OS or Linux}
 \begin{enumerate}
     \item Open a \textit{Terminal} window
@@ -29,7 +30,8 @@ The version control system \textit{Git} uses branches, each branch contains a ve
 
 \subsection{Windows}
 \begin{enumerate}
-    \item Open \textit{Visual Sudio 2017}.
+    \item Open \textit{Visual Studio 2017}.
+    % TODO change to (1) MS VS community 2019 (2) later try also VS code
     \item Navigate to \textit{File} \(\rightarrow\) \textit{Folder} \(\rightarrow\) \textit{Open} in the menu bar.
     \item Choose the \textit{SimComp} folder.
     \item Navigate to \textit{View} \(\rightarrow\) \textit{Team Explorer} in the menu bar.
@@ -43,7 +45,9 @@ The version control system \textit{Git} uses branches, each branch contains a ve
         \end{enumerate}
     \item Click on \textit{Sync} under \textit{project}.
     \item Sync by clicking \textit{Sync}.
+    % Note: Lasse needed github extensions to do this
     \item A successful update(sync) is indicated by the message: \textit{Successfully synchronized incoming and outgoing commits.}
+    % TODO check ... my version ssays: there are no incoming ... no outgoing ... , wait till we are using MSVS community 2019
 \end{enumerate}
 
 By now the project should be up to date and ready to be built.\\

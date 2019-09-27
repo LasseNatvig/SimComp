@@ -3,23 +3,26 @@ This section is intended to help you familiarize with the SimComp codebase. Sinc
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{img/SimComp-relation.pdf}
+\includegraphics[scale=0.5]{img/SimComp-relation.pdf}
 \caption{SimComp project relation}
 \label{fig:relation}
 \end{figure}
+% TODO: mer detaljert figur senere?
 
 \subsection{Simulator}
 \subsubsection{File Description}
 \begin{description}
 \item[isa.h/.cpp] - Contains the \texttt{Isa} class that defines the instruction set and functions that help interpreting and printing instructions.
 
-\item[loader.h/.cpp] - Contains the \texttt{Loader} class that reads the sasm-format and generates instructions that are written to the instructions memory.
+\item[loader.h/.cpp] - Contains the \texttt{Loader} class that reads the sasm-format and generates instructions that are written to the instruction memory.
+% instruction memory, not instructions memory, see eg. figure in https://en.wikipedia.org/wiki/Harvard_architecture
+
 
 \item[logger.h/.cpp] - Contains the \texttt{Logger} class used to log simulator execution. 
 
 \item[memory.h/.cpp] - Contains the \texttt{Memory} class used by the \texttt{ComputerSimulation} class to store data- and instruction memory. 
 
-\item[program.h/.cpp] - Contains the \texttt{Program} struct that stores information about a assembler program, the struct is needed by \texttt{ComuputerSimulation} to generate instructions.
+\item[program.h/.cpp] - Contains the \texttt{Program} struct that stores information about an assembler program, the struct is needed by \texttt{ComputerSimulation} to generate instructions.
 
 \item[compSim.h/.cpp] - Contains the \texttt{ComputerSimulation} class that is responsible for control and execution of simulation. The class is designed to be the access point for the API. 
 \end{description}
@@ -31,7 +34,7 @@ This section is intended to help you familiarize with the SimComp codebase. Sinc
 
 \item[consoleUI.h/.cpp] - Contains the class \texttt{ConsoleUi} which creates and controls a console user interface. \texttt{ConsoleUi} is also responsible for creating an instance of \texttt{ComputerSimulation}.
 \item[config.h/.cpp] - Contains functions for finding assembler programs in a folder.
-\item[utils.h/.cpp] - Contains utility functions for creating a console ui.
+\item[utils.h/.cpp] - Contains utility functions for creating a console user interface ({UI}).
 \end{description}
 
 \subsection{GUI}
@@ -44,32 +47,36 @@ This section is intended to help you familiarize with the SimComp codebase. Sinc
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{img/mainwindowlayout.png}
-\caption{QMainWindow layout \cite{qt}}
+\caption{QMainWindow layout \cite{qmainwindow}}
 \label{fig:qmainwindowlayout}
 \end{figure}
 
 
-\item [runwidget.h/.cpp] - Contains the \texttt{RunWidget} and the \texttt{SimulatorThread} classes. \\ \\ \texttt{RunWidget} inherits \texttt{QWidget} and is responsible for simulator execution. Graphically, the widget consists of the execution table which show information relevant to execution, see figure \ref{fig:runwidget}. \texttt{RunWidget} is one of the two tabs in the \texttt{QTabWidget} set as central widget by \texttt{MainWindow}. \\ \\
+\item [runwidget.h/.cpp] - Contains the \texttt{RunWidget} and the \texttt{SimulatorThread} classes. \\ \\ \texttt{RunWidget} inherits \texttt{QWidget} and is responsible for simulator execution. Graphically, the widget consists of the execution table
+% TODO: execution table not good terminology, ... maybe execution history (view) ... ?
+which show information relevant to execution, see figure \ref{fig:runwidget}. \texttt{RunWidget} is one of the two tabs in the \texttt{QTabWidget} set as central widget by \texttt{MainWindow}. \\ \\
 \texttt{SimulatorThread} inherits \texttt{QThread}. The class overrides the \texttt{virtual void QThread::run()} function to start the simulator by invoking \texttt{void ComputerSimulation::run()}. Calling \texttt{SimulatorThread::run()} will therefore start the simulator in RUN-mode in a thread. The class is constructed with a pointer to a \texttt{ComputerSimulation} instance.
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.3]{img/RunWidget.png}
+\includegraphics[scale=0.35]{img/RunWidget.png}
 \caption{Screenshot of a RunWidget used in the SimComp GUI.}
 \label{fig:runwidget}
 \end{figure}
 
 
-\item [idewidget.h/.cpp] - The \texttt{IdeWidget} class inherits \texttt{QPlainTextEdit} and acts as a standalone ide widget. Graphically, the widgets consists of the editing area and a left sidebar with line numbers and breakpoints, see figure \ref{fig:idewidget}. The class is responsible for creating, editing, opening and saving assembler programs. \texttt{IdeWidget} is the second of the two tabs in the \texttt{QTabWidget} set as central widget by \texttt{MainWindow}.
+\item [idewidget.h/.cpp] - The \texttt{IdeWidget} class inherits \texttt{QPlainTextEdit} and acts as a standalone {IDE} widget. Graphically, the widget consists of the editing area and a left sidebar with line numbers and breakpoints, see figure \ref{fig:idewidget}. The class is responsible for creating, editing, opening and saving assembler programs. \texttt{IdeWidget} is the second of the two tabs in the \texttt{QTabWidget} set as central widget by \texttt{MainWindow}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.3]{img/IdeWidget.png}
-\caption{Screenshot a IdeWidget used in the SimComp GUI.}
+\includegraphics[scale=0.43]{img/IdeWidget.png}
+\caption{Screenshot of an IdeWidget used in the SimComp GUI.}
 \label{fig:idewidget}
 \end{figure}
 
-\item [memorywindow.h/.cpp] - The \texttt{MemoryWindow} class inherits \texttt{QWidget} and is should be used as a top-level window. The window is used to display memory areas, see fig \ref{fig:memorywindow}. A \texttt{QSplitter} is used to fill the top layout of the window. The splitter is populated by two widgets: 
+\item [memorywindow.h/.cpp] - The \texttt{MemoryWindow} class inherits \texttt{QWidget} and should be used as a top-level window.
+% TODO; explain what a top level window is?. see figure? 
+The window is used to display memory areas, see fig \ref{fig:memorywindow}. A \texttt{QSplitter} is used to fill the top layout of the window. The splitter is populated by two widgets: 
 
 \begin{itemize}
     \item The left side is a \texttt{QTabWidget} that contains two tabs, one with a table- (\texttt{QTableWidget}) and one with an graphical (\texttt{MemoryMap}) representation of the memory area.
@@ -91,8 +98,9 @@ This section is intended to help you familiarize with the SimComp codebase. Sinc
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.3]{img/FileViewer.png}
+\includegraphics[scale=0.5]{img/FileViewer.png}
 \caption{Screenshot of a FileViewer used in the SimComp GUI.}
+% TODO dont waste that much vertical space
 \label{fig:fileviewer}
 \end{figure}
 
@@ -106,6 +114,7 @@ This section is intended to help you familiarize with the SimComp codebase. Sinc
 \end{figure}
 
 \item [globals.h] - Used to store global constants in the \texttt{globals} namespace.
+% TODO: what is it?, explain 
 
 \end{description}
 
@@ -121,7 +130,7 @@ Qt Object Communication relies on sending and receiving signals. The receiver re
 RunWidget       & instructionCountChanged(int) & Lambda*           & \begin{tabular}[c]{@{}l@{}}Updates status bar with\\ the new instruction count.\end{tabular} \\ \hline
 RunWidget       & performanceChanged(double)               & PerformanceChart  & updatePerformance(double)                                                               \\ \hline
 IdeWidget       & fileChanged(QString)                 & RunWidget         & load(QString)                                                                       \\ \hline
-IdeWidget       & fileChanged(QString)                 & Lambda*           & Set FileViewer to filename.                                                                  \\ \hline
+IdeWidget       & fileChanged(QString)                 & Lambda*           & Set FileViewer to filename.                                                                  \\ \hline % TODO, should be equal?, check in code, understand
 IdeWidget       & breakPointsChanged()                                & Lambda*           & \begin{tabular}[c]{@{}l@{}}Sets breakpoints in \\ RunWidget.\end{tabular}                    \\ \hline
 FileViewer      & changeFile(QString)                  & IdeWidget         & open(QString)                                                                       \\ \hline
 SimulatorThread & finished()                                          & RunWidget         & runFinished()                                                                                \\ \hline
